@@ -1,0 +1,41 @@
+{
+  "name": "accountancy-helper",
+  "productName": "Accountancy Helper",
+  "version": "1.0.0",
+  "description": "Accountancy Helper - ZUS and tax calculator for JDG (2026)",
+  "author": "Accountancy Helper",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "build": {
+    "appId": "pl.jdg.kalkulator",
+    "productName": "Accountancy Helper",
+    "files": [
+      "main.js",
+      "preload.js",
+      "app/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "devDependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@tesseract.js-data/pol": "^1.0.0",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
+    "exceljs": "^4.4.0",
+    "pdfjs-dist": "^3.11.174",
+    "tesseract.js": "^7.0.0"
+  },
+  "dependencies": {
+    "bir1": "^4.2.0"
+  }
+}

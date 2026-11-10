@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><title>Accountancy Helper – Instrukcja / Manual</title>
+<style>
+@page{size:A4;margin:18mm 16mm}
+body{font:11pt/1.5 "Segoe UI",Arial,sans-serif;color:#1c2430}
+h1{font-size:22pt;margin:0 0 4pt} h2{font-size:14pt;margin:18pt 0 6pt;border-bottom:1px solid #ccd3dd;padding-bottom:3pt}
+h3{font-size:11.5pt;margin:12pt 0 3pt}
+.sub{color:#667085;margin-bottom:12pt}
+ol,ul{margin:4pt 0 4pt 18pt;padding:0} li{margin:2pt 0}
+.box{border:1px solid #ccd3dd;border-radius:6pt;padding:8pt 10pt;margin:8pt 0;background:#f6f8fb}
+.warn{border-color:#e0b4b0;background:#fdf3f2}
+.pb{page-break-before:always}
+code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
+</style></head><body>
+
+<!-- ===================== POLSKI ===================== -->
+<h1>Accountancy Helper</h1>
+<div class="sub">Instrukcja obsługi – kalkulator miesięcznych składek ZUS i podatku dla jednoosobowej działalności (JDG), wartości na rok 2026</div>
+
+<h2>1. Do czego służy program</h2>
+<p>Program liczy miesięczne składki ZUS, składkę zdrowotną i zaliczkę na podatek dochodowy na podstawie faktur sprzedaży i kosztowych (pliki PDF lub XML z KSeF), danych narastających od początku roku i wybranych ustawień firmy. Wszystkie dane zapisują się na komputerze.</p>
+
+<h2>2. Instalacja</h2>
+<ol>
+<li>Uruchom plik <code>Accountancy Helper Setup 1.0.0.exe</code> i postępuj zgodnie z instrukcjami.</li>
+<li>Windows może wyświetlić ostrzeżenie „System Windows ochronił ten komputer”, ponieważ program nie ma płatnego podpisu cyfrowego. Kliknij <b>Więcej informacji</b>, a potem <b>Uruchom mimo to</b>.</li>
+<li>Po instalacji na pulpicie pojawi się skrót. Przy pierwszym uruchomieniu program sam pokaże krótki samouczek.</li>
+</ol>
+
+<h2>3. Jednorazowa konfiguracja (sekcja „1. Konfiguracja firmy”)</h2>
+<ul>
+<li><b>Dane firmy:</b> nazwa, NIP, REGON. Przycisk „Pobierz dane z rejestru VAT” (wymaga internetu) może uzupełnić nazwę i REGON na podstawie NIP; wysyła tylko numer NIP do rejestru Ministerstwa Finansów. Firmy zwolnione z VAT mogą nie być w rejestrze – wtedy wpisz dane ręcznie.</li>
+<li><b>Rok i miesiąc</b> rozliczany.</li>
+<li><b>Forma opodatkowania:</b> skala podatkowa (12% / 32%), podatek liniowy (19%) lub ryczałt (wybierz stawkę).</li>
+<li><b>Status VAT:</b> czynny podatnik VAT albo zwolnienie z art. 43 (wtedy VAT nie jest liczony, a wartości brutto traktowane są jak netto).</li>
+<li><b>Schemat ZUS:</b> Ulga na start, Preferencyjny ZUS, Mały ZUS Plus, pełny ZUS albo „Emeryt / inny system” (składki społeczne wpisywane ręcznie). Można go zmienić w każdej chwili. Dobrowolna składka chorobowa to osobne pole wyboru.</li>
+<li><b>Mały ZUS Plus:</b> wpisz dochód z poprzedniego roku, liczbę dni działalności w poprzednim roku (365 = cały rok) oraz przychód z poprzedniego roku (do kontroli limitu 120 000 zł). Podstawa = dochód ÷ dni × 30 × 0,5, w granicach określonych w Ustawieniach. Opcjonalnie można wpisać podstawę ręcznie.</li>
+<li><b>Dane narastające (YTD):</b> przychód, koszty, zapłacony podatek, zapłacone składki społeczne i zdrowotne od początku roku do końca poprzedniego miesiąca. Wpisujesz je raz – potem program uzupełnia je sam po zamknięciu miesiąca.</li>
+</ul>
+
+<h2>4. Co miesiąc – krok po kroku</h2>
+<ol>
+<li>Wybierz rozliczany miesiąc.</li>
+<li>Przeciągnij faktury sprzedaży do pola „Faktury sprzedaży”, a faktury kosztowe do pola „Faktury kosztowe” (albo użyj przycisków „Wybierz pliki” / „Wybierz folder”). Obsługiwane są pliki PDF, zdjęcia i skany (JPG, PNG), pliki XML z KSeF oraz archiwa ZIP (np. pobrane ze strony internetowej) i całe foldery – można je przeciągnąć na pole. Jeśli faktura sprzedaży trafi do pola kosztów (albo odwrotnie), program rozpozna to po NIP-ie, przeniesie dokument do właściwej grupy i oznaczy wiersz. Skany i zdjęcia (np. paragon z taksówki) program odczytuje automatycznie (OCR) – takie wiersze są oznaczone i trzeba dokładnie sprawdzić NIP, numer i kwoty. Liczba plików nie jest ograniczona.</li>
+<li><b>Sprawdź tabelę.</b> Odczytane wartości to tylko podpowiedź. Popraw datę, kontrahenta, numer i kwoty. Wiersze z datą spoza miesiąca są oznaczone i pomijane. Program ostrzega o możliwych duplikatach i zapamiętuje poprawione nazwy kontrahentów. Brakujące pozycje dodasz przyciskami „+ Przychód” i „+ Koszt”.</li>
+<li>Składka zdrowotna (skala podatkowa i podatek liniowy) jest liczona od dochodu z <b>poprzedniego</b> miesiąca. Program bierze go z historii (po zamknięciu poprzedniego miesiąca); jeśli tego miesiąca nie ma w programie, wpisz go w polu „Dochód z poprzedniego miesiąca”. Wartość 0 oznacza składkę minimalną.</li>
+<li><b>Dane firmy i NIP:</b> przy pustych danych firmy program sam znajdzie Twoją firmę na pierwszych fakturach sprzedaży (dane sprzedawcy) i zapyta, czy je wstawić. Przycisk „Uzupełnij z mojej faktury” robi to samo na życzenie. Program zapamiętuje każdy NIP z wczytanych dokumentów wraz z nazwą i adresem. Po wpisaniu NIP-u (w danych firmy albo w wierszu tabeli) uzupełnia nazwę i adres z tej pamięci, a w razie braku z rejestru podatników VAT (Ministerstwo Finansów); wysyłany jest wtedy tylko numer NIP. Firmy zwolnione z VAT nie występują w tym rejestrze – dla nich dane pochodzą z faktur lub wpisuje się je raz ręcznie.</li>
+<li>Opcjonalnie wpisz notatkę do miesiąca.</li>
+<li>Kliknij <b>Oblicz miesiąc</b>. Pojawi się zestawienie: przychód i koszty, składki ZUS ze składnikami, składka zdrowotna, podatek narastająco, podatek do zapłaty za miesiąc i ewentualne ostrzeżenia (np. zbliżanie się do progu 120 000 zł).</li>
+<li><b>Drukuj / zapisz PDF</b> lub <b>Eksport CSV</b> – gotowe zestawienie dla dokumentacji.</li>
+<li><b>Księga KPIR (Excel)</b> – plik z podatkową księgą przychodów i rozchodów: jeden plik na rok, każdy miesiąc w osobnej zakładce. W tabeli uzupełnij kolumny „NIP kontrahenta”, „Opis zdarzenia” i „Adres kontrahenta” (program zapamiętuje je dla kontrahenta), a w konfiguracji firmy – adres i rodzaj działalności (PKD i opis). Kwoty są brutto, gdy firma jest zwolniona z VAT. Odsetki i inne pozostałe przychody wybierz jako rodzaj „Pozostały przychód”. W konfiguracji firmy możesz wpisać domyślny opis przychodu (np. „Nauka jęz. angielskiego”).</li>
+<li>Gdy wszystko się zgadza, kliknij <b>Zamknij miesiąc</b>. Miesiąc trafia do historii razem z fakturami i notatką, a dane narastające zostają zaktualizowane.</li>
+<li>Po opłaceniu składek i podatku wpisz w <b>Historii</b> faktycznie zapłacone kwoty i datę zapłaty (np. z wyciągu bankowego). Zmiana kwoty automatycznie koryguje dane narastające.</li>
+</ol>
+
+<h2>5. Historia, kopie zapasowe i dane</h2>
+<ul>
+<li>Historia pokazuje zamknięte miesiące, sumy roczne, faktury każdego miesiąca oraz przycisk „Cofnij”, który usuwa miesiąc i odejmuje go od danych narastających.</li>
+<li>„Eksport roku (CSV)” zapisuje zestawienie całego roku.</li>
+<li><b>Dziennik działań</b> (Ustawienia → Dziennik działań): zapis tego, co robiono w programie, z datą i godziną – wczytane pliki, zmiany wartości (stara i nowa wartość), obliczenia, zamknięte miesiące, eksporty i zmiany ustawień. Można go przeglądać wg dnia i zapisać jako plik tekstowy. Klucze API nie są w nim zapisywane. Dziennik zawiera ostatnie 400 dni.</li>
+<li>Dane zapisują się automatycznie w folderze <code>Dokumenty\Accountancy Helper</code> (plik <code>dane.json</code>). Raz dziennie powstaje kopia w podfolderze <code>Kopie zapasowe</code> (przechowywane jest 60 ostatnich dni). Przycisk „Otwórz folder z danymi” w Ustawieniach otwiera ten folder.</li>
+<li>Dodatkową kopię zapiszesz przyciskiem „Zapisz kopię (JSON)”, a wczytasz przyciskiem „Wczytaj kopię” – np. przy zmianie komputera.</li>
+</ul>
+
+<h2>6. Ustawienia (⚙)</h2>
+<ul>
+<li><b>Język:</b> polski (domyślny) lub angielski. Można go też zmienić listą w prawym górnym rogu.</li>
+<li><b>Samouczek:</b> przycisk „Uruchom samouczek ponownie” pokazuje krok po kroku wszystkie funkcje. Samouczek jest też dostępny pod przyciskiem „? Samouczek”.</li>
+<li><b>Parametry roczne:</b> podstawy ZUS, płaca minimalna, minimalna składka zdrowotna, przeciętne wynagrodzenie i limit odliczenia składki zdrowotnej przy podatku liniowym. Wartości są ustawione na 2026 r.; w nowym roku trzeba je zaktualizować. Program przechowuje te wartości w pliku zasad z numerem wersji; pod parametrami widać, której wersji używa i czy wartości na dany rok są zgodne z zasadami. Po zmianie roku (np. na 2027) program sam wczytuje wartości z zasad, jeśli je ma; w przeciwnym razie ostrzega, że trzeba je sprawdzić ręcznie.</li>
+<li><b>Aktualizacja zasad:</b> jeśli podany jest adres pliku z zasadami (https), program raz na miesiąc sprawdza, czy jest nowsza wersja, a przycisk „Sprawdź aktualizację zasad” robi to od razu. Nowe wartości są pokazane obok dotychczasowych i <b>nic się nie zmienia bez Twojego kliknięcia „Zastosuj”</b>. Zawsze porównaj je ze źródłem urzędowym (ZUS, Ministerstwo Finansów). Bez połączenia z internetem program działa na dotychczasowych zasadach.</li>
+<li><b>Usuń wszystkie dane</b> – nieodwracalne; najpierw zapisz kopię.</li>
+<li><b>Przydatne linki (🔗):</b> przycisk u góry otwiera listę stron: PUE ZUS, e-Urząd Skarbowy, e-Deklaracje, KSeF, wykaz podatników VAT, CEIDG, REGON, kursy NBP i inne. Linki otwierają się w domyślnej przeglądarce; program nie zna ani nie zapisuje haseł do tych serwisów. W sekcji „Moje linki” można dodać własne strony (nazwa + adres) i je usuwać; są zapisywane razem z pozostałymi danymi.</li>
+</ul>
+
+<h2>7. Wskazówki i rozwiązywanie problemów</h2>
+<ul>
+<li><b>PDF nie został odczytany:</b> skanowane dokumenty bez warstwy tekstowej trzeba wpisać ręcznie.</li>
+<li><b>Faktury w KSeF:</b> pliki XML z KSeF są odczytywane bezpośrednio. Jeśli w polu NIP wpisano NIP firmy, program sam rozpoznaje, czy faktura jest przychodem, czy kosztem. Faktury korygujące i w walutach obcych są oznaczone do sprawdzenia.</li>
+<li><b>Kwota wygląda źle:</b> popraw ją w tabeli przed kliknięciem „Oblicz miesiąc”.</li>
+<li><b>Pomyłka po zamknięciu miesiąca:</b> użyj „Cofnij” w historii, popraw dane i zamknij miesiąc ponownie.</li>
+</ul>
+
+<div class="box warn"><b>Ważne.</b> Program podaje kwoty orientacyjne, wyliczone według parametrów na 2026 r. Przed złożeniem deklaracji (DRA, PIT-5 / PIT-5L / PIT-28, JPK) i dokonaniem płatności zweryfikuj wyniki z aktualnymi przepisami, ZUS lub doradcą. Nie jest to porada podatkowa. Nie uwzględniono m.in. zwolnień ze składki zdrowotnej, ulg podatkowych (poza kwotą zmniejszającą 3 600 zł przy skali), odsetek ani rat zaległych składek.</div>
+
+<!-- ===================== ENGLISH ===================== -->
+<div class="pb"></div>
+<h1>Accountancy Helper</h1>
+<div class="sub">User manual – monthly ZUS contribution and tax calculator for a sole proprietorship (JDG), values for 2026</div>
+
+<h2>1. What the program does</h2>
+<p>The program calculates monthly ZUS contributions, the health contribution and the income-tax advance from sales and cost invoices (PDF files or KSeF XML files), year-to-date figures and your company settings. All data is stored on this computer.</p>
+
+<h2>2. Installation</h2>
+<ol>
+<li>Run <code>Accountancy Helper Setup 1.0.0.exe</code> and follow the instructions.</li>
+<li>Windows may show “Windows protected your PC”, because the program does not have a paid digital signature. Click <b>More info</b>, then <b>Run anyway</b>.</li>
+<li>A shortcut appears on the desktop. On first launch the program shows a short tutorial by itself.</li>
+</ol>
+
+<h2>3. One-time setup (section “1. Company setup”)</h2>
+<ul>
+<li><b>Company details:</b> name, NIP, REGON. The “Fetch details from VAT register” button (needs internet) can fill in the name and REGON from the NIP; it sends only the NIP to the Ministry of Finance register. VAT-exempt businesses may not be listed – then enter the details manually.</li>
+<li><b>Year and month</b> being calculated.</li>
+<li><b>Tax form:</b> tax scale (12% / 32%), linear tax (19%) or lump sum (choose the rate).</li>
+<li><b>VAT status:</b> VAT-registered, or exempt under Art. 43 (VAT is then not calculated and gross values are treated as net).</li>
+<li><b>ZUS scheme:</b> Ulga na start, Preferential ZUS, Small ZUS Plus, full ZUS, or “Pensioner / other system” (social contributions entered manually). It can be changed at any time. Voluntary sickness insurance is a separate checkbox.</li>
+<li><b>Small ZUS Plus:</b> enter last year's income, the number of days of activity last year (365 = full year) and last year's revenue (to check the PLN 120,000 limit). Base = income ÷ days × 30 × 0.5, within the limits set in Settings. You can also enter the base manually.</li>
+<li><b>Year-to-date (YTD) figures:</b> revenue, costs, tax paid, social and health contributions paid from the start of the year to the end of last month. Enter them once – afterwards the program updates them itself when you close a month.</li>
+</ul>
+
+<h2>4. Every month – step by step</h2>
+<ol>
+<li>Choose the month to calculate.</li>
+<li>Drag sales invoices into “Sales invoices” and cost invoices into “Cost invoices” (or use “Choose files” / “Choose folder”). PDF files, photos and scans (JPG, PNG), KSeF XML files, ZIP archives (for example downloaded from a website) and whole folders are supported – drag them onto the box. If a sales invoice lands in the costs box (or the other way round), the program recognises it by the NIP, moves the document to the right group and marks the row. Scans and photos (for example a taxi receipt) are read automatically (OCR) – those rows are marked and the NIP, number and amounts must be checked carefully. There is no limit on the number of files.</li>
+<li><b>Check the table.</b> Values read from files are only suggestions. Correct the date, counterparty, number and amounts. Rows dated outside the month are flagged and skipped. The program warns about possible duplicates and remembers corrected counterparty names. Use “+ Income” and “+ Expense” to add missing items.</li>
+<li>The health contribution (tax scale and linear tax) is based on the income of the <b>previous</b> month. The program takes it from the history (once the previous month is closed); if that month is not in the program, enter it in the field “Income of the previous month”. A value of 0 means the minimum contribution.</li>
+<li><b>Company details and NIP:</b> when the company details are empty, the program finds your company on the first sales invoices (the seller details) and asks whether to insert them. The button “Fill in from my invoice” does the same on request. The program remembers every NIP from the documents you load, with its name and address. After you type a NIP (in the company details or in a table row), it fills in the name and address from that memory, or if it is not there from the VAT payers register (Ministry of Finance); only the NIP number is sent. Businesses exempt from VAT are not in that register – for them the details come from invoices or are typed once.</li>
+<li>Optionally write a note for the month.</li>
+<li>Click <b>Calculate month</b>. A summary appears: revenue and costs, ZUS contributions with their components, health contribution, cumulative tax, tax due for the month and any warnings (for example approaching the PLN 120,000 threshold).</li>
+<li><b>Print / save as PDF</b> or <b>Export CSV</b> – a ready summary for your records.</li>
+<li><b>KPIR ledger (Excel)</b> – a file with the tax revenue and expense ledger: one file per year, each month on its own tab. Fill in the “Counterparty NIP”, “Description of event” and “Counterparty address” columns in the table (the program remembers them for each counterparty), and the company address and type of activity (PKD and description) in the company setup. Amounts are gross when the business is VAT-exempt. Choose the type “Other income” for interest and other non-sales income. In the company setup you can enter a default description for income (for example “English lessons”).</li>
+<li>When everything is correct, click <b>Close month</b>. The month goes into the history together with its invoices and note, and the year-to-date figures are updated.</li>
+<li>After the contributions and tax are paid, enter the amounts actually paid and the payment date in the <b>History</b> (for example from the bank statement). Changing an amount automatically corrects the year-to-date figures.</li>
+</ol>
+
+<h2>5. History, backups and data</h2>
+<ul>
+<li>The history shows closed months, yearly totals, each month's invoices, and an “Undo” button that removes a month and subtracts it from the year-to-date figures.</li>
+<li>“Export year (CSV)” saves a summary of the whole year.</li>
+<li><b>Activity log</b> (Settings → Activity log): a record of what was done in the program, with date and time – files loaded, value changes (old and new value), calculations, closed months, exports and settings changes. It can be browsed by day and saved as a text file. API keys are never written to it. The log keeps the last 400 days.</li>
+<li>Data is saved automatically in <code>Documents\Accountancy Helper</code> (file <code>dane.json</code>). Once a day a copy is made in the <code>Kopie zapasowe</code> subfolder (the last 60 days are kept). The “Open data folder” button in Settings opens this folder.</li>
+<li>Save an extra copy with “Save backup (JSON)” and restore it with “Load backup” – for example when changing computers.</li>
+</ul>
+
+<h2>6. Settings (⚙)</h2>
+<ul>
+<li><b>Language:</b> Polish (default) or English. You can also change it with the list at the top right.</li>
+<li><b>Tutorial:</b> “Run the tutorial again” walks through every function step by step. It is also available under the “? Tutorial” button.</li>
+<li><b>Yearly parameters:</b> ZUS bases, minimum wage, minimum health contribution, average wage and the health-contribution deduction limit for linear tax. The values are set for 2026; update them in a new year. The program keeps these values in a versioned rules file; under the parameters you can see which version it uses and whether the values for the selected year match the rules. When you change the year (e.g. to 2027) the program loads the values from the rules if it has them; otherwise it warns you to check them manually.</li>
+<li><b>Rule updates:</b> if an address for the rules file (https) is entered, the program checks once a month for a newer version, and the “Check for rule updates” button does it immediately. New values are shown next to the current ones and <b>nothing changes until you click “Apply”</b>. Always compare them with the official source (ZUS, Ministry of Finance). Without an internet connection the program keeps using its current rules.</li>
+<li><b>Delete all data</b> – irreversible; save a backup first.</li>
+<li><b>Useful links (🔗):</b> the button at the top opens a list of sites: PUE ZUS, e-Tax Office, e-Declarations, KSeF, the VAT taxpayer list, CEIDG, REGON, NBP exchange rates and more. Links open in your default browser; the program does not know or store your passwords for these services. In the “My links” section you can add your own sites (name + address) and remove them; they are saved with the rest of your data.</li>
+</ul>
+
+<h2>7. Tips and troubleshooting</h2>
+<ul>
+<li><b>A PDF was not read:</b> scanned documents without a text layer must be entered by hand.</li>
+<li><b>KSeF invoices:</b> KSeF XML files are read directly. If the company NIP is entered, the program works out by itself whether an invoice is income or an expense. Correction and foreign-currency invoices are flagged for checking.</li>
+<li><b>An amount looks wrong:</b> fix it in the table before clicking “Calculate month”.</li>
+<li><b>Mistake after closing a month:</b> use “Undo” in the history, correct the data and close the month again.</li>
+</ul>
+
+<div class="box warn"><b>Important.</b> The program gives indicative amounts calculated with 2026 parameters. Before filing returns (DRA, PIT-5 / PIT-5L / PIT-28, JPK) and making payments, verify the results against current regulations, ZUS or an adviser. This is not tax advice. Not covered include health-contribution exemptions, tax reliefs (other than the PLN 3,600 reducing amount under the tax scale), interest and arrears instalments.</div>
+
+</body></html>

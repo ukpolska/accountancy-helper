@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.log
+*.tmp
+Pytania-*.pdf
+.DS_Store
+Thumbs.db
+Rehearsal-sheet-*.md

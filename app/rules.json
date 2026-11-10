@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "version": 1,
+  "published": "2026-11-03",
+  "years": {
+    "2026": {
+      "baseFull": 5652,
+      "basePref": 1441.8,
+      "minWage": 4806,
+      "minHealth": 432.54,
+      "avgWage": 9228.64,
+      "linLimit": 14100
+    }
+  },
+  "sources": {
+    "zus": "https://www.zus.pl/baza-wiedzy/skladki-wskazniki-odsetki",
+    "tax": "https://www.podatki.gov.pl/"
+  }
+}

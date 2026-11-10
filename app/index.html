@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accountancy Helper</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#1c2430;--mut:#667085;--line:#dfe3ea;--acc:#1f5eff;--ok:#0a7d3c;--bad:#b42318}
+@media (prefers-color-scheme:dark){:root{--bg:#10151c;--card:#182029;--ink:#e6eaf0;--mut:#98a2b3;--line:#2b3644;--acc:#6b95ff;--ok:#4ade80;--bad:#f87171}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,Segoe UI,sans-serif}
+header{padding:16px 20px;border-bottom:1px solid var(--line);background:var(--card);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:18px;margin:0} h2{font-size:15px;margin:0 0 12px}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{display:block;font-size:12px;color:var(--mut);margin-bottom:3px}
+input,select,button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%}
+button{width:auto;cursor:pointer;background:var(--acc);color:#fff;border:0;font-weight:600}
+button.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.sec.warn{color:var(--bad);border-color:var(--bad)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row select{width:auto}
+.chk{display:flex;gap:8px;align-items:center;margin-top:20px}.chk input{width:auto}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--mut)}
+.drop.over{border-color:var(--acc);background:rgba(31,94,255,.06)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:4px;border-bottom:1px solid var(--line);text-align:left}
+td input,td select{padding:4px 6px}
+td.n input{text-align:right}
+#tbl{min-width:1350px}
+#tbl td:nth-child(1) select{min-width:92px}
+#tbl td:nth-child(2) input{min-width:130px}
+#tbl td:nth-child(3) input{min-width:170px}
+#tbl td:nth-child(4) input{min-width:120px}
+#tbl td.n input{min-width:84px}
+.note{font-size:12px;color:var(--mut)}
+.warn{color:var(--bad)}
+.kv{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted var(--line)}
+.kv.t{font-weight:700;border-bottom:2px solid var(--ink)}
+.big{font-size:22px;font-weight:700}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+#sheet{display:none}
+.layer{position:fixed;inset:0;z-index:1000}
+.layer[hidden]{display:none}
+#settingsLayer,#linksLayer,#rulesLayer{background:rgba(0,0,0,.55);overflow:auto;padding:20px}
+#linksLayer a{display:block;padding:7px 10px;margin:3px 0;border:1px solid #cfd6e0;border-radius:6px;text-decoration:none;color:inherit}
+#linksLayer a:hover{background:#eef3fb}
+#linksLayer a small{display:block;opacity:.7}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:12px;max-width:760px;margin:0 auto;padding:20px}
+#tourLayer.dim{background:rgba(0,0,0,.6)}
+#tourHl{position:fixed;display:none;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.6),0 0 0 3px var(--acc);pointer-events:none;transition:all .2s}
+#tourBox{position:fixed;width:min(380px,calc(100vw - 20px));background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+@media print{
+  body{background:#fff;color:#000} header,#setup,#docs,.noprint{display:none!important}
+  #sheet{display:block!important} .card{border:1px solid #999;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Accountancy Helper <span class="note" data-i="subtitle"></span></h1>
+  <div class="row">
+    <select id="langTop" aria-label="Language"><option value="pl">Polski</option><option value="en">English</option></select>
+    <span class="note" id="saveProfile" data-i="saveProfile" style="align-self:center"></span>
+    <button class="sec" id="openTour" data-i="tourBtn"></button>
+    <button class="sec" id="openLinks" data-i="linksBtn"></button>
+    <button class="sec" id="openSettings" data-i="settingsBtn"></button>
+  </div>
+</header>
+<main>
+
+<section class="card" id="setup">
+  <h2 data-i="sec1"></h2>
+  <div class="grid" id="gCompany">
+    <div><label data-i="lName"></label><input id="name"></div>
+    <div><label data-i="lNip"></label><input id="nip"><div class="warn note" id="nipWarn"></div><button class="sec" id="nipLookup" data-i="lookupBtn" style="margin-top:6px"></button> <button class="sec" id="fromInvoice" data-i="fromInvoiceBtn" style="margin-top:6px"></button><input type="file" id="fInvFill" accept=".pdf,.xml" hidden> <button class="sec" id="ceidgSite" data-i="ceidgSiteBtn" style="margin-top:6px"></button><div class="note" id="ceidgSiteNote" data-i="ceidgSiteNote"></div><div class="note" id="nipInfo"></div></div>
+    <div><label data-i="lRegon"></label><input id="regon"><div class="warn note" id="regonWarn"></div></div>
+    <div><label data-i="lAddress"></label><input id="address"></div>
+    <div><label data-i="lActivity"></label><input id="activity"></div>
+    <div><label data-i="lDefInc"></label><input id="defInc"></div>
+    <div><label data-i="lDefExp"></label><input id="defExp"></div>
+    <div><label data-i="lYear"></label><input id="year" type="number" value="2026"></div>
+    <div><label data-i="lMonth"></label><select id="month"></select></div>
+  </div>
+  <div class="grid" id="gOptions" style="margin-top:12px">
+    <div><label data-i="lTax"></label>
+      <select id="taxForm">
+        <option value="skala" data-i="taxSkala"></option>
+        <option value="liniowy" data-i="taxLin"></option>
+        <option value="ryczalt" data-i="taxRyc"></option>
+      </select></div>
+    <div id="rateBox" hidden><label data-i="lRate"></label><select id="rate"></select></div>
+    <div><label data-i="lVat"></label>
+      <select id="vat">
+        <option value="reg" data-i="vatReg"></option>
+        <option value="art43" data-i="vat43"></option>
+      </select></div>
+    <div><label data-i="lZus"></label>
+      <select id="zus">
+        <option value="ulga" data-i="zusUlga"></option>
+        <option value="pref" data-i="zusPref"></option>
+        <option value="maly" data-i="zusMaly"></option>
+        <option value="full" data-i="zusFull"></option>
+        <option value="emeryt" data-i="zusEmeryt"></option>
+      </select></div>
+    <div class="chk"><input type="checkbox" id="chorobowe"><label style="margin:0" data-i="lChor"></label></div>
+  </div>
+  <div class="grid" id="malyBox" style="margin-top:12px" hidden>
+    <div><label data-i="lPrevInc"></label><input id="prevIncome" type="number" step="0.01" value="0"></div>
+    <div><label data-i="lPrevDays"></label><input id="prevDays" type="number" min="0" max="366" value="365"></div>
+    <div><label data-i="lPrevRev"></label><input id="prevRevenue" type="number" step="0.01" value="0"></div>
+    <div id="malyWarn" class="warn" hidden style="align-self:end" data-i="malyWarn"></div>
+    <div><label data-i="lManual"></label><input id="manualBase" type="number" step="0.01" value="0"></div>
+    <div id="malyDaysWarn" class="warn" hidden style="align-self:end" data-i="malyDaysWarn"></div>
+    <div class="note" style="align-self:end" data-i="malyNote"></div>
+  </div>
+  <div class="grid" id="emerytBox" style="margin-top:12px" hidden>
+    <div><label data-i="lManualSoc"></label><input id="manualSocial" type="number" step="0.01" value="0"></div>
+    <div class="note" style="align-self:end" data-i="emerytNote"></div>
+  </div>
+
+  <h2 style="margin-top:20px" data-i="secYtd"></h2>
+  <div class="grid" id="gYtd">
+    <div><label data-i="lYtdRev"></label><input id="ytdRev" type="number" step="0.01" value="0"></div>
+    <div><label data-i="lYtdCost"></label><input id="ytdCost" type="number" step="0.01" value="0"></div>
+    <div><label data-i="lYtdTax"></label><input id="ytdTax" type="number" step="0.01" value="0"></div>
+    <div><label data-i="lYtdZus"></label><input id="ytdZus" type="number" step="0.01" value="0"></div>
+    <div><label data-i="lYtdHealth"></label><input id="ytdHealth" type="number" step="0.01" value="0"></div>
+    <div><label data-i="lHbIncome"></label><input id="hbIncome" type="number" step="0.01" value="0"><div class="note" id="hbNote"></div></div>
+  </div>
+  <p class="note" style="margin-top:12px" data-i="paramsHint"></p>
+</section>
+
+<section class="card" id="docs">
+  <h2 data-i="sec2"></h2>
+  <div class="two" id="gDrops">
+    <div class="drop" id="dropInc"><b data-i="dropInc"></b><br><span data-i="dropHint"></span>
+      <div class="row" style="justify-content:center;margin-top:8px">
+        <button class="sec" data-pick="inc" data-i="pickFiles"></button><button class="sec" data-pickdir="inc" data-i="pickFolder"></button></div></div>
+    <div class="drop" id="dropExp"><b data-i="dropExp"></b><br><span data-i="dropHint"></span>
+      <div class="row" style="justify-content:center;margin-top:8px">
+        <button class="sec" data-pick="exp" data-i="pickFiles"></button><button class="sec" data-pickdir="exp" data-i="pickFolder"></button></div></div>
+  </div>
+  <input type="file" id="fInc" accept=".pdf,.xml,.jpg,.jpeg,.png,.zip" multiple hidden>
+  <input type="file" id="fExp" accept=".pdf,.xml,.jpg,.jpeg,.png,.zip" multiple hidden>
+  <input type="file" id="dInc" webkitdirectory multiple hidden>
+  <input type="file" id="dExp" webkitdirectory multiple hidden>
+  <p class="note" id="status"></p>
+  <div style="overflow-x:auto" id="tblWrap">
+  <table id="tbl"><thead><tr>
+    <th data-i="thType"></th><th data-i="thDate"></th><th data-i="thParty"></th><th data-i="thNo"></th><th data-i="thNet"></th><th data-i="thVat"></th><th data-i="thGross"></th><th data-i="thNip"></th><th data-i="thDesc"></th><th data-i="thAddr"></th><th data-i="thFile"></th><th></th>
+  </tr></thead><tbody></tbody></table></div>
+  <datalist id="descList"></datalist>
+  <div class="row" style="margin-top:10px">
+    <button class="sec" id="addInc" data-i="addInc"></button><button class="sec" id="addExp" data-i="addExp"></button>
+    <span style="flex:1"></span><button id="calc" data-i="calc"></button>
+  </div>
+  <div style="margin-top:10px"><label data-i="noteLbl"></label><input id="monthNote"></div>
+  <p class="note" data-i="verifyNote"></p>
+</section>
+
+<section id="sheet"></section>
+<div class="row noprint" id="outBtns" hidden style="margin-bottom:24px">
+  <button id="print" data-i="print"></button><button class="sec" id="csv" data-i="csv"></button><button class="sec" id="kpir" data-i="kpirBtn"></button>
+  <button id="closeMonth" data-i="closeMonth" data-it="closeMonthTip"></button>
+</div>
+
+<section class="card noprint" id="hist">
+  <h2 data-i="histTitle"></h2>
+  <p class="note" id="diskNote"></p>
+  <p class="note" data-i="histNote"></p>
+  <div class="row"><button id="exportJson" data-i="exportBtn"></button><button class="sec" id="importBtn" data-i="importBtn"></button><button class="sec" id="exportYear" data-i="exportYear"></button><button class="sec" id="kpirYear" data-i="kpirBtn"></button>
+    <input type="file" id="importJson" accept=".json" hidden></div>
+  <div style="overflow-x:auto;margin-top:10px"><table id="histTbl"><thead><tr>
+    <th data-i="hMonth"></th><th data-i="hRev"></th><th data-i="hCost"></th><th data-i="hSoc"></th><th data-i="hHealth"></th><th data-i="hTax"></th><th data-i="hDate"></th><th data-i="hNote"></th><th></th>
+  </tr></thead><tbody></tbody></table></div>
+</section>
+</main>
+
+<div id="settingsLayer" class="layer noprint" hidden><div class="modal">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0" data-i="setTitle"></h2><button class="sec" id="closeSettings" data-i="close"></button></div>
+  <h2 style="margin-top:18px" data-i="setLang"></h2>
+  <select id="langSel" style="width:auto"><option value="pl">Polski</option><option value="en">English</option></select>
+  <h2 style="margin-top:18px" data-i="setTour"></h2>
+  <p class="note" data-i="setTourNote"></p>
+  <button id="rerunTour" data-i="rerunTour"></button>
+  <h2 style="margin-top:18px" data-i="setParams"></h2>
+  <p class="note" data-i="setParamsNote"></p>
+  <div class="grid">
+    <div><label data-i="pBaseFull"></label><input id="pBaseFull" type="number" step="0.01" value="5652"></div>
+    <div><label data-i="pBasePref"></label><input id="pBasePref" type="number" step="0.01" value="1441.80"></div>
+    <div><label data-i="pMinWage"></label><input id="pMinWage" type="number" step="0.01" value="4806"></div>
+    <div><label data-i="pMinHealth"></label><input id="pMinHealth" type="number" step="0.01" value="432.54"></div>
+    <div><label data-i="pAvgWage"></label><input id="pAvgWage" type="number" step="0.01" value="9228.64"></div>
+    <div><label data-i="pLinLimit"></label><input id="pLinLimit" type="number" step="0.01" value="14100"></div>
+  </div>
+  <p class="note" id="rulesStatus"></p>
+  <div class="grid"><div><label data-i="rulesUrlLbl"></label><input id="rulesUrl" placeholder="https://…"></div></div>
+  <button class="sec" id="checkRules" data-i="rulesCheckBtn" style="margin-top:6px"></button>
+  <div class="note" id="rulesInfo"></div>
+  <h2 style="margin-top:18px" data-i="setGus"></h2>
+  <p class="note" data-i="gusNote"></p>
+  <div class="grid"><div><label data-i="lCeidgToken"></label><input id="ceidgToken" autocomplete="off" spellcheck="false"></div>
+    <div><label data-i="lGusKey"></label><input id="gusKey" autocomplete="off" spellcheck="false"></div></div>
+  <h2 style="margin-top:18px" data-i="setLog"></h2>
+  <p class="note" data-i="logNote"></p>
+  <button class="sec" id="openLog" data-i="openLogBtn"></button>
+  <h2 style="margin-top:18px" data-i="setData"></h2>
+  <p class="note" data-i="setDataNote"></p>
+  <button class="sec" id="openFolder" data-i="openFolder"></button> <button class="sec warn" id="resetAll" data-i="resetAll"></button>
+</div></div>
+
+<div id="logLayer" class="layer noprint" hidden><div class="modal">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0" data-i="logTitle"></h2><button class="sec" id="closeLog" data-i="close"></button></div>
+  <div class="row" style="margin:10px 0;align-items:center"><label style="margin:0" data-i="logDay"></label><input type="date" id="logDate" style="width:auto"><button class="sec" id="logAll" data-i="logAllBtn"></button><span style="flex:1"></span><button class="sec" id="logSave" data-i="logSaveBtn"></button></div>
+  <div id="logBody" style="font:13px/1.55 Consolas,'Courier New',monospace;white-space:pre-wrap;max-height:60vh;overflow:auto"></div>
+</div></div>
+
+<div id="linksLayer" class="layer noprint" hidden><div class="modal">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0" data-i="linksTitle"></h2><button class="sec" id="closeLinks" data-i="close"></button></div>
+  <p class="note" data-i="linksNote"></p>
+  <div id="linksBody"></div>
+  <h2 style="margin-top:14px" data-i="myLinksTitle"></h2>
+  <div id="myLinksBody"></div>
+  <div class="row" style="margin-top:8px">
+    <input id="newLinkName" data-ph="linkNamePh" style="flex:1;min-width:140px">
+    <input id="newLinkUrl" data-ph="linkUrlPh" style="flex:2;min-width:200px">
+    <button id="addLink" data-i="addLink"></button>
+  </div>
+  <div class="warn note" id="linkWarn"></div>
+</div></div>
+
+<div id="rulesLayer" class="layer noprint" hidden><div class="modal">
+  <h2 id="rulesNewTitle" style="margin-top:0"></h2>
+  <p class="note" data-i="rulesReview"></p>
+  <div id="rulesDiff"></div>
+  <p class="note" id="rulesSrc"></p>
+  <div class="row" style="margin-top:12px"><button class="sec" id="rulesLater" data-i="rulesLater"></button><button id="rulesApply" data-i="rulesApply"></button></div>
+</div></div>
+
+<div id="tourLayer" class="layer noprint" hidden>
+  <div id="tourHl"></div>
+  <div id="tourBox"><div id="tourStep" class="note"></div><h2 id="tourTitle" style="margin:4px 0 6px"></h2><div id="tourText"></div>
+    <div class="row" style="margin-top:12px"><button class="sec" id="tourSkip"></button><span style="flex:1"></span><button class="sec" id="tourPrev"></button><button id="tourNext"></button></div></div>
+</div>
+
+<script src="vendor/pdf.min.js"></script>
+<script src="vendor/exceljs.min.js"></script>
+<script src="vendor/jszip.min.js"></script>
+<script src="vendor/tesseract/tesseract.min.js"></script>
+<script src="kpir.js"></script>
+<script>
+// ==CALC==
+const r2 = x => Math.round((x + Number.EPSILON) * 100) / 100;
+const R = x => Math.round(x);
+const RATES = {emerytalne:.1952, rentowe:.08, wypadkowe:.0167, chorobowe:.0245, fp:.0245};
+
+function socialBase(p){
+  if(p.zus==='ulga'||p.zus==='emeryt') return 0;
+  if(p.zus==='pref') return p.basePref;
+  if(p.zus==='full') return p.baseFull;
+  if(p.manualBase>0) return r2(Math.min(p.baseFull, Math.max(p.basePref, p.manualBase)));
+  const perMonth = p.prevDays>0 ? p.prevIncome/p.prevDays*30 : 0;   // dochód / dni działalności x 30
+  return r2(Math.min(p.baseFull, Math.max(p.basePref, perMonth*0.5)));
+}
+function calcSocial(p){
+  const base = socialBase(p);
+  if(base===0){ const m=p.zus==='emeryt'?r2(p.manualSocial||0):0; return {base:0,emerytalne:0,rentowe:0,wypadkowe:0,chorobowe:0,fp:0,manual:m,total:m}; }
+  const o = {base};
+  o.emerytalne = r2(base*RATES.emerytalne);
+  o.rentowe = r2(base*RATES.rentowe);
+  o.wypadkowe = r2(base*RATES.wypadkowe);
+  o.chorobowe = p.chorobowe ? r2(base*RATES.chorobowe) : 0;
+  o.fp = (p.zus!=='pref' && base>=p.minWage) ? r2(base*RATES.fp) : 0;
+  o.total = r2(o.emerytalne+o.rentowe+o.wypadkowe+o.chorobowe+o.fp);
+  return o;
+}
+function ryczaltHealth(cumRev, avgWage){
+  if(cumRev<=60000) return r2(avgWage*0.6*0.09);
+  if(cumRev<=300000) return r2(avgWage*0.09);
+  return r2(avgWage*1.8*0.09);
+}
+function compute(p, m){
+  const soc = calcSocial(p);
+  const monthIncomeRaw = m.rev - m.cost;
+  let health, healthKey, healthArg = '', healthBase = 0;
+  if(p.taxForm==='ryczalt'){
+    health = ryczaltHealth(p.ytdRev + m.rev, p.avgWage);
+    healthKey = 'hRyc';
+  } else {
+    const rate = p.taxForm==='skala' ? .09 : .049;
+    // Składka zdrowotna za miesiąc M liczona jest od dochodu z miesiąca POPRZEDNIEGO (art. 81 ust. 2c ustawy o świadczeniach opieki zdrowotnej)
+    healthBase = Math.max(0, p.healthBaseIncome||0);
+    health = r2(Math.max(p.minHealth, healthBase*rate));
+    healthKey = p.taxForm==='skala' ? 'hSkala' : 'hLin'; healthArg = p.minHealth.toFixed(2);
+  }
+  const cumRev = p.ytdRev + m.rev, cumCost = p.ytdCost + m.cost;
+  const cumSoc = p.ytdZus + soc.total;
+  const cumHealth = p.ytdHealth + health;
+  let taxBase, taxCum, bracket;
+  if(p.taxForm==='skala'){
+    taxBase = Math.max(0, cumRev - cumCost - cumSoc);
+    taxCum = Math.max(0, 0.12*Math.min(taxBase,120000) + 0.32*Math.max(0,taxBase-120000) - 3600);
+    bracket = taxBase>120000 ? '32%' : '12%';
+  } else if(p.taxForm==='liniowy'){
+    taxBase = Math.max(0, cumRev - cumCost - cumSoc - Math.min(cumHealth, p.linLimit));
+    taxCum = 0.19*taxBase; bracket = '19%';
+  } else {
+    taxBase = Math.max(0, cumRev - cumSoc - 0.5*cumHealth);   // art. 11 ust. 1a ustawy o zryczałcie: 50% składek zdrowotnych pomniejsza przychód
+    taxCum = p.rate*taxBase;
+    bracket = (p.rate*100)+'%';
+  }
+  taxCum = R(taxCum);
+  const taxDue = taxCum - p.ytdTax;
+  return {soc, health, healthKey, healthArg, healthBase, cumRev, cumCost, cumSoc, cumHealth, taxBase:r2(taxBase), taxCum, taxDue,
+          taxPayable: Math.max(0,taxDue), bracket, totalZus: r2(soc.total+health)};
+}
+// ==/CALC==
+
+// ---------- i18n ----------
+const I18N = {
+pl:{
+subtitle:'— kalkulator miesięczny',
+setGus:'Wyszukiwanie firm po NIP (rejestry)', gusNote:'Wykaz podatników VAT zna tylko firmy płacące VAT. Aby program znajdował także firmy zwolnione z VAT: (1) CEIDG – rejestr jednoosobowych działalności: zarejestruj się na dane.biznes.gov.pl (potrzebne konto na biznes.gov.pl, logowanie Profilem Zaufanym); klucz API przyjdzie mailem – wpisz go jako token CEIDG. (2) GUS (REGON), także dla spółek: klucz użytkownika bezpłatnie na wniosek, api.stat.gov.pl/Home/RegonApi. Wystarczy jedno z nich. Wysyłany jest tylko numer NIP.', lCeidgToken:'Token CEIDG (klucz API) – opcjonalnie', lGusKey:'Klucz API GUS (REGON) – opcjonalnie', lookupOkGus:'Pobrano z rejestru: {0}. Sprawdź dane.', lookupNeedKey:'Aby szukać także w rejestrach CEIDG / GUS, wpisz token lub klucz w Ustawieniach.', lookupConfirm:'Znaleziono w rejestrze:\n\nNazwa: {0}\nREGON: {1}\nAdres: {2}\nPKD: {4}\nŹródło: {3}\n\nRejestr pokazuje dane oficjalnie zarejestrowane i mogą się różnić od aktualnych. Wstawić nazwę i REGON (adres i PKD tylko jeśli pola są puste)?', lookupDeclined:'Nic nie zmieniono.', setLog:'Dziennik działań', logNote:'Zapis tego, co robiono w programie (wczytane pliki, zmiany wartości, obliczenia, zamknięte miesiące, eksporty) z datą i godziną. Pomaga sprawdzić, czy czegoś nie pominięto. Zapisywany jest tylko na tym komputerze, obok danych.', openLogBtn:'Otwórz dziennik', logTitle:'Dziennik działań', logDay:'Dzień:', logAllBtn:'Pokaż wszystko', logSaveBtn:'Zapisz jako plik tekstowy', logEmpty:'Brak wpisów.', logSession:'Sesja od {0}', lg_sStart:'Uruchomiono program', lg_sEnd:'Zamknięto program', lg_file:'Wczytano plik {0}: {1}, odczyt {2}, kwota {3} zł{4}', lg_moved:' – przeniesiono do właściwej grupy wg NIP', lg_fileFail:'Nie udało się odczytać pliku {0}', lg_zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', lg_addRow:'Dodano ręcznie wiersz: {0}', lg_delRow:'Usunięto wiersz „{0}”', lg_edit:'Wiersz „{0}”: zmieniono {1} z „{2}” na „{3}”', lg_calc:'Obliczono miesiąc {0}: przychód {1} zł, koszty {2} zł, ZUS społeczne {3} zł, zdrowotna {4} zł, podatek do zapłaty {5} zł', lg_close:'Zamknięto miesiąc {0}: przychód {1} zł, koszty {2} zł, dokumentów {3}', lg_undo:'Cofnięto zamknięcie miesiąca {0}', lg_histEdit:'Historia {0}: zmieniono {1} na „{2}”', lg_kpir:'Wyeksportowano księgę KPIR za rok {0} (miesięcy: {1}, dokumentów: {2})', lg_csv:'Wyeksportowano CSV za {0}', lg_csvYear:'Wyeksportowano CSV za rok {0}', lg_print:'Drukowanie / zapis PDF zestawienia: {0}', lg_backupSave:'Zapisano kopię zapasową (JSON)', lg_backupLoad:'Wczytano kopię zapasową', lg_setting:'Ustawienie „{0}” zmieniono na „{1}”', lg_rules:'Zastosowano zasady roczne, wersja {0}', lg_nip:'Wyszukiwanie NIP {0}: {1}', lg_nipNone:'nie znaleziono w rejestrze', lg_nipErr:'błąd wyszukiwania', lg_reset:'Usunięto wszystkie dane', fromInvoiceBtn:'Uzupełnij z mojej faktury', ceidgSiteBtn:'Sprawdź w CEIDG (strona internetowa)', ceidgSiteNote:'Otwiera oficjalną stronę CEIDG w przeglądarce: wpisz tam NIP i przepisz dane firmy. Automatyczne pobieranie z CEIDG będzie możliwe po otrzymaniu klucza.', fromInvConfirm:'Znaleziono na fakturze (dane sprzedawcy):\n\nNazwa: {0}\nNIP: {1}\nAdres: {2}\n\nWstawić te dane jako dane firmy?', fromInvOk:'Wstawiono dane z faktury: {0}.', fromInvNone:'Nie znaleziono danych sprzedawcy w tym pliku. Wybierz fakturę sprzedaży wystawioną przez Twoją firmę (PDF z tekstem lub XML z KSeF).', lAddress:'Adres firmy', lActivity:'Rodzaj działalności (PKD i opis)', lDefInc:'Domyślny opis przychodu (do księgi), np. Nauka jęz. angielskiego', lDefExp:'Domyślny opis kosztu (do księgi) – opcjonalnie', thNip:'NIP kontrahenta', thDesc:'Opis zdarzenia', thAddr:'Adres kontrahenta', typeOth:'Pozostały przychód', kpirBtn:'Księga KPIR (Excel)', kpirNone:'Brak pozycji do księgi – dodaj faktury i kliknij „Oblicz miesiąc” albo zamknij miesiąc.',
+zusEmeryt:'Emeryt / inny system (składki społeczne wpisane ręcznie)', lManualSoc:'Składki społeczne miesięcznie (PLN) – wpisz 0, jeśli ich nie ma',
+emerytNote:'Brak obowiązkowych składek społecznych z działalności; składka zdrowotna nadal jest liczona. Zweryfikuj swoją sytuację w ZUS / u księgowej.',
+lPrevDays:'Liczba dni działalności w poprzednim roku (365 = cały rok)', malyDaysWarn:'Działalność trwała krócej niż 60 dni w poprzednim roku – warunek Mały ZUS Plus może nie być spełniony.',
+paidTip:'Faktycznie zapłacono (kwota)', hDate:'Data zapłaty', hNote:'Notatka', hInv:'Faktury ({0})', unpaid:'brak daty zapłaty', noteLbl:'Notatka do miesiąca (opcjonalnie)', dupWarn:'możliwy duplikat', invNone:'Brak zapisanych faktur.',
+zEmeryt:'Składki społeczne wpisane ręcznie (emeryt / inny system).', histPaidSum:'zapłacono: {0}',
+wTitle:'Ostrzeżenia', wScale:'Podstawa opodatkowania zbliża się do progu 120 000 zł – powyżej stosuje się stawkę 32%.', wScale32:'Przekroczono próg 120 000 zł – nadwyżka jest opodatkowana stawką 32%.',
+wRyc60:'Przychód narastający zbliża się do 60 000 zł – po przekroczeniu składka zdrowotna wzrośnie.', wRyc300:'Przychód narastający zbliża się do 300 000 zł – po przekroczeniu składka zdrowotna wzrośnie.', wRycCross:'W tym miesiącu przekroczono próg przychodu (60 000 / 300 000 zł) – składka zdrowotna jest wyższa.',
+diskBackup:'Kopie dzienne w: {0}', badNip:'NIP wygląda niepoprawnie (sprawdź cyfry)', badRegon:'REGON wygląda niepoprawnie (sprawdź cyfry)', openFolder:'Otwórz folder z danymi', lookupBtn:'Pobierz dane z rejestru VAT', lookupBusy:'Szukam…', lookupOk:'Pobrano: {0} (status VAT: {1}). Sprawdź dane.', lookupNone:'Nie znaleziono w rejestrze VAT – to może być normalne dla firmy zwolnionej z VAT. Wpisz dane ręcznie.', lookupErr:'Nie udało się pobrać danych: {0}', lookupPriv:'Wysyłany jest tylko numer NIP do rejestru Ministerstwa Finansów.', exportYear:'Eksport roku (CSV)', yearCsvHead:['Miesiąc','Przychód','Koszty','ZUS społ. (naliczone)','Zdrowotna (naliczona)','Podatek (naliczony)','ZUS społ. (zapłacono)','Zdrowotna (zapłacono)','Podatek (zapłacono)','Data zapłaty','Notatka'],
+saveProfile:'✓ Dane zapisują się automatycznie', tourBtn:'? Samouczek', settingsBtn:'⚙ Ustawienia', rulesOk:'Zasady: wersja {0} ({1}). Wartości dla {2} r. zgodne z zasadami.', rulesEdited:'Zasady: wersja {0} ({1}). Wartości dla {2} r. zostały zmienione ręcznie.', rulesNone:'Zasady: wersja {0} ({1}). Brak zasad dla {2} r. – sprawdź parametry ręcznie.', rulesUrlLbl:'Adres pliku z zasadami (https) – opcjonalnie', rulesCheckBtn:'Sprawdź aktualizację zasad', rulesNoUrl:'Nie podano adresu pliku z zasadami.', rulesUpToDate:'Masz aktualne zasady.', rulesErr:'Nie udało się sprawdzić zasad: {0}', rulesBad:'Pobrany plik z zasadami jest nieprawidłowy – nic nie zmieniono.', rulesNewTitle:'Dostępne nowe zasady (wersja {0})', rulesReview:'Sprawdź zmiany i porównaj je ze źródłem urzędowym, zanim je zastosujesz. Nic nie zmieni się bez Twojej zgody.', rulesApply:'Zastosuj', rulesLater:'Później', rulesApplied:'Zastosowano zasady w wersji {0}.', rulesCols:['Rok','Parametr','Obecnie','Nowa wartość'], rulesSources:'Źródła: ', wNoRules:'Brak zasad na rok {0} w programie – sprawdź parametry roczne w Ustawieniach.', rulesLine:'Zasady: wersja {0}', myLinksTitle:'Moje linki',linkNamePh:'Nazwa', linkUrlPh:'Adres, np. www.example.pl', addLink:'Dodaj link', delLink:'Usuń', linkBad:'Wpisz nazwę i poprawny adres strony.', linksBtn:'🔗 Przydatne linki',linksTitle:'🔗 Przydatne linki', linksNote:'Linki otwierają się w domyślnej przeglądarce. Do logowania (PUE ZUS, e-Urząd Skarbowy, KSeF) potrzebne są własne dane dostępowe – program ich nie zna i nie zapisuje.',
+sec1:'1. Konfiguracja firmy', lName:'Nazwa firmy', lNip:'NIP', lRegon:'REGON / numer firmy', lYear:'Rok', lMonth:'Miesiąc rozliczany',
+lTax:'Forma opodatkowania', taxSkala:'Skala podatkowa (12% / 32%)', taxLin:'Podatek liniowy (19%)', taxRyc:'Ryczałt od przychodów',
+lRate:'Stawka ryczałtu', lVat:'Status VAT', vatReg:'Czynny podatnik VAT', vat43:'Zwolniony – art. 43 (usługi edukacyjne / nauczanie)',
+lZus:'Schemat ZUS', zusUlga:'Ulga na start (bez składek społecznych)', zusPref:'Preferencyjny ZUS (30% minimalnego)', zusMaly:'Mały ZUS Plus (zależny od dochodu)', zusFull:'Standardowy / pełny ZUS (60% prognozy)',
+lChor:'Dobrowolna składka chorobowa',
+lPrevInc:'Dochód z poprzedniego roku (PLN)', lPrevMon:'Liczba miesięcy działalności w poprzednim roku', lPrevRev:'Przychód z poprzedniego roku (PLN) – do sprawdzenia limitu 120 000',
+malyWarn:'Przychód z poprzedniego roku przekracza 120 000 PLN (limit proporcjonalnie niższy, jeśli działalność trwała część roku) – nie spełniasz warunku Mały ZUS Plus na bieżący rok. Zmień schemat ZUS na Standardowy / pełny ZUS.',
+lManual:'Ręczna podstawa (opcjonalnie, 0 = wylicz automatycznie)',
+malyNote:'Podstawa = 50% średniomiesięcznego dochodu, w granicach 1 441,80 – 5 652 PLN. Limit: przychód ≤ 120 000 PLN w roku poprzednim (przekroczenie w bieżącym roku wpływa dopiero na rok następny). Ulga trwa max 36 miesięcy w 60-miesięcznym okresie.',
+secYtd:'Narastająco od początku roku (do końca poprzedniego miesiąca)', lYtdRev:'Przychód YTD', lYtdCost:'Koszty YTD', lYtdTax:'Zapłacony podatek dochodowy YTD', lYtdZus:'Zapłacone składki społeczne ZUS YTD', lYtdHealth:'Zapłacona składka zdrowotna YTD',
+paramsHint:'Parametry roczne (podstawy ZUS, składka minimalna, limity) zmienisz w ⚙ Ustawieniach.',
+sec2:'2. Faktury i koszty (PDF)', dropInc:'Faktury sprzedaży (przychód)', dropExp:'Faktury kosztowe (wydatki)', dropHint:'Przeciągnij pliki PDF, zdjęcia, XML z KSeF, plik ZIP lub folder', zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', nameFromRegister:'Nazwa i adres sprzedawcy uzupełnione z rejestru (wg NIP) – sprawdź.', nameFromMemory:'Nazwa i adres uzupełnione z wcześniejszych dokumentów (wg NIP).', srcMemory:'Twoje wcześniejsze dokumenty', needNumber:'Wpisz numer paragonu (W + 6 cyfr, widoczny na paragonie) – nie udało się go pewnie odczytać.', typeToInc:'To faktura SPRZEDAŻY (Twój NIP jest u sprzedawcy) – przeniesiono do przychodów.', typeToExp:'To dokument KOSZTOWY (Twój NIP jest u nabywcy lub sprzedawcą jest ktoś inny) – przeniesiono do kosztów.', pickFiles:'Wybierz pliki', pickFolder:'Wybierz folder',
+thType:'Typ', thDate:'Data', thParty:'Kontrahent', thNo:'Numer', thNet:'Netto', thVat:'VAT', thGross:'Brutto', thFile:'Plik',
+addInc:'+ Przychód', addExp:'+ Koszt', calc:'Oblicz miesiąc',
+verifyNote:'Wartości z PDF to tylko podpowiedź – sprawdź każdy wiersz. Wiersze z datą spoza wybranego miesiąca są oznaczone i pomijane w obliczeniach.',
+print:'Drukuj / zapisz PDF', csv:'Eksport CSV', closeMonth:'Zamknij miesiąc ✔', closeMonthTip:'Zapisuje miesiąc w historii i dodaje go do danych narastających',
+histTitle:'Historia i kopia zapasowa', histNote:'Dodatkową kopię możesz zapisać ręcznie do pliku (np. na pendrive).', exportBtn:'Zapisz kopię (JSON)', importBtn:'Wczytaj kopię',
+hMonth:'Miesiąc', hRev:'Przychód', hCost:'Koszty', hSoc:'ZUS społ.', hHealth:'Zdrowotna', hTax:'Podatek zapłacony',
+setTitle:'⚙ Ustawienia', close:'Zamknij ✕', setLang:'Język', setTour:'Samouczek', setTourNote:'Krótki przewodnik po programie – podświetla kolejne funkcje i wyjaśnia, do czego służą.', rerunTour:'Uruchom samouczek ponownie',
+setParams:'Parametry roczne', setParamsNote:'Wartości na 2026 r. W nowym roku zaktualizuj je zgodnie z komunikatem ZUS / Ministerstwa Finansów.',
+pBaseFull:'Podstawa pełnego ZUS', pBasePref:'Podstawa preferencyjna (30% min.)', pMinWage:'Płaca minimalna', pMinHealth:'Min. składka zdrowotna (skala/liniowy)', pAvgWage:'Przeciętne wynagrodzenie (ryczałt, 100%)', pLinLimit:'Limit odliczenia zdrowotnej – liniowy (rocznie)',
+setData:'Dane', setDataNote:'Dane zapisują się automatycznie na dysku. Usunięcie danych kasuje historię i ustawienia.', resetAll:'Usuń wszystkie dane…',
+diskOk:'Automatycznie zapisano: {0}', diskErr:'Błąd zapisu na dysku: {0}', diskLoaded:'Wczytano dane z dysku.', diskNone:'Brak zapisanych danych – zapis nastąpi automatycznie.',
+months:['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'],
+typeInc:'Przychód', typeExp:'Koszt', outOfMonth:'poza miesiącem', estimated:'szac. z brutto/1,23', manual:'(ręcznie)', del:'Usuń',
+noPdf:'Brak plików PDF ani XML.', xmlKor:'faktura korygująca / zaliczkowa – sprawdź kwoty', xmlCur:'waluta {0} – przelicz na PLN', xmlDir:'kierunek ustalony po NIP', noPdfjs:'Biblioteka pdf.js nie załadowała się. Dodaj wiersze ręcznie.', reading:'Czytam {0}… ({1}/{2})',
+readDone:'Wczytano {0} z {1} plików.', readFail:'Nie udało się odczytać: {0} – uzupełnij ręcznie.', scanNote:'Skany i zdjęcia są odczytywane automatycznie (OCR) – zawsze sprawdź wartości.', ocrBusy:'Rozpoznawanie tekstu ze skanu {0}… (kilka sekund)', ocrNote:'Odczytano ze skanu (OCR) – sprawdź każdą wartość, zwłaszcza NIP i numer.', ocrFail:'Nie udało się odczytać skanu: {0} – uzupełnij ręcznie.',
+noHist:'Brak zamkniętych miesięcy.', histTotal:'Razem {0}', undo:'Cofnij', undoQ:'Cofnąć miesiąc {0}? Odejmie go od danych narastających.',
+alreadyClosed:'Ten miesiąc jest już zamknięty. Najpierw użyj „Cofnij” w historii.', closeQ:'Zamknąć {0} {1}? Wartości zostaną dodane do danych narastających, a miesiąc zapisany w historii.',
+imported:'Kopia wczytana.', importFail:'Nie udało się wczytać: {0}', notBackup:'To nie jest plik kopii z tego programu.',
+resetQ1:'Usunąć WSZYSTKIE dane (historię, ustawienia, dane narastające)? Tej operacji nie można cofnąć.', resetQ2:'Na pewno? Zalecamy najpierw zapisać kopię (JSON).',
+currency:'zł',
+sheetTitle:'Zestawienie miesięczne – {0} {1}', yourCompany:'(nazwa firmy)', exemptTxt:'Zwolniony z VAT (art. 43)', vatTxt:'Czynny podatnik VAT', plusChor:' + chorobowe',
+taxN_skala:'Skala podatkowa 12%/32%', taxN_liniowy:'Podatek liniowy 19%', taxN_ryczalt:'Ryczałt {0}',
+revCost:'Przychody i koszty', revMonth:'Przychód miesiąca ({0} dok.)', costMonth:'Zweryfikowane koszty ({0} dok.)', resMonth:'Wynik miesiąca (przychód − koszty)',
+skipped:'Pominięto {0} wierszy spoza miesiąca.', vatNote:'Zwolnienie z VAT: kwoty VAT nie są liczone; wartości brutto = netto.',
+vatOut:'VAT należny', vatIn:'VAT naliczony', vatPay:'VAT do zapłaty', vatCarry:'VAT do przeniesienia/zwrotu',
+cumTitle:'Narastająco (YTD z tym miesiącem)', cRev:'Przychód', cCost:'Koszty', cSoc:'Składki społeczne (odliczane)', cHealth:'Składki zdrowotne', cBase:'Podstawa opodatkowania', cTax:'Podatek narastająco ({0})',
+zusTitle:'ZUS i składka zdrowotna', zBase:'Podstawa składek społecznych', zUlga:'Ulga na start – brak składek społecznych.',
+zEmer:'Emerytalna (19,52%)', zRent:'Rentowe (8%)', zWyp:'Wypadkowa (1,67%)', zChor:'Chorobowa (2,45%)', zFP:'Fundusz Pracy (2,45%)', zSocTot:'Razem składki społeczne', zHealth:'Składka zdrowotna', zTot:'ZUS do zapłaty razem',
+hSkala:'9% dochodu z poprzedniego miesiąca ({1}), min. {0}', hLin:'4,9% dochodu z poprzedniego miesiąca ({1}), min. {0}', lHbIncome:'Dochód z poprzedniego miesiąca – podstawa składki zdrowotnej (PLN)', hbAuto:'Wzięto z historii: dochód za {0} (przychód − koszty − składki społeczne).', hbManual:'Miesiąca {0} nie ma w historii programu – wpisz jego dochód ręcznie (przychód − koszty − składki społeczne). Składka zdrowotna liczona jest od dochodu z POPRZEDNIEGO miesiąca; 0 oznacza składkę minimalną.', hRyc:'Ryczałt: próg wg przychodu narastającego',
+taxTitle:'Podatek dochodowy za miesiąc', tCum:'Podatek narastająco', tPaid:'Zapłacony wcześniej (YTD)', tDue:'Zaliczka do zapłaty', tOver:'Nadpłata (zaliczka = 0)',
+grand:'Do zapłaty łącznie (PIT + ZUS): {0}', incVat:'w tym VAT {0}. ', disclaimer:'Kwoty orientacyjne – przed złożeniem deklaracji (DRA, PIT-5/PIT-5L/PIT-28, JPK) zweryfikuj z aktualnymi przepisami.',
+chkTitle:'Kontrola', chk1:'Przychód YTD wejściowy + miesiąc', chk2:'Suma kontrolna: przychód − koszty − ZUS − zdrowotna', chkDocs:'Dokumenty: {0} przychodowych, {1} kosztowych.',
+csvHead:['Typ','Data','Kontrahent','Numer','Netto','VAT','Brutto'], csvLines:['Przychód','Koszty','Składki społeczne','Składka zdrowotna','Podatek narastająco','Podatek do zapłaty'],
+tourStep:'Krok {0} z {1}', tourSkip:'Pomiń', tourPrev:'Wstecz', tourNext:'Dalej', tourDoneBtn:'Zakończ',
+tr1t:'Dane firmy', tr1x:'Wpisz nazwę, NIP i REGON oraz wybierz rok i miesiąc, który rozliczasz. Te dane trafią na wydruk zestawienia.',
+tr2t:'Forma opodatkowania, VAT i ZUS', tr2x:'Tutaj wybierasz formę podatku, status VAT i schemat ZUS (np. Mały ZUS Plus). Możesz je zmienić w dowolnym momencie, np. gdy zmieni się Twoja sytuacja.',
+tr3t:'Dane narastające', tr3x:'Wpisz raz sumy od początku roku do końca poprzedniego miesiąca. Potem program uzupełnia je sam po kliknięciu „Zamknij miesiąc”.',
+tr4t:'Faktury PDF', tr4x:'Przeciągnij tu faktury sprzedaży (przychód) i kosztowe albo wybierz cały folder. Program odczyta daty, kwoty i kontrahentów.',
+tr5t:'Sprawdź i popraw', tr5x:'Wszystkie odczytane pozycje możesz poprawić. Możesz też dodać wiersze ręcznie przyciskami „+ Przychód” i „+ Koszt”.',
+tr6t:'Oblicz miesiąc', tr6x:'Po sprawdzeniu tabeli kliknij ten przycisk. Pojawi się zestawienie z ZUS, składką zdrowotną i podatkiem do zapłaty.',
+tr7t:'Drukuj, eksportuj, zamknij', tr7x:'Pod zestawieniem znajdziesz przyciski: drukowania / zapisu do PDF, eksportu CSV oraz „Zamknij miesiąc”, który zapisuje wynik w historii i przenosi go do danych narastających.',
+tr8t:'Historia i kopia zapasowa', tr8x:'Tu widać zamknięte miesiące (można je cofnąć) oraz zapisać kopię danych do pliku. Dane i tak zapisują się automatycznie.',
+tr9t:'Ustawienia', tr9x:'W ustawieniach zmienisz język i parametry roczne, usuniesz dane oraz uruchomisz ten samouczek ponownie.'
+},
+en:{
+subtitle:'— monthly calculator',
+setGus:'Company lookup by NIP (registers)', gusNote:'The VAT register only knows VAT-paying businesses. To also find VAT-exempt businesses: (1) CEIDG, the sole-proprietor register: register at dane.biznes.gov.pl (needs a biznes.gov.pl account, sign-in with a Trusted Profile); the API key arrives by email - enter it as the CEIDG token. (2) GUS (REGON), also covers companies: a user key is issued free on request, api.stat.gov.pl/Home/RegonApi. One of them is enough. Only the NIP number is sent.', lCeidgToken:'CEIDG token (API key) - optional', lGusKey:'GUS (REGON) API key - optional', lookupOkGus:'Fetched from the register: {0}. Please check the details.', lookupNeedKey:'To also search the CEIDG / GUS registers, enter a token or key in Settings.', lookupConfirm:'Found in the register:\n\nName: {0}\nREGON: {1}\nAddress: {2}\nPKD: {4}\nSource: {3}\n\nThe register shows the officially registered details, which can differ from your current ones. Insert the name and REGON (the address and PKD only if those fields are empty)?', lookupDeclined:'Nothing was changed.', setLog:'Activity log', logNote:'A record of what was done in the program (files loaded, value changes, calculations, closed months, exports) with date and time. It helps to check that nothing was missed. It is stored only on this computer, next to the data.', openLogBtn:'Open the log', logTitle:'Activity log', logDay:'Day:', logAllBtn:'Show all', logSaveBtn:'Save as a text file', logEmpty:'No entries.', logSession:'Session from {0}', lg_sStart:'Program started', lg_sEnd:'Program closed', lg_file:'Loaded file {0}: {1}, read as {2}, amount {3} PLN{4}', lg_moved:' – moved to the right group by NIP', lg_fileFail:'Could not read file {0}', lg_zipBad:'Could not open the ZIP archive: {0}', lg_addRow:'Row added by hand: {0}', lg_delRow:'Row deleted: {0}', lg_edit:'Row {0}: {1} changed from {2} to {3}', lg_calc:'Calculated month {0}: revenue {1} PLN, costs {2} PLN, social ZUS {3} PLN, health {4} PLN, tax payable {5} PLN', lg_close:'Closed month {0}: revenue {1} PLN, costs {2} PLN, documents {3}', lg_undo:'Undid the closing of month {0}', lg_histEdit:'History {0}: {1} changed to {2}', lg_kpir:'Exported the KPIR ledger for {0} (months: {1}, documents: {2})', lg_csv:'Exported CSV for {0}', lg_csvYear:'Exported CSV for the year {0}', lg_print:'Printed / saved the summary as PDF: {0}', lg_backupSave:'Saved a backup (JSON)', lg_backupLoad:'Loaded a backup', lg_setting:'Setting {0} changed to {1}', lg_rules:'Applied yearly rules, version {0}', lg_nip:'NIP lookup {0}: {1}', lg_nipNone:'not found in the register', lg_nipErr:'lookup error', lg_reset:'All data deleted', fromInvoiceBtn:'Fill in from my invoice', ceidgSiteBtn:'Check on the CEIDG website', ceidgSiteNote:'Opens the official CEIDG page in your browser: type the NIP there and copy the company details. Automatic lookup from CEIDG will be possible once the key arrives.', fromInvConfirm:'Found on the invoice (seller details):\n\nName: {0}\nNIP: {1}\nAddress: {2}\n\nInsert these as the company details?', fromInvOk:'Inserted the details from the invoice: {0}.', fromInvNone:'No seller details found in this file. Choose a sales invoice issued by your company (a PDF with text, or a KSeF XML).', lAddress:'Company address', lActivity:'Type of activity (PKD and description)', lDefInc:'Default description for income (ledger), e.g. English lessons', lDefExp:'Default description for costs (ledger) – optional', thNip:'Counterparty NIP', thDesc:'Description of event', thAddr:'Counterparty address', typeOth:'Other income', kpirBtn:'KPIR ledger (Excel)', kpirNone:'No entries for the ledger yet – add invoices and click “Calculate month”, or close a month.',
+zusEmeryt:'Pensioner / other system (social contributions entered manually)', lManualSoc:'Social contributions per month (PLN) – enter 0 if none',
+emerytNote:'No compulsory social contributions from the business; the health contribution is still calculated. Check your situation with ZUS / your accountant.',
+lPrevDays:'Days of activity in the previous year (365 = full year)', malyDaysWarn:'The business operated for under 60 days last year – the Small ZUS Plus condition may not be met.',
+paidTip:'Actually paid (amount)', hDate:'Date paid', hNote:'Note', hInv:'Invoices ({0})', unpaid:'no payment date', noteLbl:'Note for the month (optional)', dupWarn:'possible duplicate', invNone:'No invoices saved.',
+zEmeryt:'Social contributions entered manually (pensioner / other system).', histPaidSum:'paid: {0}',
+wTitle:'Warnings', wScale:'Tax base is approaching the PLN 120,000 threshold – above it the 32% rate applies.', wScale32:'The PLN 120,000 threshold has been exceeded – the excess is taxed at 32%.',
+wRyc60:'Cumulative revenue is approaching PLN 60,000 – the health contribution rises once it is exceeded.', wRyc300:'Cumulative revenue is approaching PLN 300,000 – the health contribution rises once it is exceeded.', wRycCross:'A revenue threshold (60,000 / 300,000) was crossed this month – the health contribution is higher.',
+diskBackup:'Daily backups in: {0}', badNip:'The NIP looks invalid (check the digits)', badRegon:'The REGON looks invalid (check the digits)', openFolder:'Open data folder', lookupBtn:'Fetch details from VAT register', lookupBusy:'Searching…', lookupOk:'Fetched: {0} (VAT status: {1}). Please check the details.', lookupNone:'Not found in the VAT register – this can be normal for a VAT-exempt business. Enter the details manually.', lookupErr:'Could not fetch the details: {0}', lookupPriv:'Only the NIP number is sent, to the Ministry of Finance register.', exportYear:'Export year (CSV)', yearCsvHead:['Month','Revenue','Costs','Social ZUS (due)','Health (due)','Tax (due)','Social ZUS (paid)','Health (paid)','Tax (paid)','Date paid','Note'],
+saveProfile:'✓ Data is saved automatically', tourBtn:'? Tutorial', settingsBtn:'⚙ Settings', rulesOk:'Rules: version {0} ({1}). The values for {2} match the rules.', rulesEdited:'Rules: version {0} ({1}). The values for {2} were changed manually.', rulesNone:'Rules: version {0} ({1}). No rules for {2} – please check the parameters manually.', rulesUrlLbl:'Address of the rules file (https) – optional', rulesCheckBtn:'Check for rule updates', rulesNoUrl:'No address for the rules file has been entered.', rulesUpToDate:'Your rules are up to date.', rulesErr:'Could not check the rules: {0}', rulesBad:'The downloaded rules file is not valid – nothing was changed.', rulesNewTitle:'New rules available (version {0})', rulesReview:'Check the changes against the official source before applying them. Nothing changes without your approval.', rulesApply:'Apply', rulesLater:'Later', rulesApplied:'Rules version {0} applied.', rulesCols:['Year','Parameter','Current','New value'], rulesSources:'Sources: ', wNoRules:'The program has no rules for {0} – please check the yearly parameters in Settings.', rulesLine:'Rules: version {0}', myLinksTitle:'My links',linkNamePh:'Name', linkUrlPh:'Address, e.g. www.example.pl', addLink:'Add link', delLink:'Remove', linkBad:'Enter a name and a valid website address.', linksBtn:'🔗 Useful links',linksTitle:'🔗 Useful links', linksNote:'Links open in your default browser. Logging in (PUE ZUS, e-Urząd Skarbowy, KSeF) needs your own credentials – the program does not know or store them.',
+sec1:'1. Company setup', lName:'Company name', lNip:'NIP (tax ID)', lRegon:'REGON / company number', lYear:'Year', lMonth:'Month to calculate',
+lTax:'Tax form', taxSkala:'Tax scale (12% / 32%)', taxLin:'Linear tax (19%)', taxRyc:'Lump-sum tax (ryczałt)',
+lRate:'Lump-sum rate', lVat:'VAT status', vatReg:'VAT-registered', vat43:'VAT-exempt – Art. 43 (educational / teaching services)',
+lZus:'ZUS scheme', zusUlga:'Ulga na start (no social contributions)', zusPref:'Preferential ZUS (30% of minimum wage)', zusMaly:'Small ZUS Plus (income-based)', zusFull:'Standard / full ZUS (60% of forecast wage)',
+lChor:'Voluntary sickness insurance',
+lPrevInc:'Previous year income (PLN)', lPrevMon:'Months of activity in previous year', lPrevRev:'Previous year revenue (PLN) – to check the 120,000 limit',
+malyWarn:'Previous-year revenue exceeds PLN 120,000 (the limit is lower pro rata if you traded for part of the year) – you do not meet the Small ZUS Plus condition for the current year. Switch the ZUS scheme to Standard / full ZUS.',
+lManual:'Manual base (optional, 0 = calculate automatically)',
+malyNote:'Base = 50% of average monthly income, between PLN 1,441.80 and 5,652. Limit: revenue ≤ PLN 120,000 in the previous year (exceeding it this year only affects next year). Relief lasts at most 36 months in each 60-month period.',
+secYtd:'Year to date (up to the end of the previous month)', lYtdRev:'YTD revenue', lYtdCost:'YTD costs', lYtdTax:'YTD income tax paid', lYtdZus:'YTD social (ZUS) contributions paid', lYtdHealth:'YTD health contribution paid',
+paramsHint:'Yearly parameters (ZUS bases, minimum contribution, limits) can be changed in ⚙ Settings.',
+sec2:'2. Invoices and expenses (PDF)', dropInc:'Sales invoices (income)', dropExp:'Cost invoices (expenses)', dropHint:'Drag PDF files, photos, KSeF XML files, a ZIP file or a folder here', zipBad:'Could not open the ZIP archive: {0}', nameFromRegister:'Seller name and address filled in from the register (by NIP) – please check.', nameFromMemory:'Name and address filled in from earlier documents (by NIP).', srcMemory:'Your earlier documents', needNumber:'Type the receipt number (W + 6 digits, printed on the receipt) – it could not be read reliably.', typeToInc:'This is a SALES invoice (your NIP is the seller) – moved to income.', typeToExp:'This is a COST document (your NIP is the buyer, or someone else is the seller) – moved to costs.', pickFiles:'Choose files', pickFolder:'Choose folder',
+thType:'Type', thDate:'Date', thParty:'Counterparty', thNo:'Number', thNet:'Net', thVat:'VAT', thGross:'Gross', thFile:'File',
+addInc:'+ Income', addExp:'+ Expense', calc:'Calculate month',
+verifyNote:'Values read from PDFs are only suggestions – check every row. Rows dated outside the selected month are flagged and excluded from the calculation.',
+print:'Print / save as PDF', csv:'Export CSV', closeMonth:'Close month ✔', closeMonthTip:'Saves the month to history and adds it to the year-to-date totals',
+histTitle:'History and backup', histNote:'You can also save an extra backup copy to a file (e.g. on a USB stick).', exportBtn:'Save backup (JSON)', importBtn:'Load backup',
+hMonth:'Month', hRev:'Revenue', hCost:'Costs', hSoc:'Social ZUS', hHealth:'Health', hTax:'Tax paid',
+setTitle:'⚙ Settings', close:'Close ✕', setLang:'Language', setTour:'Tutorial', setTourNote:'A short guided tour that highlights each function and explains what it does.', rerunTour:'Run the tutorial again',
+setParams:'Yearly parameters', setParamsNote:'Values for 2026. In a new year, update them from the ZUS / Ministry of Finance announcements.',
+pBaseFull:'Full ZUS base', pBasePref:'Preferential base (30% of min. wage)', pMinWage:'Minimum wage', pMinHealth:'Min. health contribution (scale/linear)', pAvgWage:'Average wage (lump-sum, 100%)', pLinLimit:'Health deduction limit – linear (yearly)',
+setData:'Data', setDataNote:'Data is saved automatically to disk. Deleting data erases history and settings.', resetAll:'Delete all data…',
+diskOk:'Saved automatically: {0}', diskErr:'Could not save to disk: {0}', diskLoaded:'Data loaded from disk.', diskNone:'No saved data yet – it will be saved automatically.',
+months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+typeInc:'Income', typeExp:'Expense', outOfMonth:'outside month', estimated:'est. from gross/1.23', manual:'(manual)', del:'Delete',
+noPdf:'No PDF or XML files found.', xmlKor:'correction / advance invoice – check the amounts', xmlCur:'currency {0} – convert to PLN', xmlDir:'direction set by NIP', noPdfjs:'The pdf.js library did not load. Add rows manually.', reading:'Reading {0}… ({1}/{2})',
+readDone:'Read {0} of {1} files.', readFail:'Could not read: {0} – fill in manually.', scanNote:'Scans and photos are read automatically (OCR) – always check the values.', ocrBusy:'Recognising text in scan {0}… (a few seconds)', ocrNote:'Read from a scan (OCR) – check every value, especially the NIP and number.', ocrFail:'Could not read the scan: {0} – fill in manually.',
+noHist:'No closed months yet.', histTotal:'Total {0}', undo:'Undo', undoQ:'Undo month {0}? It will be subtracted from the year-to-date totals.',
+alreadyClosed:'This month is already closed. Use “Undo” in the history first.', closeQ:'Close {0} {1}? The values will be added to year-to-date and the month saved in history.',
+imported:'Backup loaded.', importFail:'Could not load: {0}', notBackup:'This is not a backup file from this program.',
+resetQ1:'Delete ALL data (history, settings, year-to-date)? This cannot be undone.', resetQ2:'Are you sure? We recommend saving a backup (JSON) first.',
+currency:'PLN',
+sheetTitle:'Monthly summary – {0} {1}', yourCompany:'(company name)', exemptTxt:'VAT-exempt (Art. 43)', vatTxt:'VAT-registered', plusChor:' + sickness',
+taxN_skala:'Tax scale 12%/32%', taxN_liniowy:'Linear tax 19%', taxN_ryczalt:'Lump sum {0}',
+revCost:'Revenue and costs', revMonth:'Month revenue ({0} docs)', costMonth:'Verified costs ({0} docs)', resMonth:'Month result (revenue − costs)',
+skipped:'{0} rows outside the month were skipped.', vatNote:'VAT exemption: VAT amounts are not counted; gross = net.',
+vatOut:'Output VAT', vatIn:'Input VAT', vatPay:'VAT payable', vatCarry:'VAT to carry forward / refund',
+cumTitle:'Year to date (including this month)', cRev:'Revenue', cCost:'Costs', cSoc:'Social contributions (deductible)', cHealth:'Health contributions', cBase:'Tax base', cTax:'Cumulative tax ({0})',
+zusTitle:'ZUS and health contribution', zBase:'Social contribution base', zUlga:'Ulga na start – no social contributions.',
+zEmer:'Pension (19.52%)', zRent:'Disability (8%)', zWyp:'Accident (1.67%)', zChor:'Sickness (2.45%)', zFP:'Labour Fund (2.45%)', zSocTot:'Total social contributions', zHealth:'Health contribution', zTot:'Total ZUS payable',
+hSkala:'9% of last month income ({1}), min. {0}', hLin:'4.9% of last month income ({1}), min. {0}', lHbIncome:'Income of the previous month – base of the health contribution (PLN)', hbAuto:'Taken from the history: income of {0} (revenue − costs − social contributions).', hbManual:'Month {0} is not in the program history – enter its income by hand (revenue − costs − social contributions). The health contribution is based on the PREVIOUS month income; 0 means the minimum contribution.', hRyc:'Lump sum: tier by cumulative revenue',
+taxTitle:'Income tax for the month', tCum:'Cumulative tax', tPaid:'Paid earlier (YTD)', tDue:'Advance payable', tOver:'Overpayment (advance = 0)',
+grand:'Total payable (PIT + ZUS): {0}', incVat:'including VAT {0}. ', disclaimer:'Indicative amounts – verify against current regulations before filing (DRA, PIT-5/PIT-5L/PIT-28, JPK).',
+chkTitle:'Check', chk1:'Opening YTD revenue + month', chk2:'Check total: revenue − costs − ZUS − health', chkDocs:'Documents: {0} income, {1} expense.',
+csvHead:['Type','Date','Counterparty','Number','Net','VAT','Gross'], csvLines:['Revenue','Costs','Social contributions','Health contribution','Cumulative tax','Tax payable'],
+tourStep:'Step {0} of {1}', tourSkip:'Skip', tourPrev:'Back', tourNext:'Next', tourDoneBtn:'Finish',
+tr1t:'Company details', tr1x:'Enter the company name, NIP and REGON and choose the year and month you are calculating. These appear on the printed summary.',
+tr2t:'Tax form, VAT and ZUS', tr2x:'Choose the tax form, VAT status and ZUS scheme (e.g. Small ZUS Plus) here. You can change them at any time if your situation changes.',
+tr3t:'Year-to-date figures', tr3x:'Enter the totals from the start of the year to the end of last month once. After that the program fills them in when you click “Close month”.',
+tr4t:'PDF invoices', tr4x:'Drag sales invoices (income) and cost invoices here, or pick a whole folder. The program reads dates, amounts and counterparties.',
+tr5t:'Check and correct', tr5x:'You can correct every extracted item. You can also add rows manually with “+ Income” and “+ Expense”.',
+tr6t:'Calculate month', tr6x:'After checking the table, click this button. A summary appears with ZUS, health contribution and tax due.',
+tr7t:'Print, export, close', tr7x:'Below the summary you will find buttons to print / save as PDF, export CSV, and “Close month”, which saves the result to history and adds it to the year-to-date totals.',
+tr8t:'History and backup', tr8x:'Closed months are listed here (and can be undone), and you can save a backup of your data to a file. Data is also saved automatically.',
+tr9t:'Settings', tr9x:'In Settings you can change the language and yearly parameters, delete data, and run this tutorial again.'
+}};
+let LANG='pl';
+const t=(k,...a)=>{ let s=(I18N[LANG][k]!==undefined?I18N[LANG][k]:I18N.pl[k]); if(s===undefined) return k; if(typeof s!=='string') return s; a.forEach((v,i)=>s=s.split('{'+i+'}').join(v)); return s; };
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const $=id=>document.getElementById(id);
+const num=id=>parseFloat($(id).value)||0;
+const fmt=x=>(x||0).toLocaleString(LANG==='pl'?'pl-PL':'en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+t('currency');
+const RYCZ=[2,3,5.5,8.5,10,12,12.5,14,15,17];
+function applyLang(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  document.querySelectorAll('[data-it]').forEach(e=>e.title=t(e.dataset.it));
+  document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=t(e.dataset.ph));
+  if(!$('linksLayer').hidden) renderLinks();
+  const mv=$('month').value, rv=$('rate').value;
+  $('month').innerHTML=t('months').map((n,i)=>`<option value="${i+1}">${n}</option>`).join('');
+  $('rate').innerHTML=RYCZ.map(r=>`<option value="${r}">${String(r).replace('.',LANG==='pl'?',':'.')}%</option>`).join('');
+  $('month').value=mv||new Date().getMonth()+1; $('rate').value=rv||8.5;
+  $('langTop').value=LANG; $('langSel').value=LANG;
+  if(tourOpen) tourShow(tourI);
+  if(typeof syncHealthBase==='function') syncHealthBase();
+}
+
+// ---------- state ----------
+let nipDir={}, partyInfo={}, rulesState=null, lastRulesCheck='', myLinks=[], rows=[], history=[], corr={}, lastResult=null, tourDone=false, tourOpen=false, tourI=0;
+const FIELDS=['hbIncome','name','nip','regon','address','activity','defInc','defExp','gusKey','ceidgToken','year','month','taxForm','rate','vat','zus','prevIncome','prevDays','prevRevenue','manualBase','manualSocial','ytdRev','ytdCost','ytdTax','ytdZus','ytdHealth','pBaseFull','pBasePref','pMinWage','pMinHealth','pAvgWage','pLinLimit','rulesUrl'];
+const ytdMap={rev:'ytdRev',cost:'ytdCost',tax:'ytdTax',soc:'ytdZus',health:'ytdHealth'};
+function stateObj(){
+  const o={app:'jdg-kalkulator',version:2,saved:new Date().toISOString(),chorobowe:$('chorobowe').checked,lang:LANG,tourDone,corr,partyInfo,nipDir,history,myLinks,rulesApplied:rulesState,lastRulesCheck};
+  FIELDS.forEach(f=>o[f]=$(f).value); return o;
+}
+function applyState(o){
+  FIELDS.forEach(k=>{ if(o[k]!==undefined) $(k).value=o[k]; });
+  $('chorobowe').checked=!!o.chorobowe;
+  history=Array.isArray(o.history)?o.history:[];
+  corr=o.corr&&typeof o.corr==='object'?o.corr:{};
+  partyInfo=o.partyInfo&&typeof o.partyInfo==='object'?o.partyInfo:{};
+  nipDir=o.nipDir&&typeof o.nipDir==='object'?o.nipDir:{};
+  if(o.tourDone) tourDone=true;
+  if(validRules(o.rulesApplied)&&(!rulesState||o.rulesApplied.version>rulesState.version)) rulesState=o.rulesApplied;
+  lastRulesCheck=typeof o.lastRulesCheck==='string'?o.lastRulesCheck:'';
+  myLinks=Array.isArray(o.myLinks)?o.myLinks.filter(l=>l&&typeof l.name==='string'&&/^https:\/\//.test(l.url)):[];
+  if(o.lang&&I18N[o.lang]&&o.lang!==LANG){ LANG=o.lang; applyLang(); if(o.month!==undefined)$('month').value=o.month; if(o.rate!==undefined)$('rate').value=o.rate; }
+  syncUI(); renderHistory(); render();
+}
+async function diskSave(){
+  if(!window.jdgStore) return;
+  const r=await window.jdgStore.save(stateObj());
+  $('diskNote').innerHTML=r.ok?esc(t('diskOk',r.path))+'<br>'+esc(t('diskBackup',r.backupDir)):'<span class="warn">'+esc(t('diskErr',r.error))+'</span>';
+}
+function persistAll(){
+  try{ localStorage.setItem('jdgState',JSON.stringify(stateObj())); }catch(e){}
+  diskSave();
+}
+function params(){
+  return {taxForm:$('taxForm').value, rate:parseFloat($('rate').value)/100, zus:$('zus').value, chorobowe:$('chorobowe').checked&&$('zus').value!=='ulga'&&$('zus').value!=='emeryt',
+    prevIncome:num('prevIncome'), prevDays:num('prevDays'), manualBase:num('manualBase'), manualSocial:num('manualSocial'),
+    ytdRev:num('ytdRev'), ytdCost:num('ytdCost'), ytdTax:num('ytdTax'), ytdZus:num('ytdZus'), ytdHealth:num('ytdHealth'), healthBaseIncome:num('hbIncome'),
+    baseFull:num('pBaseFull'), basePref:num('pBasePref'), minWage:num('pMinWage'), minHealth:num('pMinHealth'), avgWage:num('pAvgWage'), linLimit:num('pLinLimit')};
+}
+let hbAuto=false;
+function syncHealthBase(){
+  const y=num('year'), m=num('month'), py=m===1?y-1:y, pm=m===1?12:m-1;
+  const h=history.find(x=>x.year===py&&x.month===pm), note=$('hbNote');
+  if(h){ hbAuto=true; $('hbIncome').value=r2(Math.max(0,h.rev-h.cost-h.soc)); note.textContent=t('hbAuto',py+'-'+String(pm).padStart(2,'0')); }
+  else { if(hbAuto){ $('hbIncome').value=0; hbAuto=false; } note.textContent=t('hbManual',py+'-'+String(pm).padStart(2,'0')); }
+}
+['month','year'].forEach(i=>$(i).addEventListener('change',()=>{ syncHealthBase(); persistAll(); }));
+$('hbIncome').addEventListener('input',()=>{ hbAuto=false; });
+function syncUI(){
+  $('rateBox').hidden=$('taxForm').value!=='ryczalt';
+  $('malyBox').hidden=$('zus').value!=='maly';
+  $('emerytBox').hidden=$('zus').value!=='emeryt';
+  $('chorobowe').disabled=$('zus').value==='ulga'||$('zus').value==='emeryt';
+  $('malyDaysWarn').hidden=!($('zus').value==='maly'&&$('prevDays').value!==''&&num('prevDays')<60);
+  $('malyWarn').hidden=!($('zus').value==='maly'&&num('prevRevenue')>120000);
+}
+['taxForm','zus'].forEach(i=>$(i).addEventListener('change',syncUI));
+$('prevRevenue').addEventListener('input',syncUI); $('prevDays').addEventListener('input',syncUI);
+$('setup').addEventListener('change',logSettingChange);
+$('setup').addEventListener('change',persistAll);
+$('settingsLayer').addEventListener('change',e=>{ if(e.target.id!=='langSel'){ logSettingChange(e); persistAll(); } });
+function setLang(l){ LANG=l; applyLang(); render(); renderHistory(); if(lastResult) showSheet(); if(typeof checkIds==='function') checkIds(); persistAll(); }
+$('langTop').onchange=e=>setLang(e.target.value);
+$('langSel').onchange=e=>setLang(e.target.value);
+
+// ---------- PDF extraction ----------
+const NUM='(\\d{1,3}(?:[ \\u00a0.]\\d{3})*(?:[,.]\\d{1,2})|\\d+(?:[,.]\\d{1,2})?)';
+function toNum(s){
+  s=s.replace(/[ \u00a0]/g,'');
+  if(/,\d{1,2}$/.test(s)) s=s.replace(/\./g,'').replace(',','.');
+  else if(/\.\d{1,2}$/.test(s)) s=s.replace(/,/g,'');
+  return parseFloat(s)||0;
+}
+function normDate(s){
+  let m=s.match(/(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})/); if(m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  m=s.match(/(\d{1,2})[-.\/](\d{1,2})[-.\/](\d{4})/); if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return '';
+}
+async function pdfText(file){
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  const out=[], cl=[];
+  for(let i=1;i<=pdf.numPages;i++){
+    const pg=await pdf.getPage(i), tc=await pg.getTextContent();
+    const lines={};
+    tc.items.forEach(it=>{ if(!it.str||!it.str.trim()) return; const y=Math.round(it.transform[5]/3); (lines[y]=lines[y]||[]).push(it); });
+    Object.keys(lines).map(Number).sort((a,b)=>b-a).forEach(y=>{
+      // pozycje na jednej wysokości łączone w "kolumny": przerwa większa niż ~9 pt zaczyna nową kolumnę (nagłówki Sprzedawca | Nabywca)
+      const clusters=[]; let prevEnd=null;
+      lines[y].sort((a,b)=>a.transform[4]-b.transform[4]).forEach(it=>{
+        const x=it.transform[4];
+        if(prevEnd!==null&&x-prevEnd<9&&clusters.length) clusters[clusters.length-1].str+=' '+it.str; else clusters.push({x,str:it.str,w:0});
+        prevEnd=x+(it.width||0); clusters[clusters.length-1].w=prevEnd-clusters[clusters.length-1].x;
+      });
+      clusters.forEach(c=>c.str=c.str.replace(/\s+/g,' ').trim());
+      const text=clusters.map(c=>c.str).join(' ').replace(/\s+/g,' ').trim();
+      if(text){ out.push(text); cl.push(clusters.filter(c=>c.str)); }
+    });
+  }
+  out.clusters=cl; return out;
+}
+const ROLE_S=/^(sprzedawca|seller|dostawca|wystawca|supplier)\b/i, ROLE_B=/^(nabywca|buyer|odbiorca|bill to)\b/i;
+// Strony faktury w układzie kolumnowym: "Sprzedawca | Nabywca" w nagłówku, a pod spodem nazwa, NIP i adres każdej strony w swojej kolumnie.
+function partyFromColumns(lines,type){
+  const cl=lines.clusters; if(!cl) return null;
+  const want=type==='inc'?ROLE_B:ROLE_S, stop=/^(faktura|lp\.?|nazwa|rozliczenie|numer|termin|sposób|pozycja)/i;
+  const nipRe=/^NIP\s*:?\s*(?:PL)?\s*(\d[\d\- ]{8,12}\d)$/i;
+  const grab=(rows,cell)=>{ let name='',nip='',addr=[];
+    for(const r of rows){ const s=cell(r).trim(); if(!s||s.length<3) continue; if(stop.test(s)) break;
+      const m=s.match(nipRe); if(!name) name=s; else if(m){ if(!nip) nip=m[1].replace(/\D/g,''); } else { if(/faktur|zł\b/i.test(s)) break; if(addr.length<3) addr.push(s); } }
+    return {name,nip,addr:addr.join(', ')}; };
+  for(let i=0;i<cl.length;i++){
+    const hdr=cl[i];
+    if(hdr.length>=2&&hdr.every(c=>ROLE_S.test(c.str)||ROLE_B.test(c.str)||/^adresat\b/i.test(c.str))){
+      const idx=hdr.findIndex(c=>want.test(c.str.replace(/[:\s]+$/,''))); if(idx<0) continue;
+      const ctr=hdr.map(c=>c.x+c.w/2), mine=c=>{ const m=c.x+c.w/2; return ctr.reduce((b,v,k)=>Math.abs(v-m)<Math.abs(ctr[b]-m)?k:b,0)===idx; };
+      const res=grab(cl.slice(i+1,i+9).map((_,k)=>i+1+k),r=>cl[r].filter(mine).map(c=>c.str).join(' '));
+      if(res.name) return res;
+    }
+  }
+  // układ Bolt: "Odbiorca:" osobno, a w następnej linii nazwa odbiorcy po lewej i sprzedawcy po prawej
+  if(type==='exp') for(let i=0;i<cl.length-1;i++){
+    if(cl[i].length===1&&ROLE_B.test(cl[i][0].str)&&cl[i+1].length>=2){
+      const right=cl[i+1][cl[i+1].length-1], x0=right.x-4, res={name:right.str,nip:'',addr:''};
+      const ad=[]; for(let j=i+2;j<Math.min(i+6,cl.length);j++){
+        const s=cl[j].filter(c=>c.x>=x0).map(c=>c.str).join(' '); const m=s.match(/NIP\s*:?\s*(?:PL)?\s*(\d[\d\- ]{8,12}\d)/i);
+        if(m){ res.nip=m[1].replace(/\D/g,''); break; } if(s&&!/REGON/i.test(s)&&ad.length<2) ad.push(s); }
+      res.addr=ad.join(', '); return res;
+    }
+  }
+  return null;
+}
+function amountsIn(line){ return [...line.matchAll(new RegExp(NUM,'g'))].map(m=>toNum(m[1])).filter(v=>v>0); }
+function extract(lines, type, file){
+  const txt=lines.join('\n');
+  const r={type, file:file.name, rawParty:'', date:'', party:'', number:'', nip:'', addr:'', desc:'', net:0, vat:0, gross:0, estimated:false};
+  const dateRe=/(\d{4}[-.\/]\d{1,2}[-.\/]\d{1,2}|\d{1,2}[-.\/]\d{1,2}[-.\/]\d{4})/;
+  for(let i=0;i<lines.length;i++){ const l=lines[i]; if(/data( i miejsce)? (wystawienia|sprzeda|dokumentu)|issue date|date of issue|wystawion|^data\s*:/i.test(l)){ let m=l.match(dateRe); if(!m&&lines[i+1]) m=lines[i+1].match(dateRe); if(m){r.date=normDate(m[1]);break} } }
+  if(!r.date){ const m=txt.match(dateRe); if(m) r.date=normDate(m[1]); }
+  const NUMP='([A-Za-z0-9\\/\\-_.]*\\d[A-Za-z0-9\\/\\-_.]*)';
+  const nm=txt.match(new RegExp('numer faktury\\s*:?\\s*'+NUMP,'i'))||txt.match(new RegExp('^\\s*faktura(?: VAT)?\\s+'+NUMP+'\\s*$','im'))
+    ||txt.match(/(?:faktura(?: VAT)?|invoice)[^\n]*?(?:nr|no\.?|numer|:)\s*([A-Za-z0-9\/\-_.]+\d[A-Za-z0-9\/\-_.]*)/i); if(nm) r.number=nm[1];
+  const lastAmt=l=>{ const a=amountsIn(l); return a.length?a[a.length-1]:0 };
+  for(const l of lines){
+    if(/(razem|suma|ogółem|total|wartość)\b.*(netto|net)\b|netto.*(razem|suma|ogółem|total)|total net|net total/i.test(l)){
+      const a=amountsIn(l);
+      if(a.length>=3){ r.net=a[a.length-3]; r.vat=a[a.length-2]; r.gross=a[a.length-1]; }
+      else if(a.length) r.net=a[0];
+    }
+    if(!r.net&&/^ogółem\b/i.test(l)&&!/brutto/i.test(l)){ const a=amountsIn(l); if(a.length===1) r.net=a[0]; }
+    if(!/poprzedni/i.test(l)&&/do zapłaty|razem brutto|brutto razem|gross total|total gross|amount due|ogółem brutto|należność|prosimy o wpłatę|twoja faktura/i.test(l)) r.gross=lastAmt(l)||r.gross;
+    if(/kwota vat|razem vat|vat razem|total vat|podatek vat/i.test(l)) r.vat=lastAmt(l)||r.vat;
+  }
+  if(!r.gross){ for(const l of lines) if(/brutto|gross/i.test(l)&&amountsIn(l).length){ r.gross=lastAmt(l); break; } }
+  if(r.net&&(r.net>r.gross&&r.gross||r.vat>r.net*0.23+0.05)){ r.net=0; r.vat=0; }
+  if(!r.net && r.gross && r.vat) r.net=r2(r.gross-r.vat);
+  if(r.net && !r.vat && r.gross) r.vat=r2(r.gross-r.net);
+  if(r.net&&r.vat>r.net*0.23+0.05){ r.net=0; r.vat=0; }
+  if(!r.net && r.gross){
+    if($('vat').value==='art43'){ r.net=r.gross; r.vat=0; }
+    else { r.net=r2(r.gross/1.23); r.vat=r2(r.gross-r.net); r.estimated=true; }
+  }
+  if(!r.gross && r.net) r.gross=r2(r.net+r.vat);
+  const lab=type==='inc'?/nabywca|buyer|odbiorca|bill to/i:/sprzedawca|seller|dostawca|wystawca|supplier/i;
+  const own=($('nip').value||'').replace(/\D/g,'');
+  const pc=partyFromColumns(lines,type);
+  if(pc&&pc.name){
+    r.party=pc.name.slice(0,80); r.rawParty=r.party; if(corr[r.party.toLowerCase()]) r.party=corr[r.party.toLowerCase()];
+    if(pc.nip&&pc.nip!==own) r.nip=pc.nip; r.addr=pc.addr||'';
+  }
+  for(let i=0;i<lines.length&&!r.party;i++){
+    if(lab.test(lines[i])){
+      let s=lines[i].replace(lab,'').replace(/^[\s:]+/,'').trim();
+      if(s.length<3 && lines[i+1]) s=lines[i+1];
+      s=s.replace(/NIP.*$/i,'').replace(/\s{2,}.*/,'').trim();
+      if(s.length>2){ r.party=s.slice(0,80); r.rawParty=r.party; if(corr[r.party.toLowerCase()]) r.party=corr[r.party.toLowerCase()]; break; }
+    }
+  }
+  for(let i=0;i<lines.length&&!r.nip;i++) if(lab.test(lines[i])) for(let j=i;j<Math.min(i+5,lines.length);j++){
+    const m=lines[j].match(/NIP\s*:?\s*(?:PL)?\s*([\d\- ]{10,14})/i);
+    if(m){ const dg=m[1].replace(/\D/g,''); if(dg.length===10&&dg!==own){ r.nip=dg; break; } }
+  }
+  return r;
+}
+function xmlChild(el,name){ return el?[...el.children].find(c=>c.localName===name):null; }
+function xmlPath(el,path){ for(const n of path){ el=xmlChild(el,n); if(!el) return ''; } return el.textContent.trim(); }
+// Struktura FA(3) wg oficjalnego schematu MF (Podmiot1 = sprzedawca, Podmiot2 = nabywca, Fa/P_1 data, P_2 numer, P_13_* netto, P_14_* VAT, P_15 brutto)
+function parseKsef(txt,type,file){
+  const doc=new DOMParser().parseFromString(txt,'application/xml');
+  const root=doc.documentElement;
+  if(doc.querySelector('parsererror')||!root||root.localName!=='Faktura') throw new Error('not a KSeF invoice');
+  const fa=xmlChild(root,'Fa'); if(!fa) throw new Error('no Fa');
+  const digits=x=>(x||'').replace(/\D/g,'');
+  const sNip=xmlPath(root,['Podmiot1','DaneIdentyfikacyjne','NIP']), bNip=xmlPath(root,['Podmiot2','DaneIdentyfikacyjne','NIP']);
+  const sName=xmlPath(root,['Podmiot1','DaneIdentyfikacyjne','Nazwa']), bName=xmlPath(root,['Podmiot2','DaneIdentyfikacyjne','Nazwa']);
+  const own=digits($('nip').value), flags=[];
+  if(own){ if(digits(sNip)===own){ if(type!=='inc') flags.push({k:'xmlDir'}); type='inc'; } else if(digits(bNip)===own){ if(type!=='exp') flags.push({k:'xmlDir'}); type='exp'; } }
+  let net=0, vat=0;
+  [...fa.children].forEach(c=>{ const n=c.localName;
+    if(/^P_13_\d+(_\d)?$/.test(n)) net+=parseFloat(c.textContent)||0;
+    else if(/^P_14_\d$/.test(n)) vat+=parseFloat(c.textContent)||0; });
+  net=r2(net); vat=r2(vat);
+  let gross=parseFloat(xmlPath(fa,['P_15']))||0;
+  if(!gross) gross=r2(net+vat);
+  if(!net&&gross) net=r2(gross-vat);
+  const kind=xmlPath(fa,['RodzajFaktury']), cur=xmlPath(fa,['KodWaluty']);
+  if(kind&&kind!=='VAT') flags.push({k:'xmlKor'});
+  if(cur&&cur!=='PLN') flags.push({k:'xmlCur',a:cur});
+  const party=type==='inc'?bName:sName, pod=type==='inc'?'Podmiot2':'Podmiot1';
+  const addr=[xmlPath(root,[pod,'Adres','AdresL1']),xmlPath(root,[pod,'Adres','AdresL2'])].filter(Boolean).join(', ');
+  return {type, file:file.name, rawParty:party, date:normDate(xmlPath(fa,['P_1'])||xmlPath(fa,['P_6'])), party:corr[party.toLowerCase()]||party,
+          number:xmlPath(fa,['P_2']), nip:digits(type==='inc'?bNip:sNip), addr, desc:'', net, vat, gross, estimated:false, flags};
+}
+// ---------- OCR (skany i zdjęcia paragonów) – działa w programie, bez internetu ----------
+let ocrWorker=null;
+async function ocrGet(){
+  if(typeof Tesseract==='undefined') throw new Error('OCR library missing');
+  if(!ocrWorker) ocrWorker=await Tesseract.createWorker('pol',1,{workerPath:'vendor/tesseract/worker.min.js',corePath:'vendor/tesseract/',langPath:'vendor/tesseract/',workerBlobURL:false});
+  return ocrWorker;
+}
+const nipOk=d=>{ if(!/^\d{10}$/.test(d)) return false; const w=[6,5,7,2,3,4,5,6,7], sm=w.reduce((a,v,i)=>a+v*(+d[i]),0)%11; return sm!==10&&sm===+d[9]; };
+function binarize(c){ const cx=c.getContext('2d'), im=cx.getImageData(0,0,c.width,c.height), dd=im.data; for(let k=0;k<dd.length;k+=4){ const v=(0.3*dd[k]+0.59*dd[k+1]+0.11*dd[k+2])<170?0:255; dd[k]=dd[k+1]=dd[k+2]=v; } cx.putImageData(im,0,0); }
+// kilka przebiegów rozpoznawania: ten sam NIP czytany różnie, a poprawny rozpoznajemy po sumie kontrolnej
+// pierwszy przebieg wystarcza, gdy jest data, kwota i (jeśli w ogóle jest NIP) poprawny NIP – kolejne przebiegi tylko wtedy, gdy trzeba
+const ocrGood=t=>{
+  const nips=[...t.matchAll(/NIP\s*:?\s*(?:PL)?\s*([\d\- ]{9,14})/gi)].map(m=>m[1].replace(/\D/g,''));
+  return /\d{1,2}[-.\/]\d{1,2}[-.\/]\d{4}/.test(t)&&/(do zap[łl]aty|suma|razem|brutto|ogółem)[^\n]*\d/i.test(t)&&(!nips.length||nips.some(nipOk));
+};
+async function ocrRun(render,allowBin){
+  const w=await ocrGet(), texts=[];
+  for(const [sc,bin,psm] of [[4,allowBin,'6'],[3,false,'3'],[4,false,'6']]){
+    const c=await render(sc); if(bin) binarize(c);
+    await w.setParameters({tessedit_pageseg_mode:psm});
+    const text=(await w.recognize(c)).data.text; texts.push(text);
+    if(ocrGood(text)) break;
+  }
+  return texts;
+}
+const isReceiptText=t=>/[pm]aragon|fiskaln|\bPTU\b/i.test(t);
+// nagłówek paragonu czytany drugi raz (powiększony fragment u góry strony), gdy pierwszy odczyt nie dał poprawnego NIP-u
+async function ocrHeader(render){
+  const c=await render(6), h=Math.round(c.height*0.26), cr=document.createElement('canvas');
+  cr.width=c.width; cr.height=h; const cx=cr.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,cr.width,cr.height); cx.drawImage(c,0,0,c.width,h,0,0,c.width,h);
+  const w=await ocrGet(), out=[];
+  for(const [psm,wl] of [['11',''],['11','0123456789NIPnipWw:.-/ ']]){
+    await w.setParameters({tessedit_pageseg_mode:psm,tessedit_char_whitelist:wl});
+    out.push((await w.recognize(cr)).data.text);
+  }
+  await w.setParameters({tessedit_char_whitelist:'',tessedit_pageseg_mode:'3'});
+  return out;
+}
+const needHeader=t=>isReceiptText(t)&&![...t.matchAll(/NIP\s*:?\s*(?:PL)?\s*([\d\- ]{9,14})/gi)].some(m=>nipOk(m[1].replace(/\D/g,'')));
+function ocrLines(texts,header){
+  header=Array.isArray(header)?header:(header?[header]:[]);
+  const fix=l=>l.replace(/(\d)[.,]\s+(\d{2})\b/g,'$1.$2').replace(/\s+/g,' ').trim();
+  const lines=texts.map(t=>t.split('\n').map(fix).filter(Boolean));
+  const out=lines[0]; out.ocr=true;
+  const nipsFrom=t=>[...t.matchAll(/NIP\s*:?\s*(?:PL)?\s*([\d\- ]{9,14})/gi)].map(m=>m[1].replace(/\D/g,''));
+  out.nips=[...new Set([...texts.flatMap(nipsFrom),...header.flatMap(h=>(h.match(/\d[\d\- ]{8,12}\d/g)||[]).map(x=>x.replace(/\D/g,'')))].filter(nipOk))];
+  return out;
+}
+async function pdfOcr(file){
+  const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise, texts=[]; let header='';
+  for(let n=1;n<=Math.min(pdf.numPages,3);n++){
+    const pg=await pdf.getPage(n);
+    const render=async sc=>{ const vp=pg.getViewport({scale:sc}), c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height; const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height); await pg.render({canvasContext:cx,viewport:vp}).promise; return c; };
+    const t=await ocrRun(render,true);
+    t.forEach((x,i)=>texts[i]=(texts[i]||'')+'\n'+x);
+    if(n===1&&needHeader(t[0])) header=await ocrHeader(render);
+  }
+  return ocrLines(texts,header);
+}
+async function imgOcr(file){
+  const bm=await createImageBitmap(file);
+  const render=async sc=>{ const k=Math.min(3,(sc>=4?2600:2000)/Math.max(bm.width,bm.height)), c=document.createElement('canvas'); c.width=Math.round(bm.width*k); c.height=Math.round(bm.height*k); const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height); cx.drawImage(bm,0,0,c.width,c.height); return c; };
+  const texts=await ocrRun(render,false);
+  return ocrLines(texts,needHeader(texts[0])?await ocrHeader(render):[]);
+}
+// nazwa i adres sprzedawcy z oficjalnego rejestru (wykaz podatników VAT) wg NIP – poprawia błędy odczytu ze skanu; bez internetu pomijane
+async function enrichFromRegister(r){
+  try{
+    if(!r||!r.nip||!window.jdgStore||!window.jdgStore.lookupNip) return;
+    const res=await Promise.race([window.jdgStore.lookupNip(r.nip,{}),new Promise(x=>setTimeout(()=>x(null),8000))]);
+    if(res&&res.ok&&res.name){ r.rawParty=r.party; r.party=res.name; if(res.address) r.addr=res.address; r.flags=[...(r.flags||[]),{k:'nameFromRegister'}]; }
+  }catch(e){}
+}
+function extractReceipt(lines,type,file){
+  const own=($('nip').value||'').replace(/\D/g,''), txt=lines.join('\n');
+  const r={type,file:file.name,rawParty:'',date:'',party:'',number:'',nip:'',addr:'',desc:'',net:0,vat:0,gross:0,estimated:false};
+  const dm=txt.match(/(\d{1,2}[-.\/]\d{1,2}[-.\/]\d{4}|\d{4}[-.\/]\d{1,2}[-.\/]\d{1,2})/); if(dm) r.date=normDate(dm[1]);
+  const first=lines.findIndex(l=>l.replace(/[^A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]/g,'').length>=5&&!/paragon|nip|nr\s|rejestr|kopia/i.test(l));
+  if(first>=0){
+    r.party=lines[first].replace(/\bSp\.?\s*z\s*[0oO]\.?\s*[0oO]\.?/i,'Sp. z o.o.').replace(/[^\wĄĆĘŁŃÓŚŹŻąćęłńóśźż.,&\- ]/g,'').trim().slice(0,80);
+    r.rawParty=r.party; if(corr[r.party.toLowerCase()]) r.party=corr[r.party.toLowerCase()];
+    const ad=[]; for(let j=first+1;j<Math.min(first+4,lines.length)&&ad.length<2;j++){ if(/rejestr|nip|paragon/i.test(lines[j])) break; ad.push(lines[j]); }
+    r.addr=ad.join(', ');
+  }
+  r.nip=(lines.nips||[]).find(n=>n!==own)||'';
+  r.flags=[{k:'needNumber'}];   // numer paragonu (W + 6 cyfr) nigdy nie jest brany ze skanu: czcionka punktowa daje pomyłki o jedną cyfrę, a błędny numer w księdze jest gorszy niż pusty
+  const lastIn=(re,skip)=>{ let v=0; for(const l of lines) if(re.test(l)&&!(skip&&skip.test(l))){ const a=amountsIn(l); if(a.length) v=a[a.length-1]; } return v; };
+  r.gross=lastIn(/do zap[łl]aty/i)||lastIn(/^suma\b/i,/ptu/i);
+  const vat=lastIn(/suma\s*ptu/i)||lastIn(/kwota\s*ptu/i);
+  if(r.gross&&vat&&vat<r.gross){ r.vat=vat; r.net=r2(r.gross-vat); }
+  else if(r.gross){ if($('vat').value==='art43'){ r.net=r.gross; r.vat=0; } else { r.net=r2(r.gross/1.23); r.vat=r2(r.gross-r.net); r.estimated=true; } }
+  return r;
+}
+// Rodzaj dokumentu wg NIP-ów na nim (gdy ktoś wrzuci faktury sprzedaży i kosztowe do złego pola):
+// własny NIP u sprzedawcy = faktura sprzedaży (przychód); własny NIP u nabywcy albo cudzy sprzedawca bez naszego NIP = koszt.
+function detectType(lines){
+  const own=($('nip').value||'').replace(/\D/g,''); if(own.length!==10) return null;
+  const digitsOf=x=>(x||'').replace(/\D/g,'');
+  const seller=partyFromColumns(lines,'exp'), buyer=partyFromColumns(lines,'inc');
+  const sNip=seller?digitsOf(seller.nip):'', bNip=buyer?digitsOf(buyer.nip):'';
+  if(sNip===own&&bNip!==own) return 'inc';
+  if(bNip===own&&sNip!==own) return 'exp';
+  if(!seller&&!buyer){   // układ bez kolumn: pierwszy własny NIP po etykiecie sprzedawca/nabywca
+    let role='';
+    for(const l of lines){
+      if(/sprzedawca|seller|dostawca|wystawca|supplier/i.test(l)) role='S'; else if(/nabywca|buyer|odbiorca|bill to/i.test(l)) role='B';
+      if(role&&l.replace(/\D/g,'').includes(own)&&/NIP/i.test(l)){ const m=[...l.matchAll(/NIP\s*:?\s*(?:PL)?\s*([\d\- ]{10,14})/gi)].map(x=>digitsOf(x[1])); if(m.includes(own)) return role==='S'?'inc':'exp'; }
+    }
+  }
+  const text=lines.join(' ').replace(/\D/g,'');
+  if(lines.ocr){   // skan/zdjęcie: tylko paragon z cudzym NIP sprzedawcy jest pewnym kosztem
+    const nips=lines.nips||[];
+    if(/[pm]aragon|fiskaln|\bPTU\b/i.test(lines.join(' '))){ if(nips.includes(own)) return 'inc'; if(nips.length) return 'exp'; }
+    return null;
+  }
+  if(sNip&&sNip!==own&&!text.includes(own)) return 'exp';   // cudzy sprzedawca, naszego NIP w dokumencie nie ma
+  return null;
+}
+function extractOcr(lines,type,file){
+  if(/[pm]aragon|fiskaln|\bPTU\b/i.test(lines.join(' '))) return extractReceipt(lines,type,file);
+  const r=extract(lines,type,file), own=($('nip').value||'').replace(/\D/g,'');
+  if(!r.nip) r.nip=(lines.nips||[]).find(n=>n!==own)||'';
+  return r;
+}
+// ---------- ZIP i foldery ----------
+async function expandZip(file,depth=0){
+  const out=[], zip=await JSZip.loadAsync(await file.arrayBuffer());
+  for(const [name,entry] of Object.entries(zip.files)){
+    if(entry.dir||/(^|\/)(__MACOSX\/|\.)/.test(name)) continue;
+    const base=name.split('/').pop();
+    if(/\.zip$/i.test(base)&&depth<2) out.push(...await expandZip(new File([await entry.async('blob')],base),depth+1));
+    else if(/\.(pdf|xml|jpe?g|png)$/i.test(base)) out.push(new File([await entry.async('blob')],base));
+  }
+  return out;
+}
+async function expandFiles(files,bad){
+  const out=[];
+  for(const f of files){
+    if(/\.zip$/i.test(f.name)){ try{ if(typeof JSZip==='undefined') throw new Error('no zip library'); out.push(...await expandZip(f)); }catch(e){ bad.push(f.name); } }
+    else out.push(f);
+  }
+  return out;
+}
+// przeciągnięty folder: przechodzimy po wpisach (webkitGetAsEntry); wpisy trzeba pobrać synchronicznie w zdarzeniu drop
+async function filesFromDrop(dt){
+  const items=[...(dt.items||[])].filter(i=>i.kind==='file');
+  if(!items.length||!items[0].webkitGetAsEntry) return [...dt.files];
+  const entries=items.map(i=>i.webkitGetAsEntry()).filter(Boolean), out=[];
+  const readDir=r=>new Promise((res,rej)=>r.readEntries(res,rej));
+  const walkE=async en=>{
+    if(en.isFile) out.push(await new Promise((res,rej)=>en.file(res,rej)));
+    else if(en.isDirectory){ const rd=en.createReader(); for(;;){ const batch=await readDir(rd); if(!batch.length) break; for(const c of batch) await walkE(c); } }
+  };
+  for(const en of entries) await walkE(en);
+  return out;
+}
+async function handleFiles(files,type){
+  const badZips=[];
+  files=await expandFiles(files,badZips);
+  if(badZips.length) logAct('zipBad',[badZips.join(', ')]);
+  const list=[...files].filter(f=>/\.(pdf|xml|jpe?g|png)$/i.test(f.name));
+  if(!list.length){ $('status').textContent=badZips.length?t('zipBad',badZips.join(', ')):t('noPdf'); return; }
+  pdfjsLib.GlobalWorkerOptions.workerSrc='vendor/pdf.worker.min.js';
+  let ok=0, fail=[];
+  for(const f of list){
+    $('status').textContent=t('reading',f.name,ok+fail.length+1,list.length);
+    try{
+      if(/\.xml$/i.test(f.name)) rows.push(parseKsef(await f.text(),type,f));
+      else if(/\.(jpe?g|png)$/i.test(f.name)){ $('status').textContent=t('ocrBusy',f.name); const ln=await imgOcr(f); if(!ln.length) throw new Error('no text'); const det=detectType(ln), tp=det&&det!==type?det:type; const row=extractOcr(ln,tp,f); row.flags=[...(row.flags||[]),...(tp!==type?[{k:tp==='inc'?'typeToInc':'typeToExp'}]:[]),{k:'ocrNote'}]; await enrichFromRegister(row); rows.push(row); }
+      else { if(typeof pdfjsLib==='undefined') throw new Error(t('noPdfjs')); let ln=await pdfText(f), ocr=false; if(!ln.length){ $('status').textContent=t('ocrBusy',f.name); ln=await pdfOcr(f); ocr=true; if(!ln.length) throw new Error('no text'); } let tp=type; const det=detectType(ln); if(det&&det!==type) tp=det; let row=ocr?extractOcr(ln,tp,f):extract(ln,tp,f); if(tp!==type) row.flags=[...(row.flags||[]),{k:tp==='inc'?'typeToInc':'typeToExp'}]; if(ocr){ row.flags=[...(row.flags||[]),{k:'ocrNote'}]; await enrichFromRegister(row); } rows.push(row); }
+      fillInfo(rows[rows.length-1]); rememberNip(rows[rows.length-1]); ok++;
+      { const r0=rows[rows.length-1], fl=r0.flags||[]; logAct('file',[f.name,r0.type,/\.xml$/i.test(f.name)?'XML KSeF':fl.some(x=>x.k==='ocrNote')?'OCR':'PDF',(r0.gross||0).toFixed(2),fl.some(x=>x.k==='typeToInc'||x.k==='typeToExp')?'1':'0']); }
+    }catch(e){ logAct('fileFail',[f.name]); fail.push(f.name); rows.push({type,file:f.name,date:'',party:'',number:'',nip:'',addr:'',desc:'',net:0,vat:0,gross:0}); }
+  }
+  $('status').innerHTML=esc(t('readDone',ok,list.length))+(fail.length?' <span class="warn">'+esc(t('readFail',fail.join(', ')))+'</span>':'')+(badZips.length?' <span class="warn">'+esc(t('zipBad',badZips.join(', ')))+'</span>':'')+' '+esc(t('scanNote'));
+  if(type==='inc'&&!$('name').value.trim()&&!$('nip').value.trim()) await offerOwnCompany(list);
+  render();
+}
+function wire(zone,fileIn,dirIn,type){
+  const go=e=>{ handleFiles(e.target.files,type); e.target.value=''; };
+  $(fileIn).onchange=go; $(dirIn).onchange=go;
+  ['dragover','dragenter'].forEach(ev=>$(zone).addEventListener(ev,e=>{e.preventDefault();$(zone).classList.add('over')}));
+  ['dragleave','drop'].forEach(ev=>$(zone).addEventListener(ev,e=>{e.preventDefault();$(zone).classList.remove('over')}));
+  $(zone).addEventListener('drop',async e=>{ const dropped=await filesFromDrop(e.dataTransfer); handleFiles(dropped,type); });
+}
+wire('dropInc','fInc','dInc','inc'); wire('dropExp','fExp','dExp','exp');
+document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>$(b.dataset.pick==='inc'?'fInc':'fExp').click());
+document.querySelectorAll('[data-pickdir]').forEach(b=>b.onclick=()=>$(b.dataset.pickdir==='inc'?'dInc':'dExp').click());
+function rememberNip(r){ const n=String(r.nip||'').replace(/\D/g,''); if(nipOk(n)&&r.party&&!nipDir[n]) nipDir[n]={name:r.party,addr:r.addr||'',regon:''}; }
+// po wpisaniu NIP-u w wierszu tabeli: nazwa i adres z pamięci programu, a w razie braku z rejestru
+async function fillRowFromNip(r){
+  const n=String(r.nip||'').replace(/\D/g,''); if(!nipOk(n)||r.party) return;
+  const res=await lookupNipAny(n,{}); if(!(res&&res.ok&&res.name)) return;
+  r.nip=n; r.party=res.name; if(!r.addr&&res.address) r.addr=res.address;
+  r.flags=[...(r.flags||[]),{k:res.source==='memory'?'nameFromMemory':'nameFromRegister'}];
+  fillInfo(r); if(res.source!=='memory') nipDir[n]={name:res.name,addr:res.address||'',regon:res.regon||''};
+  logAct('nip',[n,srcName(res)+': '+res.name]); persistAll(); render();
+}
+function fillInfo(r){ const p=partyInfo[(r.party||'').toLowerCase()]; if(p) ['desc','addr','nip'].forEach(k=>{ if(!r[k]&&p[k]) r[k]=p[k]; }); if(!r.desc) r.desc=$(r.type==='exp'?'defExp':'defInc').value; }
+const addRow=ty=>{const r={type:ty,file:'manual',date:'',party:'',number:'',nip:'',addr:'',desc:'',net:0,vat:0,gross:0}; fillInfo(r); rows.push(r); logAct('addRow',[ty]); render()};
+$('addInc').onclick=()=>addRow('inc'); $('addExp').onclick=()=>addRow('exp');
+
+function inMonth(r){ const y=num('year'), m=num('month'); return r.date && r.date.startsWith(`${y}-${String(m).padStart(2,'0')}`); }
+function dupCount(r){
+  const key=x=>((x.number||'').trim().toLowerCase())+'|'+((x.party||'').trim().toLowerCase());
+  if(!(r.number||'').trim()) return 0;
+  const k=key(r); let c=rows.filter(x=>x!==r&&key(x)===k).length;
+  history.forEach(h=>(h.rows||[]).forEach(x=>{ if(key(x)===k) c++; }));
+  return c;
+}
+function render(){
+  const tb=$('tbl').querySelector('tbody'); tb.innerHTML='';
+  $('descList').innerHTML=[...new Set(Object.values(partyInfo).map(p=>p.desc).filter(Boolean))].map(d=>`<option value="${esc(d)}">`).join('');
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr'), out=!inMonth(r), dup=dupCount(r)>0;
+    tr.innerHTML=`<td><select data-k="type"><option value="inc">${t('typeInc')}</option><option value="oth">${t('typeOth')}</option><option value="exp">${t('typeExp')}</option></select></td>
+      <td><input type="date" data-k="date" value="${esc(r.date)}">${out?'<div class="warn note">'+t('outOfMonth')+'</div>':''}</td>
+      <td><input data-k="party" value="${esc(r.party)}"></td>
+      <td><input data-k="number" value="${esc(r.number)}">${dup?'<div class="warn note">'+t('dupWarn')+'</div>':''}</td>
+      <td class="n"><input type="number" step="0.01" data-k="net" value="${r.net}"></td>
+      <td class="n"><input type="number" step="0.01" data-k="vat" value="${r.vat}"></td>
+      <td class="n"><input type="number" step="0.01" data-k="gross" value="${r.gross}">${r.estimated?'<div class="warn note">'+t('estimated')+'</div>':''}</td>
+      <td><input data-k="nip" value="${esc(r.nip||'')}" style="min-width:100px"></td>
+      <td><input data-k="desc" list="descList" value="${esc(r.desc||'')}" style="min-width:160px"></td>
+      <td><input data-k="addr" value="${esc(r.addr||'')}" style="min-width:160px"></td>
+      <td class="note">${r.file==='manual'?t('manual'):esc(r.file)}${(r.flags||[]).map(f=>'<div class="warn">'+esc(t(f.k,f.a))+'</div>').join('')}</td><td><button class="sec" data-del="1" title="${t('del')}">✕</button></td>`;
+    tr.querySelector('[data-k=type]').value=r.type;
+    tr.querySelectorAll('[data-k]').forEach(el=>el.onchange=()=>{
+      const k=el.dataset.k, old=r[k]; r[k]=['net','vat','gross'].includes(k)?parseFloat(el.value)||0:el.value;
+      if(String(old)!==String(r[k])) logAct('edit',[r.number||r.party||r.file,LOG_ROWFIELD[k]||'thType',k==='type'?logTypeName(old):old,k==='type'?logTypeName(r[k]):r[k]]);
+      if(k==='net'||k==='vat'){ r.gross=r2(r.net+r.vat); r.estimated=false; }
+      if(k==='gross'){ r.net=r2(r.gross-r.vat); r.estimated=false; }
+      if(k==='party'&&r.rawParty&&r.party!==r.rawParty){ corr[r.rawParty.toLowerCase()]=r.party; persistAll(); }
+      if(k==='party') fillInfo(r);
+      if(k==='nip') fillRowFromNip(r);
+      if(['nip','desc','addr'].includes(k)&&r.party){ const pk=r.party.toLowerCase(); partyInfo[pk]=Object.assign(partyInfo[pk]||{},{[k]:r[k]}); persistAll(); }
+      if(['date','type','net','vat','gross','number','party','desc'].includes(k)) render();
+    });
+    tr.querySelector('[data-del]').onclick=()=>{ logAct('delRow',[r.number||r.party||r.file]); rows.splice(i,1); render(); };
+    tb.appendChild(tr);
+  });
+}
+
+// ---------- summary ----------
+function monthTotals(){
+  const exempt=$('vat').value==='art43';
+  const x={rev:0,cost:0,outVat:0,inVat:0,nInc:0,nExp:0,skipped:0};
+  rows.forEach(r=>{
+    if(!inMonth(r)){ x.skipped++; return; }
+    if(r.type!=='exp'){ x.nInc++; x.rev+=exempt?(r.gross||r.net):r.net; x.outVat+=exempt?0:r.vat; }
+    else { x.nExp++; x.cost+=exempt?(r.gross||r.net):r.net; x.inVat+=exempt?0:r.vat; }
+  });
+  x.rev=r2(x.rev); x.cost=r2(x.cost); return x;
+}
+const typeLabel=r=>r.type==='inc'?t('typeInc'):r.type==='oth'?t('typeOth'):t('typeExp');
+const kv=(a,b,cls='')=>`<div class="kv ${cls}"><span>${a}</span><span>${b}</span></div>`;
+function showSheet(){
+  const {p,t:tt,res,exempt,m,y}=lastResult, S=res.soc;
+  const taxName=p.taxForm==='ryczalt'?t('taxN_ryczalt',String(p.rate*100).replace('.',LANG==='pl'?',':'.')+'%'):t('taxN_'+p.taxForm);
+  const zusName=$('zus').selectedOptions[0].textContent;
+  const vatBal=r2(tt.outVat-tt.inVat);
+  const warns=[];
+  if(!rulesFor(y)) warns.push(t('wNoRules',y));
+  if(p.taxForm==='skala'){ if(res.taxBase>120000) warns.push(t('wScale32')); else if(res.taxBase>=108000) warns.push(t('wScale')); }
+  if(p.taxForm==='ryczalt'){
+    const a=p.ytdRev, b=res.cumRev;
+    if((a<=60000&&b>60000)||(a<=300000&&b>300000)) warns.push(t('wRycCross'));
+    else if(b>=54000&&b<=60000) warns.push(t('wRyc60'));
+    else if(b>=270000&&b<=300000) warns.push(t('wRyc300'));
+  }
+  if(p.zus==='maly'){
+    if(num('prevRevenue')>120000) warns.push(t('malyWarn'));
+    if($('prevDays').value!==''&&num('prevDays')<60) warns.push(t('malyDaysWarn'));
+  }
+  $('sheet').innerHTML=`
+  <div class="card"><h2>${esc(t('sheetTitle',t('months')[m-1],y))}</h2>
+    <div>${esc($('name').value||t('yourCompany'))} · NIP ${esc($('nip').value||'—')} · REGON ${esc($('regon').value||'—')}</div>
+    <div class="note">${esc(taxName)} · ${exempt?t('exemptTxt'):t('vatTxt')} · ${esc(zusName)}${p.chorobowe?t('plusChor'):''}</div>
+    <div class="note">${esc(t('rulesLine',rulesState?rulesState.version:'—'))}</div></div>
+  <div class="two">
+  <div class="card"><h2>${t('revCost')}</h2>
+    ${kv(t('revMonth',tt.nInc),fmt(tt.rev))}${kv(t('costMonth',tt.nExp),fmt(tt.cost))}${kv(t('resMonth'),fmt(r2(tt.rev-tt.cost)),'t')}
+    ${tt.skipped?`<div class="note warn">${t('skipped',tt.skipped)}</div>`:''}
+    ${exempt?`<div class="note">${t('vatNote')}</div>`:kv(t('vatOut'),fmt(tt.outVat))+kv(t('vatIn'),fmt(tt.inVat))+kv(vatBal>=0?t('vatPay'):t('vatCarry'),fmt(Math.abs(vatBal)),'t')}
+    <h2 style="margin-top:16px">${t('cumTitle')}</h2>
+    ${kv(t('cRev'),fmt(res.cumRev))}${p.taxForm!=='ryczalt'?kv(t('cCost'),fmt(res.cumCost)):''}
+    ${kv(t('cSoc'),fmt(res.cumSoc))}${kv(t('cHealth'),fmt(res.cumHealth))}
+    ${kv(t('cBase'),fmt(res.taxBase))}${kv(t('cTax',res.bracket),fmt(res.taxCum))}
+  </div>
+  <div class="card"><h2>${t('zusTitle')}</h2>
+    ${S.base?kv(t('zBase'),fmt(S.base)):`<div class="note">${p.zus==='emeryt'?t('zEmeryt'):t('zUlga')}</div>`}
+    ${kv(t('zEmer'),fmt(S.emerytalne))}${kv(t('zRent'),fmt(S.rentowe))}${kv(t('zWyp'),fmt(S.wypadkowe))}${kv(t('zChor'),fmt(S.chorobowe))}${kv(t('zFP'),fmt(S.fp))}
+    ${kv(t('zSocTot'),fmt(S.total),'t')}${kv(t('zHealth'),fmt(res.health),'t')}
+    <div class="note">${t(res.healthKey,res.healthArg,fmt(res.healthBase))}</div>
+    ${kv(t('zTot'),fmt(res.totalZus),'t')}
+  </div></div>
+  <div class="card"><h2>${t('taxTitle')}</h2>
+    ${kv(t('tCum'),fmt(res.taxCum))}${kv(t('tPaid'),fmt(p.ytdTax))}
+    ${kv(res.taxDue>=0?t('tDue'):t('tOver'),fmt(Math.abs(res.taxDue)),'t')}
+    <div class="big" style="margin-top:12px">${t('grand',fmt(r2(res.taxPayable+res.totalZus+(exempt?0:Math.max(0,vatBal)))))}</div>
+    <div class="note">${exempt?'':t('incVat',fmt(Math.max(0,vatBal)))}${t('disclaimer')}</div></div>
+  ${warns.length?`<div class="card"><h2>⚠ ${t('wTitle')}</h2>${warns.map(w=>`<div class="warn">• ${esc(w)}</div>`).join('')}</div>`:''}
+  <div class="card"><h2>${t('chkTitle')}</h2>
+    ${kv(t('chk1'),fmt(r2(p.ytdRev+tt.rev)))}${kv(t('chk2'),fmt(r2(tt.rev-tt.cost-S.total-res.health)))}
+    <div class="note">${t('chkDocs',tt.nInc,tt.nExp)}</div></div>`;
+  $('sheet').style.display='block'; $('outBtns').hidden=false;
+}
+$('calc').onclick=()=>{
+  const p=params(), tt=monthTotals(), res=compute(p,{rev:tt.rev,cost:tt.cost});
+  lastResult={p,t:tt,res,exempt:$('vat').value==='art43',m:num('month'),y:num('year')};
+  showSheet(); $('sheet').scrollIntoView({behavior:'smooth'});
+  logAct('calc',[t('months')[lastResult.m-1]+' '+lastResult.y,tt.rev.toFixed(2),tt.cost.toFixed(2),res.soc.total.toFixed(2),res.health.toFixed(2),res.taxPayable.toFixed(2)]);
+};
+$('print').onclick=()=>{ if(lastResult) logAct('print',[t('months')[lastResult.m-1]+' '+lastResult.y]); window.print(); };
+$('csv').onclick=()=>{
+  if(!lastResult) return;
+  const {t:tt,res}=lastResult, q=s=>`"${String(s).replace(/"/g,'""')}"`, L=t('csvLines');
+  const lines=[t('csvHead').map(q).join(';'),
+    ...rows.map(r=>[typeLabel(r),r.date,r.party,r.number,r.net,r.vat,r.gross].map(q).join(';')),'',
+    [L[0],tt.rev],[L[1],tt.cost],[L[2],res.soc.total],[L[3],res.health],[L[4],res.taxCum],[L[5],res.taxPayable]].map(x=>Array.isArray(x)?x.map(q).join(';'):x);
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv'}));
+  logAct('csv',[`${num('year')}-${String(num('month')).padStart(2,'0')}`]);
+  a.download=`${num('year')}-${String(num('month')).padStart(2,'0')}.csv`; a.click();
+};
+
+// ---------- Dane firmy z własnej faktury sprzedaży (bez żadnego rejestru) ----------
+async function companyFromInvoice(f){
+  if(/\.xml$/i.test(f.name)){
+    const root=new DOMParser().parseFromString(await f.text(),'application/xml').documentElement;
+    const nm=xmlPath(root,['Podmiot1','DaneIdentyfikacyjne','Nazwa']);
+    if(!nm) return null;
+    return {name:nm, nip:(xmlPath(root,['Podmiot1','DaneIdentyfikacyjne','NIP'])||'').replace(/\D/g,''),
+            addr:[xmlPath(root,['Podmiot1','Adres','AdresL1']),xmlPath(root,['Podmiot1','Adres','AdresL2'])].filter(Boolean).join(', ')};
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc='vendor/pdf.worker.min.js';
+  const ln=await pdfText(f); if(!ln.length) return null;
+  const r=partyFromColumns(ln,'exp');   // sprzedawca
+  if(r&&r.name) return {name:r.name,nip:r.nip,addr:r.addr};
+  const x=extract(ln,'exp',f); return x.party?{name:x.party,nip:x.nip,addr:x.addr}:null;
+}
+async function fillCompanyFromInvoice(f,quiet){
+  let p=null; try{ p=await companyFromInvoice(f); }catch(e){ p=null; }
+  if(!p||!p.name){ if(!quiet) $('nipInfo').textContent=t('fromInvNone'); return false; }
+  if(!confirm(t('fromInvConfirm',p.name,p.nip||'—',p.addr||'—'))){ $('nipInfo').textContent=t('lookupDeclined'); return false; }
+  $('name').value=p.name; if(p.nip) $('nip').value=p.nip; if(p.addr) $('address').value=p.addr;
+  if(nipOk(p.nip||'')) nipDir[p.nip]={name:p.name,addr:p.addr||'',regon:''};
+  checkIds(); persistAll(); logAct('nip',[p.nip||'','invoice: '+p.name]); $('nipInfo').textContent=t('fromInvOk',p.name);
+  return true;
+}
+// pierwsza paczka faktur sprzedaży przy pustych danych firmy: sprzedawca występujący najczęściej to nasza firma
+async function offerOwnCompany(list){
+  const counts={};
+  for(const f of list){ if(/\.(jpe?g|png)$/i.test(f.name)) continue; try{ const p=await companyFromInvoice(f); if(p&&nipOk(p.nip||'')){ const e=counts[p.nip]||(counts[p.nip]={n:0,f}); e.n++; } }catch(e){} }
+  const best=Object.values(counts).sort((a,b)=>b.n-a.n)[0];
+  if(best) await fillCompanyFromInvoice(best.f,true);
+}
+$('fromInvoice').onclick=()=>$('fInvFill').click();
+$('ceidgSite').onclick=()=>window.open('https://aplikacja.ceidg.gov.pl/ceidg/ceidg.public.ui/search.aspx','_blank');
+$('fInvFill').onchange=e=>{ const f=e.target.files[0]; e.target.value=''; if(f) fillCompanyFromInvoice(f); };
+
+// ---------- Dziennik działań ----------
+function logAct(k,a){ try{ if(window.jdgStore&&window.jdgStore.log) window.jdgStore.log(k,(a||[]).map(x=>typeof x==='number'?x:String(x==null?'':x).slice(0,200))); }catch(e){} }
+const LOG_SECRET=['gusKey','ceidgToken'];
+const LOG_FIELD={name:'lName',nip:'lNip',regon:'lRegon',address:'lAddress',activity:'lActivity',year:'lYear',month:'lMonth',taxForm:'lTax',rate:'lRate',vat:'lVat',zus:'lZus',chorobowe:'lChor',prevIncome:'lPrevInc',prevDays:'lPrevDays',prevRevenue:'lPrevRev',manualBase:'lManual',manualSocial:'lManualSoc',ytdRev:'lYtdRev',ytdCost:'lYtdCost',ytdTax:'lYtdTax',ytdZus:'lYtdZus',ytdHealth:'lYtdHealth',hbIncome:'lHbIncome',defInc:'lDefInc',defExp:'lDefExp',pBaseFull:'pBaseFull',pBasePref:'pBasePref',pMinWage:'pMinWage',pMinHealth:'pMinHealth',pAvgWage:'pAvgWage',pLinLimit:'pLinLimit',rulesUrl:'rulesUrlLbl',gusKey:'lGusKey',ceidgToken:'lCeidgToken',monthNote:'noteLbl'};
+const LOG_ROWFIELD={type:'thType',date:'thDate',party:'thParty',number:'thNo',net:'thNet',vat:'thVat',gross:'thGross',nip:'thNip',desc:'thDesc',addr:'thAddr'};
+const LOG_HISTFIELD={paidSoc:'hSoc',paidHealth:'hHealth',paidTax:'hTax',paidDate:'hDate',note:'hNote'};
+const logTypeName=v=>v==='inc'?t('typeInc'):v==='oth'?t('typeOth'):v==='exp'?t('typeExp'):v;
+function logSettingChange(e){
+  const el=e.target, id=el.id; if(!LOG_FIELD[id]) return;
+  const v=LOG_SECRET.includes(id)?(el.value?'•••':''):el.type==='checkbox'?(el.checked?'✓':'–'):el.tagName==='SELECT'?el.selectedOptions[0].textContent:el.value;
+  logAct('setting',[LOG_FIELD[id],v]);
+}
+function logLine(e){
+  const a=(e.a||[]).slice();
+  if(e.k==='file'){ a[1]=logTypeName(a[1]); a[4]=a[4]==='1'?t('lg_moved'):''; }
+  else if(e.k==='edit'){ a[1]=t(a[1]); }
+  else if(e.k==='setting'){ a[0]=t(a[0]); }
+  else if(e.k==='histEdit'){ a[1]=t(a[1]); }
+  else if(e.k==='addRow'){ a[0]=logTypeName(a[0]); }
+  else if(e.k==='nip'){ a[1]=a[1]==='notfound'?t('lg_nipNone'):a[1]==='error'?t('lg_nipErr'):a[1]; }
+  const txt=t('lg_'+e.k,...a);
+  return e.ts+'  '+(txt==='lg_'+e.k?e.k+' '+a.join(' | '):txt);
+}
+async function renderLog(){
+  const all=(window.jdgStore&&window.jdgStore.readLog)?await window.jdgStore.readLog():[];
+  const day=$('logDate').value, list=day?all.filter(e=>e.ts.startsWith(day)):all;
+  const sessions=[]; list.forEach(e=>{ let s=sessions.find(x=>x.sid===e.sid); if(!s){ s={sid:e.sid,items:[]}; sessions.push(s); } s.items.push(e); });
+  sessions.sort((x,y)=>y.sid.localeCompare(x.sid));
+  window.__logText=sessions.map(s=>'━━ '+t('logSession',s.items[0].ts)+' ━━\n'+s.items.map(logLine).join('\n')).join('\n\n');
+  $('logBody').textContent=window.__logText||t('logEmpty');
+}
+$('openLog').onclick=async()=>{ $('logLayer').hidden=false; await renderLog(); };
+$('closeLog').onclick=()=>{ $('logLayer').hidden=true; };
+$('logDate').onchange=renderLog; $('logAll').onclick=()=>{ $('logDate').value=''; renderLog(); };
+$('logSave').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+t('logTitle')+'\n\n'+(window.__logText||'')],{type:'text/plain'})); a.download='dziennik-'+new Date().toISOString().slice(0,10)+'.txt'; a.click(); };
+
+// ---------- KPIR (Excel) ----------
+async function exportKpir(){
+  const y=num('year'), exempt=$('vat').value==='art43', months={};
+  const map=r=>({date:r.date,number:r.number,party:r.party,nip:r.nip||'',addr:r.addr||'',desc:r.desc||'',type:r.type,amount:exempt?(r.gross||r.net):r.net});
+  history.filter(h=>h.year===y).forEach(h=>months[h.month]=(h.rows||[]).map(map));
+  const m=num('month'); if(!months[m]){ const cur=rows.filter(inMonth).map(map); if(cur.length) months[m]=cur; }
+  const list=Object.keys(months).map(k=>({month:+k,rows:months[k]})).filter(x=>x.rows.length);
+  if(!list.length){ alert(t('kpirNone')); return; }
+  const buf=await buildKpir(ExcelJS,{name:$('name').value,address:$('address').value,activity:$('activity').value,year:y,months:list});
+  logAct('kpir',[y,list.length,list.reduce((n,x)=>n+x.rows.length,0)]);
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  a.download=`KPIR-${y}.xlsx`; a.click();
+}
+$('kpir').onclick=exportKpir; $('kpirYear').onclick=exportKpir;
+
+// ---------- history / close month / backup ----------
+const paidKey={soc:'paidSoc',health:'paidHealth',tax:'paidTax'};
+const paidOf=(h,k)=>paidKey[k]&&h[paidKey[k]]!==undefined?h[paidKey[k]]:h[k];
+function invTable(h){
+  const rr=h.rows||[];
+  if(!rr.length) return `<span class="note">${t('invNone')}</span>`;
+  return `<table><thead><tr><th>${t('thType')}</th><th>${t('thDate')}</th><th>${t('thParty')}</th><th>${t('thNo')}</th><th>${t('thNet')}</th><th>${t('thVat')}</th><th>${t('thGross')}</th></tr></thead><tbody>`+
+    rr.map(x=>`<tr><td>${typeLabel(x)}</td><td>${esc(x.date)}</td><td>${esc(x.party)}</td><td>${esc(x.number)}</td><td>${fmt(x.net)}</td><td>${fmt(x.vat)}</td><td>${fmt(x.gross)}</td></tr>`).join('')+`</tbody></table>`;
+}
+function renderHistory(){
+  syncHealthBase();
+  const tb=$('histTbl').querySelector('tbody');
+  const sorted=history.slice().sort((a,b)=>(a.year*100+a.month)-(b.year*100+b.month));
+  const cell=(h,k,id)=>`<div>${fmt(h[k])}</div><input type="number" step="0.01" data-h="${id}" data-k="${paidKey[k]}" value="${paidOf(h,k)}" title="${esc(t('paidTip'))}">`;
+  tb.innerHTML=sorted.map(h=>{ const id=h.year+'-'+h.month;
+    return `<tr><td>${h.year}-${String(h.month).padStart(2,'0')}</td><td>${fmt(h.rev)}</td><td>${fmt(h.cost)}</td>
+     <td>${cell(h,'soc',id)}</td><td>${cell(h,'health',id)}</td><td>${cell(h,'tax',id)}</td>
+     <td><input type="date" data-h="${id}" data-k="paidDate" value="${esc(h.paidDate||'')}">${h.paidDate?'':'<div class="warn note">'+t('unpaid')+'</div>'}</td>
+     <td><input data-h="${id}" data-k="note" value="${esc(h.note||'')}"></td>
+     <td><button class="sec" data-inv="${id}">${t('hInv',(h.rows||[]).length)}</button> <button class="sec" data-undo="${id}">${t('undo')}</button></td></tr>
+     <tr data-invrow="${id}" hidden><td colspan="9">${invTable(h)}</td></tr>`; }).join('')||`<tr><td colspan="9" class="note">${t('noHist')}</td></tr>`;
+  const yr=history.filter(h=>h.year===num('year'));
+  if(yr.length){ const s=k=>r2(yr.reduce((a,h)=>a+h[k],0)), sp=k=>r2(yr.reduce((a,h)=>a+paidOf(h,k),0));
+    const tc=k=>`<td>${fmt(s(k))}<div class="note">${t('histPaidSum',fmt(sp(k)))}</div></td>`;
+    tb.insertAdjacentHTML('beforeend',`<tr style="font-weight:700"><td>${t('histTotal',num('year'))}</td><td>${fmt(s('rev'))}</td><td>${fmt(s('cost'))}</td>${tc('soc')}${tc('health')}${tc('tax')}<td></td><td></td><td></td></tr>`); }
+  tb.querySelectorAll('[data-inv]').forEach(b=>b.onclick=()=>{ const r=tb.querySelector(`[data-invrow="${b.dataset.inv}"]`); r.hidden=!r.hidden; });
+  tb.querySelectorAll('input[data-h]').forEach(inp=>inp.onchange=()=>{
+    const [y,m]=inp.dataset.h.split('-').map(Number), h=history.find(x=>x.year===y&&x.month===m); if(!h) return;
+    const k=inp.dataset.k;
+    logAct('histEdit',[inp.dataset.h,LOG_HISTFIELD[k]||'hNote',inp.value]);
+    if(k==='paidDate'||k==='note') h[k]=inp.value;
+    else{
+      const base=Object.keys(paidKey).find(b=>paidKey[b]===k), nv=parseFloat(inp.value)||0, old=paidOf(h,base);
+      h[k]=nv; if(h.year===num('year')) $(ytdMap[base]).value=r2(Math.max(0,num(ytdMap[base])+nv-old));
+    }
+    persistAll(); renderHistory();
+  });
+  tb.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>{
+    const [y,m]=b.dataset.undo.split('-').map(Number), i=history.findIndex(h=>h.year===y&&h.month===m);
+    if(i<0||!confirm(t('undoQ',b.dataset.undo))) return;
+    const h=history[i];
+    if(h.year===num('year')) Object.entries(ytdMap).forEach(([k,id])=>$(id).value=r2(Math.max(0,num(id)-paidOf(h,k))));
+    logAct('undo',[b.dataset.undo]);
+    history.splice(i,1); persistAll(); renderHistory(); render();
+  });
+}
+$('closeMonth').onclick=()=>{
+  if(!lastResult) return;
+  const y=lastResult.y, m=lastResult.m;
+  if(history.some(h=>h.year===y&&h.month===m)){ alert(t('alreadyClosed')); return; }
+  if(!confirm(t('closeQ',t('months')[m-1],y))) return;
+  const {t:tt,res}=lastResult;
+  const h={year:y,month:m,rev:tt.rev,cost:tt.cost,soc:res.soc.total,health:res.health,tax:res.taxPayable,
+    paidSoc:res.soc.total,paidHealth:res.health,paidTax:res.taxPayable,paidDate:'',note:$('monthNote').value,
+    rows:rows.filter(inMonth).map(x=>({...x}))};
+  history.push(h);
+  logAct('close',[y+'-'+String(m).padStart(2,'0'),tt.rev.toFixed(2),tt.cost.toFixed(2),h.rows.length]);
+  Object.entries(ytdMap).forEach(([k,id])=>$(id).value=r2(num(id)+paidOf(h,k)));
+  rows=rows.filter(x=>!inMonth(x)); $('monthNote').value=''; lastResult=null; $('sheet').style.display='none'; $('outBtns').hidden=true;
+  if(m<12) $('month').value=m+1; else { $('year').value=y+1; $('month').value=1; Object.values(ytdMap).forEach(id=>$(id).value=0); applyRulesForYear(y+1); updateRulesStatus(); }
+  persistAll(); renderHistory(); render(); window.scrollTo({top:0,behavior:'smooth'});
+};
+$('exportJson').onclick=()=>{
+  logAct('backupSave',[]);
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(stateObj(),null,1)],{type:'application/json'}));
+  a.download="accountancy-helper-"+new Date().toISOString().slice(0,10)+'.json'; a.click();
+};
+$('importBtn').onclick=()=>$('importJson').click();
+$('importJson').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{
+    const o=JSON.parse(await f.text());
+    if(o.app!=='jdg-kalkulator') throw new Error(t('notBackup'));
+    applyState(o); persistAll(); logAct('backupLoad',[]); alert(t('imported'));
+  }catch(err){ alert(t('importFail',err.message)); }
+  e.target.value='';
+};
+
+// ---------- settings ----------
+$('openSettings').onclick=()=>{ $('settingsLayer').hidden=false; };
+$('closeSettings').onclick=()=>{ $('settingsLayer').hidden=true; };
+const LINKS=[
+ ['ZUS',[
+  ['PUE ZUS – logowanie','PUE ZUS – log in','https://www.zus.pl/ezus/logowanie','Platforma Usług Elektronicznych','Electronic Services Platform'],
+  ['ZUS – strona główna','ZUS – home page','https://www.zus.pl/','',''],
+  ['ZUS dla firm','ZUS for businesses','https://www.zus.pl/firmy','',''],
+  ['Rozliczenia z ZUS','Settlements with ZUS','https://www.zus.pl/firmy/rozliczenia-z-zus','',''],
+  ['Składki, wskaźniki, odsetki','Contributions, indices, interest','https://www.zus.pl/baza-wiedzy/skladki-wskazniki-odsetki','Aktualne podstawy i stawki','Current bases and rates']]],
+ ['Urząd skarbowy / Tax office',[
+  ['e-Urząd Skarbowy','e-Tax Office','https://www.podatki.gov.pl/e-urzad-skarbowy/','Logowanie, rachunek podatkowy, sprawy online','Log in, tax account, online matters'],
+  ['e-Deklaracje','e-Declarations','https://www.podatki.gov.pl/e-deklaracje/','Składanie deklaracji (PIT, VAT)','Filing returns (PIT, VAT)'],
+  ['Podatki.gov.pl','Podatki.gov.pl (tax portal)','https://www.podatki.gov.pl/','',''],
+  ['PIT dla firm','PIT for businesses','https://www.podatki.gov.pl/podatki-firmowe/pit/','',''],
+  ['VAT','VAT','https://www.podatki.gov.pl/vat/','',''],
+  ['Mikrorachunek podatkowy','Tax micro-account','https://www.podatki.gov.pl/mikrorachunek-podatkowy/','Numer rachunku do wpłaty podatku','Account number for tax payments'],
+  ['Interpretacje podatkowe (EUREKA)','Tax rulings (EUREKA)','https://eureka.mf.gov.pl/','',''],
+  ['Ministerstwo Finansów','Ministry of Finance','https://www.gov.pl/web/finanse','','']]],
+ ['KSeF',[
+  ['KSeF – informacje','KSeF – information','https://ksef.podatki.gov.pl/','',''],
+  ['KSeF – aplikacja','KSeF – application','https://ksef.mf.gov.pl/','Wystawianie i pobieranie faktur','Issuing and downloading invoices'],
+  ['KSeF – środowisko testowe','KSeF – test environment','https://ksef-test.mf.gov.pl/','Do ćwiczeń, bez skutków prawnych','For practice, no legal effect']]],
+ ['Rejestry / Registers',[
+  ['Wykaz podatników VAT („biała lista”)','VAT taxpayer list (“white list”)','https://www.podatki.gov.pl/wykaz-podatnikow-vat-wyszukiwarka','Sprawdzenie kontrahenta i jego rachunku','Check a counterparty and its account'],
+  ['CEIDG – wyszukiwarka wpisów (po NIP)','CEIDG – search of entries (by NIP)','https://aplikacja.ceidg.gov.pl/ceidg/ceidg.public.ui/search.aspx','Sprawdzenie firmy jednoosobowej po NIP – dla człowieka','Check a sole proprietor by NIP – for people'],
+  ['CEIDG / biznes.gov.pl','CEIDG / biznes.gov.pl','https://www.biznes.gov.pl/','Rejestr działalności gospodarczej','Business activity register'],
+  ['REGON (GUS)','REGON (GUS)','https://wyszukiwarkaregon.stat.gov.pl/','',''],
+  ['KRS','KRS (court register)','https://ekrs.ms.gov.pl/','','']]],
+ ['Inne / Other',[
+  ['Kursy walut NBP','NBP exchange rates','https://nbp.pl/en/statistic-and-financial-reporting/rates/table-a/','Do faktur w walutach obcych','For foreign-currency invoices'],
+  ['Akty prawne (ISAP)','Legislation (ISAP)','https://isap.sejm.gov.pl/','Ustawy i rozporządzenia','Acts and regulations'],
+  ['Krajowa Administracja Skarbowa','National Revenue Administration','https://www.gov.pl/web/kas','','']]]
+];
+function renderLinks(){
+  const pl=LANG==='pl';
+  renderMyLinks();
+  $('linksBody').innerHTML=LINKS.map(([g,items])=>'<h2 style="margin-top:14px">'+esc(g)+'</h2>'+items.map(i=>
+    '<a href="'+i[2]+'" target="_blank" rel="noopener noreferrer">'+esc(pl?i[0]:i[1])+(i[3]?'<small>'+esc(pl?i[3]:i[4])+'</small>':'')+'</a>').join('')).join('');
+}
+function renderMyLinks(){
+  $('myLinksBody').innerHTML=myLinks.map((l,i)=>'<div class="row" style="flex-wrap:nowrap;align-items:center"><a style="flex:1" href="'+esc(l.url)+'" target="_blank" rel="noopener noreferrer">'+esc(l.name)+'<small>'+esc(l.url)+'</small></a><button class="sec" data-del="'+i+'">'+esc(t('delLink'))+'</button></div>').join('');
+}
+$('myLinksBody').addEventListener('click',e=>{ const i=e.target.dataset&&e.target.dataset.del; if(i===undefined) return; myLinks.splice(+i,1); renderMyLinks(); persistAll(); });
+$('addLink').onclick=()=>{
+  const name=$('newLinkName').value.trim();
+  let u=$('newLinkUrl').value.trim().replace(/^[a-z]+:\/\//i,'');
+  let ok=false;
+  try{ const h=new URL('https://'+u).hostname; ok=/^[^\s.]+(\.[^\s.]+)+$/.test(h); }catch(_){}
+  if(!name||!ok){ $('linkWarn').textContent=t('linkBad'); return; }
+  $('linkWarn').textContent='';
+  myLinks.push({name,url:'https://'+u}); $('newLinkName').value=''; $('newLinkUrl').value='';
+  renderMyLinks(); persistAll();
+};
+$('openLinks').onclick=()=>{ renderLinks(); $('linksLayer').hidden=false; };
+$('closeLinks').onclick=()=>{ $('linksLayer').hidden=true; };
+$('linksLayer').addEventListener('mousedown',e=>{ if(e.target.id==='linksLayer') $('linksLayer').hidden=true; });
+$('settingsLayer').addEventListener('mousedown',e=>{ if(e.target.id==='settingsLayer') $('settingsLayer').hidden=true; });
+$('rerunTour').onclick=()=>{ $('settingsLayer').hidden=true; tourStart(); };
+$('resetAll').onclick=async()=>{
+  if(!confirm(t('resetQ1'))||!confirm(t('resetQ2'))) return;
+  logAct('reset',[]);
+  try{ localStorage.clear(); }catch(e){}
+  if(window.jdgStore) await window.jdgStore.save({app:'jdg-kalkulator',version:2,history:[],tourDone:true,lang:LANG});
+  location.reload();
+};
+
+// ---------- NIP / REGON checks ----------
+function validNip(v){ const d=v.replace(/[\s-]/g,''); if(!/^\d{10}$/.test(d)) return false;
+  const w=[6,5,7,2,3,4,5,6,7]; const sum=w.reduce((a,x,i)=>a+x*+d[i],0)%11; return sum!==10&&sum===+d[9]; }
+function validRegon(v){ const d=v.replace(/[\s-]/g,''); if(!/^(\d{9}|\d{14})$/.test(d)) return false;
+  const chk=(w,n)=>{ const c=w.reduce((a,x,i)=>a+x*+d[i],0)%11%10; return c===+d[n]; };
+  if(!chk([8,9,2,3,4,5,6,7],8)) return false;
+  return d.length===9||chk([2,4,8,5,0,9,7,3,6,1,2,4,8],13); }
+function checkIds(){
+  const n=$('nip').value.trim(), r=$('regon').value.trim();
+  $('nipWarn').textContent=n&&!validNip(n)?t('badNip'):'';
+  $('regonWarn').textContent=r&&!validRegon(r)?t('badRegon'):'';
+}
+$('nip').addEventListener('input',checkIds); $('regon').addEventListener('input',checkIds);
+
+// ---------- eksport roku ----------
+$('exportYear').onclick=()=>{
+  const y=num('year'), q=x=>`"${String(x).replace(/"/g,'""')}"`;
+  const rowsY=history.filter(h=>h.year===y).sort((a,b)=>a.month-b.month);
+  const lines=[t('yearCsvHead').map(q).join(';'),
+    ...rowsY.map(h=>[y+'-'+String(h.month).padStart(2,'0'),h.rev,h.cost,h.soc,h.health,h.tax,paidOf(h,'soc'),paidOf(h,'health'),paidOf(h,'tax'),h.paidDate||'',h.note||''].map(q).join(';'))];
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv'}));
+  logAct('csvYear',[y]);
+  a.download='rok-'+y+'.csv'; a.click();
+};
+async function lookupNipAny(n,keys){
+  if(nipDir[n]) return {ok:true,source:'memory',name:nipDir[n].name,address:nipDir[n].addr||'',regon:nipDir[n].regon||''};
+  if(!(window.jdgStore&&window.jdgStore.lookupNip)) return {ok:false,error:'offline'};
+  return window.jdgStore.lookupNip(n,keys||{});
+}
+const srcName=r=>r.source==='memory'?t('srcMemory'):r.source==='GUS'?'GUS (REGON)':r.source==='CEIDG'?'CEIDG':'Wykaz podatników VAT (MF)';
+async function runNipLookup(auto){
+  const raw=$('nip').value.trim();
+  if(!validNip(raw)){ if(!auto) $('nipInfo').textContent=t('badNip'); return; }
+  const n=raw.replace(/\D/g,'');
+  $('nipInfo').textContent=t('lookupBusy');
+  const r=await lookupNipAny(n,{gus:$('gusKey').value,ceidg:$('ceidgToken').value});
+  logAct('nip',[n,r.ok?srcName(r)+': '+(r.name||''):(r.error==='notfound'?'notfound':'error')]);
+  if(r.ok){
+    // nic nie jest wpisywane bez zgody: pokazujemy znalezione dane i ich źródło
+    if(!confirm(t('lookupConfirm',r.name||'—',r.regon||'—',r.address||'—',srcName(r),r.pkd||'—'))){ $('nipInfo').textContent=t('lookupDeclined'); return; }
+    if(r.name) $('name').value=r.name;
+    if(r.regon) $('regon').value=r.regon;
+    if(r.address&&!$('address').value.trim()) $('address').value=r.address;
+    if(r.pkd&&!$('activity').value.trim()) $('activity').value=r.pkd;
+    if(r.source!=='memory') nipDir[n]={name:r.name||'',addr:r.address||'',regon:r.regon||''};
+    $('nipInfo').textContent=r.source==='GUS'||r.source==='CEIDG'||r.source==='memory'?t('lookupOkGus',r.name):t('lookupOk',r.name,r.statusVat); checkIds(); persistAll();
+  } else if(r.error==='notfound'||r.error==='offline'){ $('nipInfo').textContent=(r.error==='offline'?'':t('lookupNone'))+(r.needGusKey?' '+t('lookupNeedKey'):''); }
+  else $('nipInfo').textContent=t('lookupErr',r.network?'brak połączenia / no connection':r.error);
+}
+$('nipLookup').title=t('lookupPriv');
+$('nipLookup').onclick=()=>runNipLookup(false);
+$('nip').addEventListener('change',()=>{ if(!$('name').value.trim()) runNipLookup(true); });
+if(!(window.jdgStore&&window.jdgStore.lookupNip)) $('nipLookup').hidden=true;
+if(window.jdgStore&&window.jdgStore.openFolder) $('openFolder').onclick=()=>window.jdgStore.openFolder(); else $('openFolder').hidden=true;
+
+// ---------- tutorial ----------
+const TOUR=[
+  ()=>$('gCompany'), ()=>$('gOptions'), ()=>$('gYtd'), ()=>$('gDrops'), ()=>$('tblWrap'),
+  ()=>$('calc'), null, ()=>$('hist'), ()=>$('openSettings')
+];
+function tourPlace(el){
+  const box=$('tourBox'), hl=$('tourHl'), layer=$('tourLayer');
+  layer.classList.toggle('dim',!el);
+  if(el){
+    const r=el.getBoundingClientRect(), pad=6;
+    Object.assign(hl.style,{display:'block',left:(r.left-pad)+'px',top:(r.top-pad)+'px',width:(r.width+2*pad)+'px',height:(r.height+2*pad)+'px'});
+    const bh=box.offsetHeight; let top=r.bottom+14;
+    if(top+bh>innerHeight-10) top=Math.max(10,r.top-bh-14);
+    if(top<10) top=10;
+    box.style.top=top+'px';
+    box.style.left=Math.min(Math.max(10,r.left),Math.max(10,innerWidth-box.offsetWidth-10))+'px';
+  } else {
+    hl.style.display='none';
+    box.style.top=Math.max(10,(innerHeight-box.offsetHeight)/2)+'px';
+    box.style.left=Math.max(10,(innerWidth-box.offsetWidth)/2)+'px';
+  }
+}
+function tourShow(i){
+  tourI=i; tourOpen=true; $('tourLayer').hidden=false;
+  const n=TOUR.length, k=i+1;
+  $('tourStep').textContent=t('tourStep',k,n);
+  $('tourTitle').textContent=t('tr'+k+'t'); $('tourText').textContent=t('tr'+k+'x');
+  $('tourSkip').textContent=t('tourSkip'); $('tourPrev').textContent=t('tourPrev');
+  $('tourNext').textContent=i===n-1?t('tourDoneBtn'):t('tourNext');
+  $('tourPrev').style.visibility=i===0?'hidden':'visible';
+  const el=TOUR[i]?TOUR[i]():null;
+  if(el&&el.getClientRects().length){ el.scrollIntoView({block:'center'}); setTimeout(()=>tourPlace(el),250); }
+  else tourPlace(null);
+}
+function tourStart(){ window.scrollTo(0,0); tourShow(0); }
+function tourEnd(){
+  tourOpen=false; $('tourLayer').hidden=true; tourDone=true; persistAll();
+}
+$('tourNext').onclick=()=>{ tourI>=TOUR.length-1?tourEnd():tourShow(tourI+1); };
+$('tourPrev').onclick=()=>{ if(tourI>0) tourShow(tourI-1); };
+$('tourSkip').onclick=tourEnd;
+$('openTour').onclick=tourStart;
+addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(tourOpen) tourEnd(); else { $('settingsLayer').hidden=true; $('linksLayer').hidden=true; } } });
+addEventListener('resize',()=>{ if(tourOpen) tourShow(tourI); });
+
+// ---------- rules (yearly parameters) ----------
+const DEFAULT_RULES_URL='';   // fill in once the rules file is published
+const PKEYS={baseFull:'pBaseFull',basePref:'pBasePref',minWage:'pMinWage',minHealth:'pMinHealth',avgWage:'pAvgWage',linLimit:'pLinLimit'};
+const PRANGE={baseFull:[1000,50000],basePref:[100,20000],minWage:[500,20000],minHealth:[50,5000],avgWage:[1000,50000],linLimit:[1000,100000]};
+// used only outside the desktop app (e.g. a browser preview); the app reads app/rules.json
+const FALLBACK_RULES={schema:1,version:1,published:'2026-11-03',years:{2026:{baseFull:5652,basePref:1441.8,minWage:4806,minHealth:432.54,avgWage:9228.64,linLimit:14100}},sources:{}};
+function validRules(o){
+  if(!o||o.schema!==1||!Number.isInteger(o.version)||o.version<1||!o.years||typeof o.years!=='object') return false;
+  const ys=Object.keys(o.years); if(!ys.length) return false;
+  for(const y of ys){
+    const v=o.years[y];
+    if(!/^20\d\d$/.test(y)||!v||typeof v!=='object') return false;
+    for(const k in PRANGE){ if(typeof v[k]!=='number'||!isFinite(v[k])||v[k]<PRANGE[k][0]||v[k]>PRANGE[k][1]) return false; }
+    if(v.basePref>=v.baseFull) return false;
+  }
+  return true;
+}
+const curYear=()=>parseInt($('year').value,10);
+const rulesFor=y=>(rulesState&&rulesState.years[y])||null;
+function applyRulesForYear(y){ const r=rulesFor(y); if(!r) return false; for(const k in PKEYS) $(PKEYS[k]).value=r[k]; return true; }
+function rulesMatch(y){ const r=rulesFor(y); return !!r&&Object.keys(PKEYS).every(k=>Math.abs(num(PKEYS[k])-r[k])<0.005); }
+function updateRulesStatus(){
+  if(!rulesState){ $('rulesStatus').textContent=''; return; }
+  const y=curYear(), key=rulesFor(y)?(rulesMatch(y)?'rulesOk':'rulesEdited'):'rulesNone';
+  $('rulesStatus').textContent=t(key,rulesState.version,rulesState.published||'',y);
+}
+async function loadBundledRules(){
+  let b=FALLBACK_RULES;
+  try{ if(window.jdgStore&&window.jdgStore.rules){ const x=await window.jdgStore.rules(); if(validRules(x)) b=x; } }catch(e){}
+  if(!rulesState||b.version>rulesState.version) rulesState=b;
+  updateRulesStatus();
+}
+let pendingRules=null;
+function adoptRules(d){ logAct('rules',[d.version]); rulesState=d; applyRulesForYear(curYear()); updateRulesStatus(); persistAll(); }
+function showRulesReview(d){
+  const diff=[];
+  Object.keys(d.years).sort().forEach(y=>{
+    const old=rulesFor(y);
+    for(const k in PKEYS){ const nv=d.years[y][k]; if(!old||Math.abs(old[k]-nv)>=0.005) diff.push([y,t(PKEYS[k]),old?old[k].toFixed(2):'—',nv.toFixed(2)]); }
+  });
+  if(!diff.length){ adoptRules(d); return; }
+  pendingRules=d;
+  $('rulesNewTitle').textContent=t('rulesNewTitle',d.version);
+  $('rulesDiff').innerHTML='<table><tr>'+t('rulesCols').map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr>'+diff.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</table>';
+  const src=Object.values(d.sources||{}).filter(u=>typeof u==='string'&&/^https:\/\//.test(u));
+  $('rulesSrc').innerHTML=src.length?esc(t('rulesSources'))+src.map(u=>'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(u)+'</a>').join(' · '):'';
+  $('rulesLayer').hidden=false;
+}
+async function checkRules(manual){
+  const info=m=>{ if(manual) $('rulesInfo').textContent=m; };
+  const url=$('rulesUrl').value.trim()||DEFAULT_RULES_URL;
+  if(!/^https:\/\//.test(url)){ info(t('rulesNoUrl')); return; }
+  if(!(window.jdgStore&&window.jdgStore.fetchRules)) return;
+  info(t('lookupBusy'));
+  const r=await window.jdgStore.fetchRules(url);
+  if(!r.ok){ info(t('rulesErr',r.error)); return; }
+  if(!validRules(r.data)){ info(t('rulesBad')); return; }
+  lastRulesCheck=new Date().toISOString().slice(0,10); persistAll();
+  if(!rulesState||r.data.version>rulesState.version){ info(''); showRulesReview(r.data); }
+  else info(t('rulesUpToDate'));
+}
+$('checkRules').onclick=()=>checkRules(true);
+$('rulesApply').onclick=()=>{ const d=pendingRules; pendingRules=null; $('rulesLayer').hidden=true; if(d){ adoptRules(d); $('rulesInfo').textContent=t('rulesApplied',d.version); } };
+$('rulesLater').onclick=()=>{ pendingRules=null; $('rulesLayer').hidden=true; };
+$('year').addEventListener('change',()=>{ applyRulesForYear(curYear()); updateRulesStatus(); });
+$('settingsLayer').addEventListener('change',updateRulesStatus);
+$('openSettings').addEventListener('click',updateRulesStatus);
+function maybeAutoCheck(){
+  if(tourOpen||!(DEFAULT_RULES_URL||$('rulesUrl').value.trim())) return;
+  if(!lastRulesCheck||Date.now()-Date.parse(lastRulesCheck)>30*864e5) checkRules(false);
+}
+
+// ---------- start ----------
+(function init(){
+  try{ const o=JSON.parse(localStorage.getItem('jdgState')||'null'); if(o&&o.lang&&I18N[o.lang]) LANG=o.lang; }catch(e){}
+  applyLang();
+  try{ const o=JSON.parse(localStorage.getItem('jdgState')||'null'); if(o) applyState(o); }catch(e){}
+  syncUI(); renderHistory(); render(); checkIds();
+  const finish=()=>{ if(!tourDone) setTimeout(tourStart,400); setTimeout(maybeAutoCheck,4000); };
+  if(window.jdgStore){
+    window.jdgStore.load().then(async o=>{
+      if(o&&o.app==='jdg-kalkulator'){ applyState(o); checkIds(); $('diskNote').textContent=t('diskLoaded'); }
+      else $('diskNote').textContent=t('diskNone');
+      await loadBundledRules();
+      finish();
+    }).catch(()=>loadBundledRules().then(finish));
+  } else loadBundledRules().then(finish);
+})();
+</script>
+</body>
+</html>
