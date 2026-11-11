@@ -97,7 +97,7 @@ async function gusLookup(digits, key) {
     return { ok: false, error: 'GUS: ' + msg, gus: true };
   } finally { try { if (bir) await bir.logout(); } catch (e) {} }
 }
-function bundledKeys() { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'app', 'lookup-keys.json'), 'utf8')) || {}; } catch (e) { return {}; } }
+function bundledKeys() { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'app', 'lookup-keys.json'), 'utf8').replace(/^﻿/, '')) || {}; } catch (e) { return {}; } }
 ipcMain.handle('nip:lookup', async (_e, nip, keys) => {
   const digits = String(nip || '').replace(/\D/g, '');
   if (!/^\d{10}$/.test(digits)) return { ok: false, error: 'NIP' };
@@ -160,6 +160,13 @@ function trimLog() {
 ipcMain.handle('log:append', (_e, entry) => appendLog(entry && entry.k, entry && entry.a));
 ipcMain.handle('log:read', () => readLogEntries());
 
+ipcMain.handle('manual:open', () => {
+  try {
+    const cands = [path.join(process.resourcesPath || '', 'Instrukcja-Manual.pdf'), path.join(__dirname, 'Instrukcja-Manual.pdf')];
+    const f = cands.find(x => { try { return fs.existsSync(x); } catch (e) { return false; } });
+    return f ? shell.openPath(f) : 'manual not found';
+  } catch (e) { return String(e.message || e); }
+});
 ipcMain.handle('store:open', () => {
   try { fs.mkdirSync(dataDir(), { recursive: true }); return shell.openPath(dataDir()); } catch (e) { return String(e.message || e); }
 });

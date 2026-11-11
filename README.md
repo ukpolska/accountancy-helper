@@ -24,6 +24,10 @@
 
 ---
 
+**PL** — Przed pierwszym użyciem przeczytaj instrukcję ([`Instrukcja-Manual.pdf`](Instrukcja-Manual.pdf)); po instalacji otwierasz ją też przyciskiem na ekranie „Zanim zaczniesz”. Klucz do wyszukiwania firm po NIP jest nieobowiązkowy i bezpłatny – każdy użytkownik zdobywa własny (opis w instrukcji, punkt 8); program nie zawiera żadnego klucza.
+
+**EN** — Please read the manual ([`Instrukcja-Manual.pdf`](Instrukcja-Manual.pdf)) before first use; after installing, the "Before you start" screen also has a button that opens it. The key for company lookup by NIP is optional and free – every user gets their own (explained in section 8 of the manual); the program contains no key.
+
 ## Gdzie są dane / Where the data is
 
 `Dokumenty\Accountancy Helper` — `dane.json` (dane), `Kopie zapasowe` (codzienne kopie z 60 dni), `dziennik.jsonl` (dziennik działań). Dane zapisują się automatycznie, a po ponownym uruchomieniu program wraca do ostatniego stanu. / `Documents\Accountancy Helper` — your data, daily backups of the last 60 days, and the activity log. Data is saved automatically and the program opens where you left off.
@@ -44,6 +48,7 @@ Instrukcja / Manual: [`Instrukcja-Manual.pdf`](Instrukcja-Manual.pdf)
 - Kolejne języki: ukraiński, hiszpański, niemiecki, czeski / More languages: Ukrainian, Spanish, German, Czech
 - Wiele profili (np. kilku klientów) i opcjonalne hasło / Several profiles (for example several clients) and an optional password
 - Aktualizacje zasad rocznych z tego repozytorium (za zgodą użytkownika) / Yearly rule updates from this repository (with the user's approval)
+- Obsługa pracowników i listy płac – odłożone, obecnie niepotrzebne / Employees and payroll – on hold, not needed for now
 
 ## Dla programistów / For developers
 

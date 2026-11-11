@@ -43,7 +43,7 @@ td.n input{text-align:right}
 #sheet{display:none}
 .layer{position:fixed;inset:0;z-index:1000}
 .layer[hidden]{display:none}
-#settingsLayer,#linksLayer,#rulesLayer{background:rgba(0,0,0,.55);overflow:auto;padding:20px}
+#settingsLayer,#linksLayer,#rulesLayer,#keyLayer{background:rgba(0,0,0,.55);overflow:auto;padding:20px}
 #linksLayer a{display:block;padding:7px 10px;margin:3px 0;border:1px solid #cfd6e0;border-radius:6px;text-decoration:none;color:inherit}
 #linksLayer a:hover{background:#eef3fb}
 #linksLayer a small{display:block;opacity:.7}
@@ -239,6 +239,20 @@ td.n input{text-align:right}
   <div class="row" style="margin-top:12px"><button class="sec" id="rulesLater" data-i="rulesLater"></button><button id="rulesApply" data-i="rulesApply"></button></div>
 </div></div>
 
+<div id="keyLayer" class="layer noprint" hidden><div class="modal">
+  <h2 style="margin-top:0" data-i="kcTitle"></h2>
+  <p data-i="kcManualText"></p>
+  <button id="kcManual" data-i="kcManualBtn"></button>
+  <h3 style="margin:18px 0 4px" data-i="kcKeyTitle"></h3>
+  <p class="note" data-i="kcKeyText"></p>
+  <div class="row" style="margin:6px 0"><a href="#" id="kcLinkCeidg" data-i="kcLinkCeidg"></a> &nbsp;·&nbsp; <a href="#" id="kcLinkGus" data-i="kcLinkGus"></a></div>
+  <label data-i="kcKeyLabel"></label>
+  <input id="kcKey" autocomplete="off" spellcheck="false" style="width:100%">
+  <p class="note" data-i="kcStoreNote"></p>
+  <div class="warn note" id="kcMsg"></div>
+  <div class="row" style="margin-top:12px"><span style="flex:1"></span><button class="sec" id="kcSkip" data-i="kcSkip"></button><button id="kcSave" data-i="kcSave"></button></div>
+</div></div>
+
 <div id="tourLayer" class="layer noprint" hidden>
   <div id="tourHl"></div>
   <div id="tourBox"><div id="tourStep" class="note"></div><h2 id="tourTitle" style="margin:4px 0 6px"></h2><div id="tourText"></div>
@@ -322,7 +336,7 @@ function compute(p, m){
 const I18N = {
 pl:{
 subtitle:'— kalkulator miesięczny',
-setGus:'Wyszukiwanie firm po NIP (rejestry)', gusNote:'Wykaz podatników VAT zna tylko firmy płacące VAT. Aby program znajdował także firmy zwolnione z VAT: (1) CEIDG – rejestr jednoosobowych działalności: zarejestruj się na dane.biznes.gov.pl (potrzebne konto na biznes.gov.pl, logowanie Profilem Zaufanym); klucz API przyjdzie mailem – wpisz go jako token CEIDG. (2) GUS (REGON), także dla spółek: klucz użytkownika bezpłatnie na wniosek, api.stat.gov.pl/Home/RegonApi. Wystarczy jedno z nich. Wysyłany jest tylko numer NIP.', lCeidgToken:'Token CEIDG (klucz API) – opcjonalnie', lGusKey:'Klucz API GUS (REGON) – opcjonalnie', lookupOkGus:'Pobrano z rejestru: {0}. Sprawdź dane.', lookupNeedKey:'Aby szukać także w rejestrach CEIDG / GUS, wpisz token lub klucz w Ustawieniach.', lookupConfirm:'Znaleziono w rejestrze:\n\nNazwa: {0}\nREGON: {1}\nAdres: {2}\nPKD: {4}\nŹródło: {3}\n\nRejestr pokazuje dane oficjalnie zarejestrowane i mogą się różnić od aktualnych. Wstawić nazwę i REGON (adres i PKD tylko jeśli pola są puste)?', lookupDeclined:'Nic nie zmieniono.', setLog:'Dziennik działań', logNote:'Zapis tego, co robiono w programie (wczytane pliki, zmiany wartości, obliczenia, zamknięte miesiące, eksporty) z datą i godziną. Pomaga sprawdzić, czy czegoś nie pominięto. Zapisywany jest tylko na tym komputerze, obok danych.', openLogBtn:'Otwórz dziennik', logTitle:'Dziennik działań', logDay:'Dzień:', logAllBtn:'Pokaż wszystko', logSaveBtn:'Zapisz jako plik tekstowy', logEmpty:'Brak wpisów.', logSession:'Sesja od {0}', lg_sStart:'Uruchomiono program', lg_sEnd:'Zamknięto program', lg_file:'Wczytano plik {0}: {1}, odczyt {2}, kwota {3} zł{4}', lg_moved:' – przeniesiono do właściwej grupy wg NIP', lg_fileFail:'Nie udało się odczytać pliku {0}', lg_zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', lg_addRow:'Dodano ręcznie wiersz: {0}', lg_delRow:'Usunięto wiersz „{0}”', lg_edit:'Wiersz „{0}”: zmieniono {1} z „{2}” na „{3}”', lg_calc:'Obliczono miesiąc {0}: przychód {1} zł, koszty {2} zł, ZUS społeczne {3} zł, zdrowotna {4} zł, podatek do zapłaty {5} zł', lg_close:'Zamknięto miesiąc {0}: przychód {1} zł, koszty {2} zł, dokumentów {3}', lg_undo:'Cofnięto zamknięcie miesiąca {0}', lg_histEdit:'Historia {0}: zmieniono {1} na „{2}”', lg_kpir:'Wyeksportowano księgę KPIR za rok {0} (miesięcy: {1}, dokumentów: {2})', lg_csv:'Wyeksportowano CSV za {0}', lg_csvYear:'Wyeksportowano CSV za rok {0}', lg_print:'Drukowanie / zapis PDF zestawienia: {0}', lg_backupSave:'Zapisano kopię zapasową (JSON)', lg_backupLoad:'Wczytano kopię zapasową', lg_setting:'Ustawienie „{0}” zmieniono na „{1}”', lg_rules:'Zastosowano zasady roczne, wersja {0}', lg_nip:'Wyszukiwanie NIP {0}: {1}', lg_nipNone:'nie znaleziono w rejestrze', lg_nipErr:'błąd wyszukiwania', lg_reset:'Usunięto wszystkie dane', fromInvoiceBtn:'Uzupełnij z mojej faktury', ceidgSiteBtn:'Sprawdź w CEIDG (strona internetowa)', ceidgSiteNote:'Otwiera oficjalną stronę CEIDG w przeglądarce: wpisz tam NIP i przepisz dane firmy. Automatyczne pobieranie z CEIDG będzie możliwe po otrzymaniu klucza.', fromInvConfirm:'Znaleziono na fakturze (dane sprzedawcy):\n\nNazwa: {0}\nNIP: {1}\nAdres: {2}\n\nWstawić te dane jako dane firmy?', fromInvOk:'Wstawiono dane z faktury: {0}.', fromInvNone:'Nie znaleziono danych sprzedawcy w tym pliku. Wybierz fakturę sprzedaży wystawioną przez Twoją firmę (PDF z tekstem lub XML z KSeF).', lAddress:'Adres firmy', lActivity:'Rodzaj działalności (PKD i opis)', lDefInc:'Domyślny opis przychodu (do księgi), np. Nauka jęz. angielskiego', lDefExp:'Domyślny opis kosztu (do księgi) – opcjonalnie', thNip:'NIP kontrahenta', thDesc:'Opis zdarzenia', thAddr:'Adres kontrahenta', typeOth:'Pozostały przychód', kpirBtn:'Księga KPIR (Excel)', kpirNone:'Brak pozycji do księgi – dodaj faktury i kliknij „Oblicz miesiąc” albo zamknij miesiąc.',
+kcTitle:'Zanim zaczniesz', kcManualText:'Prosimy najpierw przeczytać instrukcję – to kilka minut i oszczędza kłopotów przy pierwszym miesiącu.', kcManualBtn:'Otwórz instrukcję', kcKeyTitle:'Klucz do automatycznego wyszukiwania firm (nieobowiązkowy)', kcKeyText:'Dzięki kluczowi program sam uzupełni nazwę i adres także firm zwolnionych z VAT, wystarczy NIP. Klucz jest bezpłatny i należy do Ciebie: zdobywasz go na stronie CEIDG (lub w GUS). Jak to zrobić krok po kroku – w instrukcji. Bez klucza program działa normalnie, a dane takiej firmy możesz wpisać ręcznie.', kcLinkCeidg:'Strona klucza CEIDG', kcLinkGus:'Strona klucza GUS', kcKeyLabel:'Wklej tutaj klucz CEIDG', kcStoreNote:'Klucz zapisuje się tylko w Twoich danych programu (folder Dokumenty\\Accountancy Helper). Nie wysyłaj go innym osobom.', kcSave:'Zapisz klucz', kcSkip:'Pomiń na razie', kcEmpty:'Wklej najpierw klucz albo wybierz „Pomiń na razie”.', setGus:'Wyszukiwanie firm po NIP (rejestry)', gusNote:'Wykaz podatników VAT zna tylko firmy płacące VAT. Aby program znajdował także firmy zwolnione z VAT: (1) CEIDG – rejestr jednoosobowych działalności: zarejestruj się na dane.biznes.gov.pl (potrzebne konto na biznes.gov.pl, logowanie Profilem Zaufanym); klucz API przyjdzie mailem – wpisz go jako token CEIDG. (2) GUS (REGON), także dla spółek: klucz użytkownika bezpłatnie na wniosek, api.stat.gov.pl/Home/RegonApi. Wystarczy jedno z nich. Wysyłany jest tylko numer NIP.', lCeidgToken:'Token CEIDG (klucz API) – opcjonalnie', lGusKey:'Klucz API GUS (REGON) – opcjonalnie', lookupOkGus:'Pobrano z rejestru: {0}. Sprawdź dane.', lookupNeedKey:'Aby szukać także w rejestrach CEIDG / GUS, wpisz token lub klucz w Ustawieniach.', lookupConfirm:'Znaleziono w rejestrze:\n\nNazwa: {0}\nREGON: {1}\nAdres: {2}\nPKD: {4}\nŹródło: {3}\n\nRejestr pokazuje dane oficjalnie zarejestrowane i mogą się różnić od aktualnych. Wstawić nazwę i REGON (adres i PKD tylko jeśli pola są puste)?', lookupDeclined:'Nic nie zmieniono.', setLog:'Dziennik działań', logNote:'Zapis tego, co robiono w programie (wczytane pliki, zmiany wartości, obliczenia, zamknięte miesiące, eksporty) z datą i godziną. Pomaga sprawdzić, czy czegoś nie pominięto. Zapisywany jest tylko na tym komputerze, obok danych.', openLogBtn:'Otwórz dziennik', logTitle:'Dziennik działań', logDay:'Dzień:', logAllBtn:'Pokaż wszystko', logSaveBtn:'Zapisz jako plik tekstowy', logEmpty:'Brak wpisów.', logSession:'Sesja od {0}', lg_sStart:'Uruchomiono program', lg_sEnd:'Zamknięto program', lg_file:'Wczytano plik {0}: {1}, odczyt {2}, kwota {3} zł{4}', lg_moved:' – przeniesiono do właściwej grupy wg NIP', lg_fileFail:'Nie udało się odczytać pliku {0}', lg_zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', lg_addRow:'Dodano ręcznie wiersz: {0}', lg_delRow:'Usunięto wiersz „{0}”', lg_edit:'Wiersz „{0}”: zmieniono {1} z „{2}” na „{3}”', lg_calc:'Obliczono miesiąc {0}: przychód {1} zł, koszty {2} zł, ZUS społeczne {3} zł, zdrowotna {4} zł, podatek do zapłaty {5} zł', lg_close:'Zamknięto miesiąc {0}: przychód {1} zł, koszty {2} zł, dokumentów {3}', lg_undo:'Cofnięto zamknięcie miesiąca {0}', lg_histEdit:'Historia {0}: zmieniono {1} na „{2}”', lg_kpir:'Wyeksportowano księgę KPIR za rok {0} (miesięcy: {1}, dokumentów: {2})', lg_csv:'Wyeksportowano CSV za {0}', lg_csvYear:'Wyeksportowano CSV za rok {0}', lg_print:'Drukowanie / zapis PDF zestawienia: {0}', lg_backupSave:'Zapisano kopię zapasową (JSON)', lg_backupLoad:'Wczytano kopię zapasową', lg_setting:'Ustawienie „{0}” zmieniono na „{1}”', lg_rules:'Zastosowano zasady roczne, wersja {0}', lg_nip:'Wyszukiwanie NIP {0}: {1}', lg_nipNone:'nie znaleziono w rejestrze', lg_nipErr:'błąd wyszukiwania', lg_reset:'Usunięto wszystkie dane', fromInvoiceBtn:'Uzupełnij z mojej faktury', ceidgSiteBtn:'Sprawdź w CEIDG (strona internetowa)', ceidgSiteNote:'Otwiera oficjalną stronę CEIDG w przeglądarce: wpisz tam NIP i przepisz dane firmy. Automatyczne pobieranie z CEIDG będzie możliwe po otrzymaniu klucza.', fromInvConfirm:'Znaleziono na fakturze (dane sprzedawcy):\n\nNazwa: {0}\nNIP: {1}\nAdres: {2}\n\nWstawić te dane jako dane firmy?', fromInvOk:'Wstawiono dane z faktury: {0}.', fromInvNone:'Nie znaleziono danych sprzedawcy w tym pliku. Wybierz fakturę sprzedaży wystawioną przez Twoją firmę (PDF z tekstem lub XML z KSeF).', lAddress:'Adres firmy', lActivity:'Rodzaj działalności (PKD i opis)', lDefInc:'Domyślny opis przychodu (do księgi), np. Nauka jęz. angielskiego', lDefExp:'Domyślny opis kosztu (do księgi) – opcjonalnie', thNip:'NIP kontrahenta', thDesc:'Opis zdarzenia', thAddr:'Adres kontrahenta', typeOth:'Pozostały przychód', kpirBtn:'Księga KPIR (Excel)', kpirNone:'Brak pozycji do księgi – dodaj faktury i kliknij „Oblicz miesiąc” albo zamknij miesiąc.',
 zusEmeryt:'Emeryt / inny system (składki społeczne wpisane ręcznie)', lManualSoc:'Składki społeczne miesięcznie (PLN) – wpisz 0, jeśli ich nie ma',
 emerytNote:'Brak obowiązkowych składek społecznych z działalności; składka zdrowotna nadal jest liczona. Zweryfikuj swoją sytuację w ZUS / u księgowej.',
 lPrevDays:'Liczba dni działalności w poprzednim roku (365 = cały rok)', malyDaysWarn:'Działalność trwała krócej niż 60 dni w poprzednim roku – warunek Mały ZUS Plus może nie być spełniony.',
@@ -390,7 +404,7 @@ tr9t:'Ustawienia', tr9x:'W ustawieniach zmienisz język i parametry roczne, usun
 },
 en:{
 subtitle:'— monthly calculator',
-setGus:'Company lookup by NIP (registers)', gusNote:'The VAT register only knows VAT-paying businesses. To also find VAT-exempt businesses: (1) CEIDG, the sole-proprietor register: register at dane.biznes.gov.pl (needs a biznes.gov.pl account, sign-in with a Trusted Profile); the API key arrives by email - enter it as the CEIDG token. (2) GUS (REGON), also covers companies: a user key is issued free on request, api.stat.gov.pl/Home/RegonApi. One of them is enough. Only the NIP number is sent.', lCeidgToken:'CEIDG token (API key) - optional', lGusKey:'GUS (REGON) API key - optional', lookupOkGus:'Fetched from the register: {0}. Please check the details.', lookupNeedKey:'To also search the CEIDG / GUS registers, enter a token or key in Settings.', lookupConfirm:'Found in the register:\n\nName: {0}\nREGON: {1}\nAddress: {2}\nPKD: {4}\nSource: {3}\n\nThe register shows the officially registered details, which can differ from your current ones. Insert the name and REGON (the address and PKD only if those fields are empty)?', lookupDeclined:'Nothing was changed.', setLog:'Activity log', logNote:'A record of what was done in the program (files loaded, value changes, calculations, closed months, exports) with date and time. It helps to check that nothing was missed. It is stored only on this computer, next to the data.', openLogBtn:'Open the log', logTitle:'Activity log', logDay:'Day:', logAllBtn:'Show all', logSaveBtn:'Save as a text file', logEmpty:'No entries.', logSession:'Session from {0}', lg_sStart:'Program started', lg_sEnd:'Program closed', lg_file:'Loaded file {0}: {1}, read as {2}, amount {3} PLN{4}', lg_moved:' – moved to the right group by NIP', lg_fileFail:'Could not read file {0}', lg_zipBad:'Could not open the ZIP archive: {0}', lg_addRow:'Row added by hand: {0}', lg_delRow:'Row deleted: {0}', lg_edit:'Row {0}: {1} changed from {2} to {3}', lg_calc:'Calculated month {0}: revenue {1} PLN, costs {2} PLN, social ZUS {3} PLN, health {4} PLN, tax payable {5} PLN', lg_close:'Closed month {0}: revenue {1} PLN, costs {2} PLN, documents {3}', lg_undo:'Undid the closing of month {0}', lg_histEdit:'History {0}: {1} changed to {2}', lg_kpir:'Exported the KPIR ledger for {0} (months: {1}, documents: {2})', lg_csv:'Exported CSV for {0}', lg_csvYear:'Exported CSV for the year {0}', lg_print:'Printed / saved the summary as PDF: {0}', lg_backupSave:'Saved a backup (JSON)', lg_backupLoad:'Loaded a backup', lg_setting:'Setting {0} changed to {1}', lg_rules:'Applied yearly rules, version {0}', lg_nip:'NIP lookup {0}: {1}', lg_nipNone:'not found in the register', lg_nipErr:'lookup error', lg_reset:'All data deleted', fromInvoiceBtn:'Fill in from my invoice', ceidgSiteBtn:'Check on the CEIDG website', ceidgSiteNote:'Opens the official CEIDG page in your browser: type the NIP there and copy the company details. Automatic lookup from CEIDG will be possible once the key arrives.', fromInvConfirm:'Found on the invoice (seller details):\n\nName: {0}\nNIP: {1}\nAddress: {2}\n\nInsert these as the company details?', fromInvOk:'Inserted the details from the invoice: {0}.', fromInvNone:'No seller details found in this file. Choose a sales invoice issued by your company (a PDF with text, or a KSeF XML).', lAddress:'Company address', lActivity:'Type of activity (PKD and description)', lDefInc:'Default description for income (ledger), e.g. English lessons', lDefExp:'Default description for costs (ledger) – optional', thNip:'Counterparty NIP', thDesc:'Description of event', thAddr:'Counterparty address', typeOth:'Other income', kpirBtn:'KPIR ledger (Excel)', kpirNone:'No entries for the ledger yet – add invoices and click “Calculate month”, or close a month.',
+kcTitle:'Before you start', kcManualText:'Please read the manual first. It takes a few minutes and saves trouble in the first month.', kcManualBtn:'Open the manual', kcKeyTitle:'Key for automatic company lookup (optional)', kcKeyText:'With a key the software fills in the name and address of VAT-exempt businesses too, from just the NIP. The key is free and belongs to you: you get it on the CEIDG website (or from GUS). The manual explains how, step by step. Without a key the software works normally, and you can type such a business in by hand.', kcLinkCeidg:'CEIDG key page', kcLinkGus:'GUS key page', kcKeyLabel:'Paste your CEIDG key here', kcStoreNote:'The key is saved only in your own program data (Documents\\Accountancy Helper folder). Do not send it to other people.', kcSave:'Save key', kcSkip:'Skip for now', kcEmpty:'Paste a key first, or choose Skip for now.', setGus:'Company lookup by NIP (registers)', gusNote:'The VAT register only knows VAT-paying businesses. To also find VAT-exempt businesses: (1) CEIDG, the sole-proprietor register: register at dane.biznes.gov.pl (needs a biznes.gov.pl account, sign-in with a Trusted Profile); the API key arrives by email - enter it as the CEIDG token. (2) GUS (REGON), also covers companies: a user key is issued free on request, api.stat.gov.pl/Home/RegonApi. One of them is enough. Only the NIP number is sent.', lCeidgToken:'CEIDG token (API key) - optional', lGusKey:'GUS (REGON) API key - optional', lookupOkGus:'Fetched from the register: {0}. Please check the details.', lookupNeedKey:'To also search the CEIDG / GUS registers, enter a token or key in Settings.', lookupConfirm:'Found in the register:\n\nName: {0}\nREGON: {1}\nAddress: {2}\nPKD: {4}\nSource: {3}\n\nThe register shows the officially registered details, which can differ from your current ones. Insert the name and REGON (the address and PKD only if those fields are empty)?', lookupDeclined:'Nothing was changed.', setLog:'Activity log', logNote:'A record of what was done in the program (files loaded, value changes, calculations, closed months, exports) with date and time. It helps to check that nothing was missed. It is stored only on this computer, next to the data.', openLogBtn:'Open the log', logTitle:'Activity log', logDay:'Day:', logAllBtn:'Show all', logSaveBtn:'Save as a text file', logEmpty:'No entries.', logSession:'Session from {0}', lg_sStart:'Program started', lg_sEnd:'Program closed', lg_file:'Loaded file {0}: {1}, read as {2}, amount {3} PLN{4}', lg_moved:' – moved to the right group by NIP', lg_fileFail:'Could not read file {0}', lg_zipBad:'Could not open the ZIP archive: {0}', lg_addRow:'Row added by hand: {0}', lg_delRow:'Row deleted: {0}', lg_edit:'Row {0}: {1} changed from {2} to {3}', lg_calc:'Calculated month {0}: revenue {1} PLN, costs {2} PLN, social ZUS {3} PLN, health {4} PLN, tax payable {5} PLN', lg_close:'Closed month {0}: revenue {1} PLN, costs {2} PLN, documents {3}', lg_undo:'Undid the closing of month {0}', lg_histEdit:'History {0}: {1} changed to {2}', lg_kpir:'Exported the KPIR ledger for {0} (months: {1}, documents: {2})', lg_csv:'Exported CSV for {0}', lg_csvYear:'Exported CSV for the year {0}', lg_print:'Printed / saved the summary as PDF: {0}', lg_backupSave:'Saved a backup (JSON)', lg_backupLoad:'Loaded a backup', lg_setting:'Setting {0} changed to {1}', lg_rules:'Applied yearly rules, version {0}', lg_nip:'NIP lookup {0}: {1}', lg_nipNone:'not found in the register', lg_nipErr:'lookup error', lg_reset:'All data deleted', fromInvoiceBtn:'Fill in from my invoice', ceidgSiteBtn:'Check on the CEIDG website', ceidgSiteNote:'Opens the official CEIDG page in your browser: type the NIP there and copy the company details. Automatic lookup from CEIDG will be possible once the key arrives.', fromInvConfirm:'Found on the invoice (seller details):\n\nName: {0}\nNIP: {1}\nAddress: {2}\n\nInsert these as the company details?', fromInvOk:'Inserted the details from the invoice: {0}.', fromInvNone:'No seller details found in this file. Choose a sales invoice issued by your company (a PDF with text, or a KSeF XML).', lAddress:'Company address', lActivity:'Type of activity (PKD and description)', lDefInc:'Default description for income (ledger), e.g. English lessons', lDefExp:'Default description for costs (ledger) – optional', thNip:'Counterparty NIP', thDesc:'Description of event', thAddr:'Counterparty address', typeOth:'Other income', kpirBtn:'KPIR ledger (Excel)', kpirNone:'No entries for the ledger yet – add invoices and click “Calculate month”, or close a month.',
 zusEmeryt:'Pensioner / other system (social contributions entered manually)', lManualSoc:'Social contributions per month (PLN) – enter 0 if none',
 emerytNote:'No compulsory social contributions from the business; the health contribution is still calculated. Check your situation with ZUS / your accountant.',
 lPrevDays:'Days of activity in the previous year (365 = full year)', malyDaysWarn:'The business operated for under 60 days last year – the Small ZUS Plus condition may not be met.',
@@ -479,11 +493,11 @@ function applyLang(){
 }
 
 // ---------- state ----------
-let nipDir={}, partyInfo={}, rulesState=null, lastRulesCheck='', myLinks=[], rows=[], history=[], corr={}, lastResult=null, tourDone=false, tourOpen=false, tourI=0;
+let nipDir={}, partyInfo={}, rulesState=null, lastRulesCheck='', myLinks=[], rows=[], history=[], corr={}, lastResult=null, tourDone=false, keyCardDone=false, tourOpen=false, tourI=0;
 const FIELDS=['hbIncome','name','nip','regon','address','activity','defInc','defExp','gusKey','ceidgToken','year','month','taxForm','rate','vat','zus','prevIncome','prevDays','prevRevenue','manualBase','manualSocial','ytdRev','ytdCost','ytdTax','ytdZus','ytdHealth','pBaseFull','pBasePref','pMinWage','pMinHealth','pAvgWage','pLinLimit','rulesUrl'];
 const ytdMap={rev:'ytdRev',cost:'ytdCost',tax:'ytdTax',soc:'ytdZus',health:'ytdHealth'};
 function stateObj(){
-  const o={app:'jdg-kalkulator',version:2,saved:new Date().toISOString(),chorobowe:$('chorobowe').checked,lang:LANG,tourDone,corr,partyInfo,nipDir,history,myLinks,rulesApplied:rulesState,lastRulesCheck};
+  const o={app:'jdg-kalkulator',version:2,saved:new Date().toISOString(),chorobowe:$('chorobowe').checked,lang:LANG,tourDone,keyCardDone,corr,partyInfo,nipDir,history,myLinks,rulesApplied:rulesState,lastRulesCheck};
   FIELDS.forEach(f=>o[f]=$(f).value); return o;
 }
 function applyState(o){
@@ -494,6 +508,7 @@ function applyState(o){
   partyInfo=o.partyInfo&&typeof o.partyInfo==='object'?o.partyInfo:{};
   nipDir=o.nipDir&&typeof o.nipDir==='object'?o.nipDir:{};
   if(o.tourDone) tourDone=true;
+  if(o.keyCardDone) keyCardDone=true;
   if(validRules(o.rulesApplied)&&(!rulesState||o.rulesApplied.version>rulesState.version)) rulesState=o.rulesApplied;
   lastRulesCheck=typeof o.lastRulesCheck==='string'?o.lastRulesCheck:'';
   myLinks=Array.isArray(o.myLinks)?o.myLinks.filter(l=>l&&typeof l.name==='string'&&/^https:\/\//.test(l.url)):[];
@@ -737,16 +752,63 @@ function ocrLines(texts,header){
   out.nips=[...new Set([...texts.flatMap(nipsFrom),...header.flatMap(h=>(h.match(/\d[\d\- ]{8,12}\d/g)||[]).map(x=>x.replace(/\D/g,'')))].filter(nipOk))];
   return out;
 }
+// numer paragonu (W + 6 cyfr) ze skanu paragonu z kasy/taksometru: skan PDF to dokładny obraz drukarki (576 punktów szerokości), więc znaki można
+// porównać z wzorcami piksel w piksel, zamiast zgadywać jak zwykłe OCR. Wynik przyjmujemy tylko wtedy, gdy KAŻDY znak pasuje niemal idealnie i wyraźnie
+// lepiej niż jakikolwiek inny znak (najmniejsza różnica między różnymi znakami we wzorcach to 18 pikseli); w każdym innym przypadku zwracamy '' i numer wpisuje człowiek.
+const BMP_TPL={"W":["##....##|##....##|##....##|##....##|##....##|##....##|##....##|##....##|##.##.##|##.##.##|##.##.##|##.##.##|########|########|########|.##..##.|.##..##.|.##..##.|.##..##.|.##..##."],"0":["..####..|.######.|.##..##.|###..###|##....##|##....##|##....##|##....##|##....##|##....##|##....##|##....##|##....##|##....##|##....##|##....##|###..###|.##..##.|.######.|..####..","..####..|.######.|.##..##.|###..###|##....##|##....##|##...###|##...###|##..#.##|##..#.##|##.#..##|##.#..##|###...##|###...##|##....##|##....##|###..###|.##..##.|.######.|..####.."],"1":["...##..|..###..|.####..|#####..|##.##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|...##..|.######|.######"],"2":["..####..|.######.|.##..##.|###..###|##....##|......##|......##|.....###|.....##.|....###.|....##..|...###..|...##...|..###...|..##....|.###....|.##.....|###.....|########|########"],"3":["..####..|.######.|.##..##.|###..###|##....##|##....##|......##|.....###|.....##.|...####.|...####.|.....##.|.....###|......##|......##|##....##|###..###|.##..##.|.######.|..####.."],"4":[".....###|.....###|....####|....####|...#####|...##.##|..###.##|..##..##|.###..##|.##...##|###...##|##....##|########|########|......##|......##|......##|......##|......##|......##"],"5":["########|########|##......|##......|##......|##......|##......|######..|#######.|###..##.|##...###|......##|......##|......##|##....##|##....##|###..###|.##..##.|.######.|..####.."],"6":["..####..|.######.|.##..##.|###..###|##....##|##....##|##......|##......|######..|#######.|###..##.|###..###|##....##|##....##|##....##|##....##|###..###|.##..##.|.######.|..####.."],"7":["########|########|......##|......##|.....##.|.....##.|.....##.|.....##.|....##..|....##..|....##..|....##..|...##...|...##...|...##...|...##...|..##....|..##....|..##....|..##...."],"8":["..####..|.######.|.##..##.|###..###|##....##|##....##|##....##|###..###|.##..##.|.######.|.######.|.##..##.|###..###|##....##|##....##|##....##|###..###|.##..##.|.######.|..####.."],"9":["..####..|.######.|.##..##.|###..###|##....##|##....##|##....##|##....##|###..###|.##..###|.#######|..######|......##|......##|##....##|##....##|###..###|.##..##.|.######.|..####.."]};
+const BMP_T=Object.entries(BMP_TPL).flatMap(([ch,vs])=>vs.map(v=>({ch,rows:v.split('|')})));
+function bmpClassify(rows){
+  const w=rows[0].length; let best=null, second=null; const per={};
+  for(const t of BMP_T){
+    if(t.rows.length!==rows.length||t.rows[0].length!==w) continue;
+    let d=0; for(let y=0;y<rows.length&&d<=40;y++){ const a=rows[y], b=t.rows[y]; for(let x=0;x<w;x++) if(a[x]!==b[x]) d++; }
+    if(per[t.ch]===undefined||d<per[t.ch]) per[t.ch]=d;
+  }
+  const list=Object.entries(per).sort((a,b)=>a[1]-b[1]); if(!list.length) return null;
+  best=list[0]; second=list[1]||[null,999];
+  return (best[1]<=4&&second[1]-best[1]>=10)?best[0]:null;
+}
+function bmpReadNumber(c){
+  const w=c.width, h=c.height, d=c.getContext('2d').getImageData(0,0,w,h).data;
+  const dark=(x,y)=>{ const i=(y*w+x)*4; return (0.3*d[i]+0.59*d[i+1]+0.11*d[i+2])<128; };
+  const rowInk=[]; for(let y=0;y<h;y++){ let k=false; for(let x=0;x<w&&!k;x++) if(dark(x,y)) k=true; rowInk.push(k); }
+  const bands=[]; let s=-1; for(let y=0;y<=h;y++){ const on=y<h&&rowInk[y]; if(on&&s<0) s=y; if(!on&&s>=0){ bands.push([s,y-1]); s=-1; } }
+  const spansOf=(y0,y1)=>{ const sp=[]; let a=-1; for(let x=0;x<=w;x++){ let on=false; if(x<w) for(let y=y0;y<=y1;y++) if(dark(x,y)){ on=true; break; } if(on&&a<0) a=x; if(!on&&a>=0){ sp.push([a,x-1]); a=-1; } } return sp; };
+  const firstDash=bands.findIndex(b=>b[1]-b[0]<=3&&spansOf(b[0],b[1]).length>=30);
+  if(firstDash<1) return '';
+  const found=new Set();
+  for(let i=0;i<firstDash;i++){
+    const [y0,y1]=bands[i]; if(y1-y0<14) continue;
+    const sp=spansOf(y0,y1); if(sp.length<7) continue;
+    const last=sp.slice(-7); if(last[6][1]<w-8) continue;   // numer jest wyrównany do prawej krawędzi
+    let str='';
+    for(const [x0,x1] of last){
+      let t=-1,b=-1; for(let y=y0;y<=y1;y++){ let k=false; for(let x=x0;x<=x1&&!k;x++) if(dark(x,y)) k=true; if(k){ if(t<0) t=y; b=y; } }
+      const rows=[]; for(let y=t;y<=b;y++){ let r=''; for(let x=x0;x<=x1;x++) r+=dark(x,y)?'#':'.'; rows.push(r); }
+      const ch=bmpClassify(rows); if(!ch){ str=''; break; } str+=ch;
+    }
+    if(/^W\d{6}$/.test(str)) found.add(str);
+  }
+  return found.size===1?[...found][0]:'';
+}
+async function bmpReceiptNumber(pg){
+  const vp=pg.getViewport({scale:4/3});
+  if(Math.abs(vp.width-576)>1.5) return '';
+  const c=document.createElement('canvas'); c.width=Math.round(vp.width); c.height=Math.round(vp.height);
+  const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height); await pg.render({canvasContext:cx,viewport:vp}).promise;
+  return bmpReadNumber(c);
+}
 async function pdfOcr(file){
-  const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise, texts=[]; let header='';
+  const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise, texts=[]; let header='', rcpt='';
   for(let n=1;n<=Math.min(pdf.numPages,3);n++){
     const pg=await pdf.getPage(n);
     const render=async sc=>{ const vp=pg.getViewport({scale:sc}), c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height; const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height); await pg.render({canvasContext:cx,viewport:vp}).promise; return c; };
     const t=await ocrRun(render,true);
     t.forEach((x,i)=>texts[i]=(texts[i]||'')+'\n'+x);
     if(n===1&&needHeader(t[0])) header=await ocrHeader(render);
+    if(n===1&&isReceiptText(t[0])){ try{ rcpt=await bmpReceiptNumber(pg); }catch(e){ rcpt=''; } }
   }
-  return ocrLines(texts,header);
+  const out=ocrLines(texts,header); if(rcpt) out.rcpt=rcpt; return out;
 }
 async function imgOcr(file){
   const bm=await createImageBitmap(file);
@@ -774,7 +836,7 @@ function extractReceipt(lines,type,file){
     r.addr=ad.join(', ');
   }
   r.nip=(lines.nips||[]).find(n=>n!==own)||'';
-  r.flags=[{k:'needNumber'}];   // numer paragonu (W + 6 cyfr) nigdy nie jest brany ze skanu: czcionka punktowa daje pomyłki o jedną cyfrę, a błędny numer w księdze jest gorszy niż pusty
+  r.flags=lines.rcpt?[]:[{k:'needNumber'}]; if(lines.rcpt) r.number='Paragon '+lines.rcpt;   // numer paragonu: tylko z dokładnego dopasowania znaków (bmpReceiptNumber); zwykłe OCR myli cyfry, a błędny numer w księdze jest gorszy niż pusty
   const lastIn=(re,skip)=>{ let v=0; for(const l of lines) if(re.test(l)&&!(skip&&skip.test(l))){ const a=amountsIn(l); if(a.length) v=a[a.length-1]; } return v; };
   r.gross=lastIn(/do zap[łl]aty/i)||lastIn(/^suma\b/i,/ptu/i);
   const vat=lastIn(/suma\s*ptu/i)||lastIn(/kwota\s*ptu/i);
@@ -1334,9 +1396,24 @@ function tourShow(i){
   if(el&&el.getClientRects().length){ el.scrollIntoView({block:'center'}); setTimeout(()=>tourPlace(el),250); }
   else tourPlace(null);
 }
+// karta „Zanim zaczniesz”: instrukcja + opcjonalny klucz do wyszukiwania firm (pokazywana raz, po przewodniku)
+function keyCardMaybe(){
+  if(keyCardDone||$('ceidgToken').value.trim()||$('gusKey').value.trim()) return;
+  $('kcMsg').textContent=''; $('kcKey').value=''; $('keyLayer').hidden=false;
+}
+function keyCardClose(){ $('keyLayer').hidden=true; keyCardDone=true; persistAll(); }
+$('kcManual').onclick=()=>{ if(window.jdgStore&&window.jdgStore.openManual) window.jdgStore.openManual(); };
+$('kcLinkCeidg').onclick=e=>{ e.preventDefault(); window.open('https://dane.biznes.gov.pl/','_blank'); };
+$('kcLinkGus').onclick=e=>{ e.preventDefault(); window.open('https://api.stat.gov.pl/Home/RegonApi','_blank'); };
+$('kcSkip').onclick=keyCardClose;
+$('kcSave').onclick=()=>{
+  const v=$('kcKey').value.replace(/\s+/g,'');
+  if(!v){ $('kcMsg').textContent=t('kcEmpty'); return; }
+  $('ceidgToken').value=v; keyCardClose();
+};
 function tourStart(){ window.scrollTo(0,0); tourShow(0); }
 function tourEnd(){
-  tourOpen=false; $('tourLayer').hidden=true; tourDone=true; persistAll();
+  tourOpen=false; $('tourLayer').hidden=true; tourDone=true; persistAll(); setTimeout(keyCardMaybe,300);
 }
 $('tourNext').onclick=()=>{ tourI>=TOUR.length-1?tourEnd():tourShow(tourI+1); };
 $('tourPrev').onclick=()=>{ if(tourI>0) tourShow(tourI-1); };
@@ -1423,7 +1500,7 @@ function maybeAutoCheck(){
   applyLang();
   try{ const o=JSON.parse(localStorage.getItem('jdgState')||'null'); if(o) applyState(o); }catch(e){}
   syncUI(); renderHistory(); render(); checkIds();
-  const finish=()=>{ if(!tourDone) setTimeout(tourStart,400); setTimeout(maybeAutoCheck,4000); };
+  const finish=()=>{ if(!tourDone) setTimeout(tourStart,400); else setTimeout(keyCardMaybe,600); setTimeout(maybeAutoCheck,4000); };
   if(window.jdgStore){
     window.jdgStore.load().then(async o=>{
       if(o&&o.app==='jdg-kalkulator'){ applyState(o); checkIds(); $('diskNote').textContent=t('diskLoaded'); }

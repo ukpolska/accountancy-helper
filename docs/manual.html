@@ -17,6 +17,8 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <h1>Accountancy Helper</h1>
 <div class="sub">Instrukcja obsługi – kalkulator miesięcznych składek ZUS i podatku dla jednoosobowej działalności (JDG), wartości na rok 2026</div>
 
+<div class="note" style="border:1px solid #cfd6e0;padding:8px 12px;border-radius:6px;background:#f6f8fc"><b>Przeczytaj najpierw.</b> Zanim zaczniesz korzystać z programu, przeczytaj tę instrukcję do końca – to kilka minut. Program liczy wartości orientacyjne; pierwszy miesiąc porównaj ze swoimi wyliczeniami.</div>
+
 <h2>1. Do czego służy program</h2>
 <p>Program liczy miesięczne składki ZUS, składkę zdrowotną i zaliczkę na podatek dochodowy na podstawie faktur sprzedaży i kosztowych (pliki PDF lub XML z KSeF), danych narastających od początku roku i wybranych ustawień firmy. Wszystkie dane zapisują się na komputerze.</p>
 
@@ -41,10 +43,10 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <h2>4. Co miesiąc – krok po kroku</h2>
 <ol>
 <li>Wybierz rozliczany miesiąc.</li>
-<li>Przeciągnij faktury sprzedaży do pola „Faktury sprzedaży”, a faktury kosztowe do pola „Faktury kosztowe” (albo użyj przycisków „Wybierz pliki” / „Wybierz folder”). Obsługiwane są pliki PDF, zdjęcia i skany (JPG, PNG), pliki XML z KSeF oraz archiwa ZIP (np. pobrane ze strony internetowej) i całe foldery – można je przeciągnąć na pole. Jeśli faktura sprzedaży trafi do pola kosztów (albo odwrotnie), program rozpozna to po NIP-ie, przeniesie dokument do właściwej grupy i oznaczy wiersz. Skany i zdjęcia (np. paragon z taksówki) program odczytuje automatycznie (OCR) – takie wiersze są oznaczone i trzeba dokładnie sprawdzić NIP, numer i kwoty. Liczba plików nie jest ograniczona.</li>
+<li>Przeciągnij faktury sprzedaży do pola „Faktury sprzedaży”, a faktury kosztowe do pola „Faktury kosztowe” (albo użyj przycisków „Wybierz pliki” / „Wybierz folder”). Obsługiwane są pliki PDF, zdjęcia i skany (JPG, PNG), pliki XML z KSeF oraz archiwa ZIP (np. pobrane ze strony internetowej) i całe foldery – można je przeciągnąć na pole. Jeśli faktura sprzedaży trafi do pola kosztów (albo odwrotnie), program rozpozna to po NIP-ie, przeniesie dokument do właściwej grupy i oznaczy wiersz. Skany i zdjęcia (np. paragon z taksówki) program odczytuje automatycznie (OCR) – takie wiersze są oznaczone i trzeba sprawdzić NIP i kwoty. Numer paragonu z pliku PDF (skan z kasy lub taksometru) program odczytuje dokładnie, porównując kształt każdego znaku; jeśli nie ma pewności (np. zdjęcie z telefonu albo inny typ paragonu), zostawia pustą komórkę z uwagą „Wpisz numer paragonu” i numer wpisuje się ręcznie, bo błędny numer w księdze jest gorszy niż pusty. Liczba plików nie jest ograniczona.</li>
 <li><b>Sprawdź tabelę.</b> Odczytane wartości to tylko podpowiedź. Popraw datę, kontrahenta, numer i kwoty. Wiersze z datą spoza miesiąca są oznaczone i pomijane. Program ostrzega o możliwych duplikatach i zapamiętuje poprawione nazwy kontrahentów. Brakujące pozycje dodasz przyciskami „+ Przychód” i „+ Koszt”.</li>
 <li>Składka zdrowotna (skala podatkowa i podatek liniowy) jest liczona od dochodu z <b>poprzedniego</b> miesiąca. Program bierze go z historii (po zamknięciu poprzedniego miesiąca); jeśli tego miesiąca nie ma w programie, wpisz go w polu „Dochód z poprzedniego miesiąca”. Wartość 0 oznacza składkę minimalną.</li>
-<li><b>Dane firmy i NIP:</b> przy pustych danych firmy program sam znajdzie Twoją firmę na pierwszych fakturach sprzedaży (dane sprzedawcy) i zapyta, czy je wstawić. Przycisk „Uzupełnij z mojej faktury” robi to samo na życzenie. Program zapamiętuje każdy NIP z wczytanych dokumentów wraz z nazwą i adresem. Po wpisaniu NIP-u (w danych firmy albo w wierszu tabeli) uzupełnia nazwę i adres z tej pamięci, a w razie braku z rejestru podatników VAT (Ministerstwo Finansów); wysyłany jest wtedy tylko numer NIP. Firmy zwolnione z VAT nie występują w tym rejestrze – dla nich dane pochodzą z faktur lub wpisuje się je raz ręcznie.</li>
+<li><b>Dane firmy i NIP:</b> przy pustych danych firmy program sam znajdzie Twoją firmę na pierwszych fakturach sprzedaży (dane sprzedawcy) i zapyta, czy je wstawić. Przycisk „Uzupełnij z mojej faktury” robi to samo na życzenie. Program zapamiętuje każdy NIP z wczytanych dokumentów wraz z nazwą i adresem. Po wpisaniu NIP-u (w danych firmy albo w wierszu tabeli) uzupełnia nazwę i adres z tej pamięci, a w razie braku z rejestru podatników VAT (Ministerstwo Finansów); wysyłany jest wtedy tylko numer NIP. Firmy zwolnione z VAT nie występują w tym rejestrze – dla nich dane pochodzą z faktur, z klucza CEIDG/GUS (patrz punkt 8) albo wpisuje się je raz ręcznie.</li>
 <li>Opcjonalnie wpisz notatkę do miesiąca.</li>
 <li>Kliknij <b>Oblicz miesiąc</b>. Pojawi się zestawienie: przychód i koszty, składki ZUS ze składnikami, składka zdrowotna, podatek narastająco, podatek do zapłaty za miesiąc i ewentualne ostrzeżenia (np. zbliżanie się do progu 120 000 zł).</li>
 <li><b>Drukuj / zapisz PDF</b> lub <b>Eksport CSV</b> – gotowe zestawienie dla dokumentacji.</li>
@@ -74,11 +76,23 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 
 <h2>7. Wskazówki i rozwiązywanie problemów</h2>
 <ul>
-<li><b>PDF nie został odczytany:</b> skanowane dokumenty bez warstwy tekstowej trzeba wpisać ręcznie.</li>
+<li><b>PDF nie został odczytany:</b> skany i zdjęcia program odczytuje metodą OCR (rozpoznawania tekstu); gdy plik jest nieczytelny, wiersz trzeba uzupełnić ręcznie.</li>
 <li><b>Faktury w KSeF:</b> pliki XML z KSeF są odczytywane bezpośrednio. Jeśli w polu NIP wpisano NIP firmy, program sam rozpoznaje, czy faktura jest przychodem, czy kosztem. Faktury korygujące i w walutach obcych są oznaczone do sprawdzenia.</li>
 <li><b>Kwota wygląda źle:</b> popraw ją w tabeli przed kliknięciem „Oblicz miesiąc”.</li>
 <li><b>Pomyłka po zamknięciu miesiąca:</b> użyj „Cofnij” w historii, popraw dane i zamknij miesiąc ponownie.</li>
 </ul>
+
+<h2>8. Klucz do wyszukiwania firm po NIP (nieobowiązkowy)</h2>
+<p>Program sam znajduje nazwę i adres firm płacących VAT. Aby znajdował też firmy <b>zwolnione z VAT</b> (np. jednoosobowe działalności), potrzebny jest bezpłatny klucz, który należy do Ciebie. Bez klucza program działa normalnie – dane takiej firmy pochodzą z faktur albo wpisujesz je raz ręcznie. Przycisk „Sprawdź na stronie CEIDG” otwiera oficjalną stronę, gdzie można wyszukać firmę po NIP.</p>
+<p><b>Klucz CEIDG (Hurtownia danych CEIDG i Biznes.gov.pl):</b></p>
+<ol>
+<li>Wejdź na <code>dane.biznes.gov.pl</code> (przycisk „Strona klucza CEIDG” na karcie „Zanim zaczniesz” otwiera tę stronę).</li>
+<li>Zarejestruj się i złóż wniosek o dostęp – wymagane jest konto na Biznes.gov.pl i potwierdzenie tożsamości (logowanie Profilem Zaufanym lub przez bank, podpis wniosku). Postępuj według poleceń na stronie – mogą się zmieniać.</li>
+<li>Klucz przychodzi e-mailem (u autora programu – tego samego dnia). To długi ciąg znaków.</li>
+<li>Skopiuj go i wklej na karcie „Zanim zaczniesz” albo w Ustawieniach (⚙) w polu „Token CEIDG (klucz API)”.</li>
+</ol>
+<p><b>Klucz GUS (REGON):</b> wyślij e-mail na adres <code>regon_bir@stat.gov.pl</code> z prośbą o klucz użytkownika do produkcyjnej usługi BIR1. Otrzymany klucz wklej w Ustawieniach (⚙) w polu „Klucz API GUS (REGON)”.</p>
+<p><b>Ważne:</b> klucz jest osobisty. Nie wysyłaj go innym osobom i nie publikuj. Zapisuje się tylko w danych programu na Twoim komputerze (folder <code>Dokumenty\Accountancy Helper</code>). Klucz CEIDG zawiera Twoje dane osobowe (m.in. PESEL), więc traktuj go jak hasło. Program zawsze pyta o zgodę, zanim wstawi dane znalezione po NIP-ie.</p>
 
 <div class="box warn"><b>Ważne.</b> Program podaje kwoty orientacyjne, wyliczone według parametrów na 2026 r. Przed złożeniem deklaracji (DRA, PIT-5 / PIT-5L / PIT-28, JPK) i dokonaniem płatności zweryfikuj wyniki z aktualnymi przepisami, ZUS lub doradcą. Nie jest to porada podatkowa. Nie uwzględniono m.in. zwolnień ze składki zdrowotnej, ulg podatkowych (poza kwotą zmniejszającą 3 600 zł przy skali), odsetek ani rat zaległych składek.</div>
 
@@ -86,6 +100,8 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <div class="pb"></div>
 <h1>Accountancy Helper</h1>
 <div class="sub">User manual – monthly ZUS contribution and tax calculator for a sole proprietorship (JDG), values for 2026</div>
+
+<div class="note" style="border:1px solid #cfd6e0;padding:8px 12px;border-radius:6px;background:#f6f8fc"><b>Read this first.</b> Before you start using the program, please read this manual to the end – it takes a few minutes. The program gives indicative figures; compare the first month with your own calculations.</div>
 
 <h2>1. What the program does</h2>
 <p>The program calculates monthly ZUS contributions, the health contribution and the income-tax advance from sales and cost invoices (PDF files or KSeF XML files), year-to-date figures and your company settings. All data is stored on this computer.</p>
@@ -111,10 +127,10 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <h2>4. Every month – step by step</h2>
 <ol>
 <li>Choose the month to calculate.</li>
-<li>Drag sales invoices into “Sales invoices” and cost invoices into “Cost invoices” (or use “Choose files” / “Choose folder”). PDF files, photos and scans (JPG, PNG), KSeF XML files, ZIP archives (for example downloaded from a website) and whole folders are supported – drag them onto the box. If a sales invoice lands in the costs box (or the other way round), the program recognises it by the NIP, moves the document to the right group and marks the row. Scans and photos (for example a taxi receipt) are read automatically (OCR) – those rows are marked and the NIP, number and amounts must be checked carefully. There is no limit on the number of files.</li>
+<li>Drag sales invoices into “Sales invoices” and cost invoices into “Cost invoices” (or use “Choose files” / “Choose folder”). PDF files, photos and scans (JPG, PNG), KSeF XML files, ZIP archives (for example downloaded from a website) and whole folders are supported – drag them onto the box. If a sales invoice lands in the costs box (or the other way round), the program recognises it by the NIP, moves the document to the right group and marks the row. Scans and photos (for example a taxi receipt) are read automatically (OCR) – those rows are marked and the NIP and amounts must be checked. The receipt number from a PDF scan (from a till or taximeter) is read exactly by comparing the shape of each character; if it is not certain (for example a phone photo or another type of receipt), the cell is left empty with the note “Type the receipt number” and the number is typed by hand, because a wrong number in the ledger is worse than an empty one. There is no limit on the number of files.</li>
 <li><b>Check the table.</b> Values read from files are only suggestions. Correct the date, counterparty, number and amounts. Rows dated outside the month are flagged and skipped. The program warns about possible duplicates and remembers corrected counterparty names. Use “+ Income” and “+ Expense” to add missing items.</li>
 <li>The health contribution (tax scale and linear tax) is based on the income of the <b>previous</b> month. The program takes it from the history (once the previous month is closed); if that month is not in the program, enter it in the field “Income of the previous month”. A value of 0 means the minimum contribution.</li>
-<li><b>Company details and NIP:</b> when the company details are empty, the program finds your company on the first sales invoices (the seller details) and asks whether to insert them. The button “Fill in from my invoice” does the same on request. The program remembers every NIP from the documents you load, with its name and address. After you type a NIP (in the company details or in a table row), it fills in the name and address from that memory, or if it is not there from the VAT payers register (Ministry of Finance); only the NIP number is sent. Businesses exempt from VAT are not in that register – for them the details come from invoices or are typed once.</li>
+<li><b>Company details and NIP:</b> when the company details are empty, the program finds your company on the first sales invoices (the seller details) and asks whether to insert them. The button “Fill in from my invoice” does the same on request. The program remembers every NIP from the documents you load, with its name and address. After you type a NIP (in the company details or in a table row), it fills in the name and address from that memory, or if it is not there from the VAT payers register (Ministry of Finance); only the NIP number is sent. Businesses exempt from VAT are not in that register – for them the details come from invoices, from a CEIDG/GUS key (see section 8) or are typed once.</li>
 <li>Optionally write a note for the month.</li>
 <li>Click <b>Calculate month</b>. A summary appears: revenue and costs, ZUS contributions with their components, health contribution, cumulative tax, tax due for the month and any warnings (for example approaching the PLN 120,000 threshold).</li>
 <li><b>Print / save as PDF</b> or <b>Export CSV</b> – a ready summary for your records.</li>
@@ -144,11 +160,23 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 
 <h2>7. Tips and troubleshooting</h2>
 <ul>
-<li><b>A PDF was not read:</b> scanned documents without a text layer must be entered by hand.</li>
+<li><b>A PDF was not read:</b> scans and photos are read with OCR (text recognition); when a file is unreadable, the row must be completed by hand.</li>
 <li><b>KSeF invoices:</b> KSeF XML files are read directly. If the company NIP is entered, the program works out by itself whether an invoice is income or an expense. Correction and foreign-currency invoices are flagged for checking.</li>
 <li><b>An amount looks wrong:</b> fix it in the table before clicking “Calculate month”.</li>
 <li><b>Mistake after closing a month:</b> use “Undo” in the history, correct the data and close the month again.</li>
 </ul>
+
+<h2>8. Key for company lookup by NIP (optional)</h2>
+<p>The program finds the name and address of VAT-paying businesses by itself. To also find <b>VAT-exempt</b> businesses (for example sole traders) you need a free key that belongs to you. Without a key the program works normally – the details of such a business come from invoices or you type them once. The “Check on the CEIDG website” button opens the official page where a business can be looked up by NIP.</p>
+<p><b>CEIDG key (CEIDG and Biznes.gov.pl data warehouse):</b></p>
+<ol>
+<li>Go to <code>dane.biznes.gov.pl</code> (the “CEIDG key page” button on the “Before you start” card opens it).</li>
+<li>Register and apply for access – you need a Biznes.gov.pl account and a confirmation of identity (login with Trusted Profile or through your bank, and signing the application). Follow the on-screen instructions – they may change.</li>
+<li>The key arrives by e-mail (for the author of the program – on the same day). It is a long string of characters.</li>
+<li>Copy it and paste it on the “Before you start” card, or in Settings (⚙) in the “CEIDG token (API key)” box.</li>
+</ol>
+<p><b>GUS (REGON) key:</b> send an e-mail to <code>regon_bir@stat.gov.pl</code> asking for a user key for the production BIR1 service. Paste the key you receive in Settings (⚙) in the “GUS (REGON) API key” box.</p>
+<p><b>Important:</b> the key is personal. Do not send it to other people or publish it. It is stored only in the program data on your computer (<code>Documents\Accountancy Helper</code> folder). The CEIDG key contains your personal data (including PESEL), so treat it like a password. The program always asks for your consent before filling in details found by NIP.</p>
 
 <div class="box warn"><b>Important.</b> The program gives indicative amounts calculated with 2026 parameters. Before filing returns (DRA, PIT-5 / PIT-5L / PIT-28, JPK) and making payments, verify the results against current regulations, ZUS or an adviser. This is not tax advice. Not covered include health-contribution exemptions, tax reliefs (other than the PLN 3,600 reducing amount under the tax scale), interest and arrears instalments.</div>
 

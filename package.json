@@ -17,6 +17,9 @@
       "preload.js",
       "app/**/*"
     ],
+    "extraResources": [
+      "Instrukcja-Manual.pdf"
+    ],
     "win": {
       "target": "nsis"
     },
