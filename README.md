@@ -37,7 +37,7 @@
 - ZUS (pełny, preferencyjny, Mały ZUS Plus, ulga na start), składka zdrowotna (od dochodu z poprzedniego miesiąca), podatek: skala, liniowy, ryczałt / full, preferential, Mały ZUS Plus, start-up relief; health contribution from the previous month's income; tax scale, linear, lump sum
 - Faktury: PDF, zdjęcia i skany (OCR), KSeF XML, ZIP, foldery; rozpoznanie faktur sprzedaży i kosztowych po NIP / invoices from PDF, photos and scans (OCR), KSeF XML, ZIP, folders; sales and cost invoices recognised by NIP
 - Księga KPIR (Excel), historia miesięcy, kopie zapasowe, dziennik działań / KPIR ledger (Excel), month history, backups, activity log
-- Polski i angielski interfejs, samouczek / Polish and English interface, guided tour
+- Interfejs w językach: polski, angielski, ukraiński, niemiecki, czeski, hiszpański (tłumaczenia nowych języków czekają na sprawdzenie przez native speakerów), samouczek / Interface in Polish, English, Ukrainian, German, Czech and Spanish (the new translations are awaiting review by native speakers), guided tour
 - Wiele firm w jednym programie (osobne profile z oddzielnymi danymi) / Several companies in one program (separate profiles with separate data)
 - VAT: czynny podatnik (netto, udział odliczanego VAT, rozliczenie miesięczne lub kwartalne), zwolnienie z art. 43 i art. 113 (z ostrzeżeniem o limicie) / VAT: registered (net, deductible share, monthly or quarterly), exemption under art. 43 and art. 113 (with a limit warning)
 - Rozliczenie roczne: PIT, VAT i roczne rozliczenie składki zdrowotnej (orientacyjnie) / Yearly figures: PIT, VAT and the annual health-contribution settlement (indicative)
@@ -48,10 +48,14 @@ Instrukcja / Manual: [`Instrukcja-Manual.pdf`](Instrukcja-Manual.pdf)
 
 - Rozliczenie roczne (PIT za rok i roczne rozliczenie składki zdrowotnej) – dodane w wersji 1.1.0 jako zestawienie orientacyjne, do sprawdzenia z księgową; samo zeznanie (PIT-36 / PIT-36L / PIT-28) i wysyłka do urzędu nie są w programie / Yearly figures (PIT for the year and the annual health-contribution settlement) – added in 1.1.0 as an indicative summary, to be checked with an accountant; the PIT return form itself and e-filing are not in the program
 - Deklaracje i pliki VAT (JPK_V7), VAT-UE i szczególne przypadki VAT (odwrotne obciążenie, samochody 75%/20%) / VAT returns and files (JPK_V7), EU VAT and special VAT cases (reverse charge, the 75%/20% car rules)
-- Kolejne języki: ukraiński, hiszpański, niemiecki, czeski / More languages: Ukrainian, Spanish, German, Czech
+- Instrukcja (PDF) w ukraińskim, niemieckim, czeskim i hiszpańskim / The manual (PDF) in Ukrainian, German, Czech and Spanish
 - Opcjonalne hasło do programu / An optional program password
 - Aktualizacje zasad rocznych z tego repozytorium (za zgodą użytkownika) / Yearly rule updates from this repository (with the user's approval)
 - Obsługa pracowników i listy płac – odłożone, obecnie niepotrzebne / Employees and payroll – on hold, not needed for now
+
+## Wsparcie / Support
+
+Program jest darmowy. Jeśli Ci pomógł, możesz dobrowolnie wesprzeć jego rozwój: [paypal.me/ColinWalker26](https://paypal.me/ColinWalker26) / The software is free. If it has helped you, you can support its development, entirely optional: [paypal.me/ColinWalker26](https://paypal.me/ColinWalker26)
 
 ## Dla programistów / For developers
 
