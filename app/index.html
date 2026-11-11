@@ -7,6 +7,7 @@
 <style>
 :root{--bg:#f4f6f9;--card:#fff;--ink:#1c2430;--mut:#667085;--line:#dfe3ea;--acc:#1f5eff;--ok:#0a7d3c;--bad:#b42318}
 @media (prefers-color-scheme:dark){:root{--bg:#10151c;--card:#182029;--ink:#e6eaf0;--mut:#98a2b3;--line:#2b3644;--acc:#6b95ff;--ok:#4ade80;--bad:#f87171}}
+a{color:var(--acc)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,Segoe UI,sans-serif}
 header{padding:16px 20px;border-bottom:1px solid var(--line);background:var(--card);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
@@ -1309,8 +1310,8 @@ taxN_skala:"Steuerskala 12 %/32 %",
 taxN_liniowy:"Linearsteuer 19 %",
 taxN_ryczalt:"Pauschalsteuer {0}",
 revCost:"Einnahmen und Ausgaben",
-revMonth:"Monatseinnahmen ({0} Belege)",
-costMonth:"Geprüfte Ausgaben ({0} Belege)",
+revMonth:"Monatseinnahmen (Belege: {0})",
+costMonth:"Geprüfte Ausgaben (Belege: {0})",
 resMonth:"Monatsergebnis (Einnahmen − Ausgaben)",
 skipped:"{0} Zeilen außerhalb des Monats wurden übersprungen.",
 vatNote:"USt-Befreiung: Umsatzsteuerbeträge werden nicht gezählt; brutto = netto.",
@@ -1353,7 +1354,7 @@ disclaimer:"Näherungsbeträge – vor der Abgabe anhand der geltenden Vorschrif
 chkTitle:"Kontrolle",
 chk1:"Anfangseinnahmen seit Jahresbeginn + Monat",
 chk2:"Kontrollsumme: Einnahmen − Ausgaben − ZUS − Krankenversicherung",
-chkDocs:"Belege: {0} Einnahmen, {1} Ausgaben.",
+chkDocs:"Belege: {0} × Einnahmen, {1} × Ausgaben.",
 csvHead:["Art", "Datum", "Geschäftspartner", "Nummer", "Netto", "USt", "Brutto"],
 csvLines:["Einnahmen", "Ausgaben", "Sozialbeiträge", "Krankenversicherungsbeitrag", "Kumulierte Steuer", "Zu zahlende Steuer"],
 tourStep:"Schritt {0} von {1}",
@@ -2820,7 +2821,7 @@ function showSheet(){
     ${S.base?kv(t('zBase'),fmt(S.base)):`<div class="note">${p.zus==='emeryt'?t('zEmeryt'):t('zUlga')}</div>`}
     ${kv(t('zEmer'),fmt(S.emerytalne))}${kv(t('zRent'),fmt(S.rentowe))}${kv(t('zWyp'),fmt(S.wypadkowe))}${kv(t('zChor'),fmt(S.chorobowe))}${kv(t('zFP'),fmt(S.fp))}
     ${kv(t('zSocTot'),fmt(S.total),'t')}${kv(t('zHealth'),fmt(res.health),'t')}
-    <div class="note">${t(res.healthKey,res.healthArg,fmt(res.healthBase))}</div>
+    <div class="note">${t(res.healthKey,fmt(+res.healthArg),fmt(res.healthBase))}</div>
     ${kv(t('zTot'),fmt(res.totalZus),'t')}
   </div></div>
   <div class="card"><h2>${t('taxTitle')}</h2>
