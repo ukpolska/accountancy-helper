@@ -1,7 +1,7 @@
 {
   "name": "accountancy-helper",
   "productName": "Accountancy Helper",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Accountancy Helper - ZUS and tax calculator for JDG (2026)",
   "author": "Accountancy Helper",
   "main": "main.js",

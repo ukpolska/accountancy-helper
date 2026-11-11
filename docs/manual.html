@@ -24,7 +24,7 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 
 <h2>2. Instalacja</h2>
 <ol>
-<li>Uruchom plik <code>Accountancy Helper Setup 1.0.0.exe</code> i postępuj zgodnie z instrukcjami.</li>
+<li>Uruchom plik <code>Accountancy Helper Setup 1.2.0.exe</code> i postępuj zgodnie z instrukcjami.</li>
 <li>Windows może wyświetlić ostrzeżenie „System Windows ochronił ten komputer”, ponieważ program nie ma płatnego podpisu cyfrowego. Kliknij <b>Więcej informacji</b>, a potem <b>Uruchom mimo to</b>.</li>
 <li>Po instalacji na pulpicie pojawi się skrót. Przy pierwszym uruchomieniu program sam pokaże krótki samouczek.</li>
 </ol>
@@ -94,6 +94,34 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <p><b>Klucz GUS (REGON):</b> wyślij e-mail na adres <code>regon_bir@stat.gov.pl</code> z prośbą o klucz użytkownika do produkcyjnej usługi BIR1. Otrzymany klucz wklej w Ustawieniach (⚙) w polu „Klucz API GUS (REGON)”.</p>
 <p><b>Ważne:</b> klucz jest osobisty. Nie wysyłaj go innym osobom i nie publikuj. Zapisuje się tylko w danych programu na Twoim komputerze (folder <code>Dokumenty\Accountancy Helper</code>). Klucz CEIDG zawiera Twoje dane osobowe (m.in. PESEL), więc traktuj go jak hasło. Program zawsze pyta o zgodę, zanim wstawi dane znalezione po NIP-ie.</p>
 
+<h2>9. Rozliczenie roczne: PIT i składka zdrowotna</h2>
+<p>Na dole strony, pod Historią, jest sekcja „Rozliczenie roczne”. Liczy ona z <b>zamkniętych miesięcy zapisanych w Historii</b> orientacyjne zestawienie za wybrany rok. To nie jest zeznanie podatkowe i nie uwzględnia innych dochodów, ulg ani odliczeń (np. na dzieci) – sprawdź je z księgową.</p>
+<ul>
+<li><b>PIT za rok:</b> przychód, koszty, składki społeczne zapłacone, podstawa opodatkowania, podatek za rok, zaliczki zapłacone w ciągu roku i różnica (do dopłaty albo nadpłata). Skala: 12% do 120 000 zł i 32% powyżej, pomniejszone o kwotę 3 600 zł (składka zdrowotna nie obniża podatku). Liniowy: 19%, składka zdrowotna odliczana do limitu 14 100 zł. Ryczałt: wybrana stawka, 50% składki zdrowotnej odlicza się od przychodu.</li>
+<li><b>Roczne rozliczenie składki zdrowotnej:</b> dochód roku kalendarzowego (po odjęciu składek społecznych) × 9% (skala) lub 4,9% (liniowy), nie mniej niż minimum roczne (liczba miesięcy × płaca minimalna × 9%). Porównanie dotyczy składek <b>należnych</b> z miesięcznych deklaracji za rok składkowy od lutego do stycznia następnego roku, więc w Historii musi być także styczeń następnego roku (albo wpisz jego składkę w polu w sekcji). Dla ryczałtu liczy się rok kalendarzowy i przedział przychodu (60 000 zł i 300 000 zł). Niedopłatę wpłaca się razem ze składką za kwiecień, do 20 maja; nadpłatę zwraca ZUS na wniosek (RZS-R). Terminy potwierdź w ZUS.</li>
+<li><b>Dodaj miesiąc z liczb:</b> w Historii przycisk „+ Dodaj miesiąc z liczb” pozwala dopisać miesiąc, dla którego nie masz faktur w programie (przychód, koszty, składki, zapłacony podatek). Miesiąc wcześniejszy niż wybrany zwiększa dane narastające od początku roku. <b>Uwaga:</b> jeśli dane narastające wpisałeś już ręcznie, nie dodawaj tych samych miesięcy drugi raz.</li>
+<li><b>Eksport CSV</b> zapisuje te wartości do pliku, który można otworzyć w Excelu.</li>
+</ul>
+<p>Podatek zaliczkowy w ciągu roku liczy się z zapłaconych składek, więc zaległości zapłacone później wpływają na PIT dopiero w roku zapłaty, a na roczne rozliczenie składki zdrowotnej – nie wpływają (liczą się składki należne).</p>
+
+<h2>10. Kilka firm: profile</h2>
+<p>Program może obsługiwać wiele firm (np. klientów księgowej). Każda firma to osobny <b>profil</b> z własnymi danymi firmy, ustawieniami, historią, zapamiętanymi kontrahentami, kopiami zapasowymi i dziennikiem działań. Dane różnych firm nigdy się nie mieszają.</p>
+<ul>
+<li><b>Wybór firmy:</b> na górze strony, przy napisie „Firma:”, jest lista profili. Wybranie innego profilu zapisuje bieżący i otwiera tamten.</li>
+<li><b>+ Nowa firma:</b> tworzy pusty profil o podanej nazwie (np. nazwa klienta). Język i klucz do wyszukiwania firm są kopiowane, reszta jest pusta.</li>
+<li><b>Zmień nazwę:</b> zmienia nazwę wyświetlaną na liście.</li>
+<li><b>Usuń z listy:</b> wyrejestrowuje profil z listy. <b>Pliki nie są kasowane</b> – zostają w folderze, który program pokazuje przed potwierdzeniem. Profilu głównego nie można usunąć.</li>
+<li><b>Gdzie są dane:</b> profil główny (dotychczasowe dane) w <code>Dokumenty\Accountancy Helper</code>, pozostałe w podfolderach <code>Profile</code> tego folderu. „Zapisz kopię (JSON)” i „Wczytaj kopię” dotyczą aktualnie wybranego profilu.</li>
+</ul>
+
+<h2>11. Rodzaje VAT</h2>
+<p>W konfiguracji firmy wybierz <b>Status VAT</b>:</p>
+<ul>
+<li><b>Czynny podatnik VAT:</b> przychody i koszty w księdze są kwotami <b>netto</b>. W zestawieniu miesiąca widać VAT należny, VAT naliczony i VAT do zapłaty albo do przeniesienia. W tabeli dokumentów kosztowych jest kolumna <b>„VAT odl. %”</b>: jaka część VAT z dokumentu podlega odliczeniu (100 = całość; np. 50 przy kosztach samochodu osobowego używanego także prywatnie). Nieodliczony VAT zwiększa koszt. W sekcji „Rozliczenie roczne” jest tabela VAT za rok; okres rozliczenia (miesięczny lub kwartalny) wybierasz w konfiguracji.</li>
+<li><b>Zwolniony – art. 43 (zwolnienie przedmiotowe)</b> i <b>Zwolniony – art. 113 (zwolnienie podmiotowe)</b>: w księdze kwoty <b>brutto</b>, VAT nie jest liczony i nie odlicza się VAT naliczonego. Przy art. 113 program ostrzega, gdy sprzedaż narastająca zbliża się do limitu zwolnienia (240 000 zł w 2026 r.; przy rozpoczęciu działalności w trakcie roku limit jest proporcjonalnie niższy – wpisz wtedy własny limit w Ustawieniach). Po przekroczeniu limitu zwolnienie przestaje obowiązywać od czynności, która go przekroczyła – ustal z księgową, od kiedy rozliczać VAT.</li>
+</ul>
+<p><b>Czego program nie obejmuje:</b> deklaracji i plików VAT (JPK_V7), VAT-UE, odwrotnego obciążenia, sprzedaży za granicę, stawek specjalnych ani szczególnych zasad dla samochodów (np. udziału w kosztach 75% czy 20%) – takie przypadki rozlicz z księgową; w kolumnie „VAT odl. %” i w kwotach w tabeli możesz wpisać wartości zgodne z jej wskazaniami.</p>
+
 <div class="box warn"><b>Ważne.</b> Program podaje kwoty orientacyjne, wyliczone według parametrów na 2026 r. Przed złożeniem deklaracji (DRA, PIT-5 / PIT-5L / PIT-28, JPK) i dokonaniem płatności zweryfikuj wyniki z aktualnymi przepisami, ZUS lub doradcą. Nie jest to porada podatkowa. Nie uwzględniono m.in. zwolnień ze składki zdrowotnej, ulg podatkowych (poza kwotą zmniejszającą 3 600 zł przy skali), odsetek ani rat zaległych składek.</div>
 
 <!-- ===================== ENGLISH ===================== -->
@@ -108,7 +136,7 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 
 <h2>2. Installation</h2>
 <ol>
-<li>Run <code>Accountancy Helper Setup 1.0.0.exe</code> and follow the instructions.</li>
+<li>Run <code>Accountancy Helper Setup 1.2.0.exe</code> and follow the instructions.</li>
 <li>Windows may show “Windows protected your PC”, because the program does not have a paid digital signature. Click <b>More info</b>, then <b>Run anyway</b>.</li>
 <li>A shortcut appears on the desktop. On first launch the program shows a short tutorial by itself.</li>
 </ol>
@@ -177,6 +205,34 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 </ol>
 <p><b>GUS (REGON) key:</b> send an e-mail to <code>regon_bir@stat.gov.pl</code> asking for a user key for the production BIR1 service. Paste the key you receive in Settings (⚙) in the “GUS (REGON) API key” box.</p>
 <p><b>Important:</b> the key is personal. Do not send it to other people or publish it. It is stored only in the program data on your computer (<code>Documents\Accountancy Helper</code> folder). The CEIDG key contains your personal data (including PESEL), so treat it like a password. The program always asks for your consent before filling in details found by NIP.</p>
+
+<h2>9. Yearly figures: PIT and health contribution</h2>
+<p>At the bottom of the page, under History, there is a “Yearly figures” section. It calculates an indicative summary for the chosen year from the <b>closed months saved in History</b>. It is not a tax return and does not include other income, reliefs or deductions (for example for children) – check them with your accountant.</p>
+<ul>
+<li><b>PIT for the year:</b> revenue, costs, social contributions paid, tax base, tax for the year, advances paid during the year and the difference (to pay or overpayment). Tax scale: 12% up to PLN 120,000 and 32% above, less the PLN 3,600 amount (the health contribution does not reduce the tax). Linear: 19%, health contribution deducted up to PLN 14,100. Lump sum (ryczałt): the chosen rate, with 50% of the health contribution deducted from revenue.</li>
+<li><b>Annual health-contribution settlement:</b> calendar-year income (after social contributions) × 9% (scale) or 4.9% (linear), not less than the annual minimum (months × minimum wage × 9%). The comparison uses the contributions <b>due</b> from the monthly declarations for the contribution year from February to January of the next year, so History must also contain January of the next year (or type its contribution in the box in that section). For ryczałt the calendar year and the revenue band (PLN 60,000 and 300,000) apply. A shortfall is paid with the April contribution, by 20 May; an overpayment is refunded by ZUS on request (RZS-R). Confirm the dates with ZUS.</li>
+<li><b>Add a month from figures:</b> in History, the “+ Add a month from figures” button lets you add a month you have no invoices for in the program (revenue, costs, contributions, tax paid). A month before the selected month increases the year-to-date totals. <b>Note:</b> if you already typed the year-to-date totals by hand, do not add the same months again.</li>
+<li><b>Export CSV</b> saves these values to a file that opens in Excel.</li>
+</ul>
+<p>The advance tax during the year is calculated from contributions paid, so arrears paid later affect the PIT only in the year they are paid, and they do not change the annual health settlement (contributions due are what count).</p>
+
+<h2>10. Several companies: profiles</h2>
+<p>The program can handle many companies (for example an accountant's clients). Each company is a separate <b>profile</b> with its own company details, settings, history, remembered counterparties, backups and activity log. The data of different companies never mixes.</p>
+<ul>
+<li><b>Choosing the company:</b> at the top of the page, next to “Company:”, is the list of profiles. Choosing another profile saves the current one and opens that one.</li>
+<li><b>+ New company:</b> creates an empty profile with the name you give (for example the client's name). The language and the company-lookup key are copied; everything else is empty.</li>
+<li><b>Rename:</b> changes the name shown in the list.</li>
+<li><b>Remove from list:</b> removes the profile from the list. <b>The files are not deleted</b> – they stay in the folder the program shows before you confirm. The main profile cannot be removed.</li>
+<li><b>Where the data is:</b> the main profile (the data you already had) is in <code>Documents\Accountancy Helper</code>, the others in subfolders of <code>Profile</code> inside it. “Save backup (JSON)” and “Load backup” apply to the profile currently selected.</li>
+</ul>
+
+<h2>11. Types of VAT</h2>
+<p>In the company setup choose the <b>VAT status</b>:</p>
+<ul>
+<li><b>VAT-registered:</b> revenue and costs in the ledger are <b>net</b> amounts. The month summary shows output VAT, input VAT and VAT payable or carried forward. The cost table has a <b>“VAT ded. %”</b> column: what share of the VAT on the document may be deducted (100 = all; for example 50 for the costs of a passenger car also used privately). The VAT that is not deducted increases the cost. The “Yearly figures” section has a VAT table for the year; the settlement period (monthly or quarterly) is chosen in the setup.</li>
+<li><b>VAT-exempt – Art. 43 (exemption by type of supply)</b> and <b>VAT-exempt – Art. 113 (small-business exemption)</b>: <b>gross</b> amounts in the ledger, VAT is not counted and input VAT is not deducted. For art. 113 the program warns when sales so far approach the exemption limit (PLN 240,000 in 2026; for a business that starts during the year the limit is proportionally lower – enter your own limit in Settings). Once the limit is exceeded the exemption stops from the transaction that exceeded it – agree with your accountant from when to account for VAT.</li>
+</ul>
+<p><b>What the program does not cover:</b> VAT returns and files (JPK_V7), EU VAT filings, reverse charge, sales abroad, special rates or the special rules for cars (such as the 75% or 20% cost share) – settle those cases with your accountant; in the “VAT ded. %” column and the amounts in the table you can enter the values she advises.</p>
 
 <div class="box warn"><b>Important.</b> The program gives indicative amounts calculated with 2026 parameters. Before filing returns (DRA, PIT-5 / PIT-5L / PIT-28, JPK) and making payments, verify the results against current regulations, ZUS or an adviser. This is not tax advice. Not covered include health-contribution exemptions, tax reliefs (other than the PLN 3,600 reducing amount under the tax scale), interest and arrears instalments.</div>
 

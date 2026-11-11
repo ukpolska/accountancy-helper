@@ -5,7 +5,28 @@ const path = require('path');
 // okno zasłonięte lub zminimalizowane nie może wstrzymywać pracy (odczyt skanów/OCR wymaga rysowania)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
-const dataDir = () => process.env.ACCOUNTANCY_HELPER_DATA_DIR || path.join(app.getPath('documents'), 'Accountancy Helper');   // zmienna tylko do testów
+const baseDir = () => process.env.ACCOUNTANCY_HELPER_DATA_DIR || path.join(app.getPath('documents'), 'Accountancy Helper');   // zmienna tylko do testów
+// Profile (kilka firm w jednym programie). Profil „default” używa głównego folderu danych (tak jak dotychczas, więc istniejące dane działają bez zmian);
+// pozostałe mają własne foldery w podfolderze Profile. Rejestr profili: profile.json w głównym folderze.
+const profilesFile = () => path.join(baseDir(), 'profile.json');
+let PROFILES = null;
+function loadProfiles() {
+  if (PROFILES) return PROFILES;
+  let o = null;
+  try { o = JSON.parse(fs.readFileSync(profilesFile(), 'utf8')); } catch (e) { o = null; }
+  if (!o || typeof o !== 'object' || !Array.isArray(o.list)) o = { active: 'default', list: [] };
+  o.list = o.list.filter(p => p && typeof p.id === 'string' && /^[A-Za-z0-9_-]{1,40}$/.test(p.id) && typeof p.name === 'string').map(p => ({ id: p.id, name: p.name.slice(0, 60) }));
+  if (!o.list.some(p => p.id === 'default')) o.list.unshift({ id: 'default', name: '' });
+  if (typeof o.active !== 'string' || !o.list.some(p => p.id === o.active)) o.active = 'default';
+  PROFILES = o; return o;
+}
+function saveProfiles() {
+  fs.mkdirSync(baseDir(), { recursive: true });
+  const tmp = profilesFile() + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(PROFILES, null, 1), 'utf8'); fs.renameSync(tmp, profilesFile());
+}
+const profDir = id => id === 'default' ? baseDir() : path.join(baseDir(), 'Profile', id);
+const dataDir = () => profDir(loadProfiles().active);
 const dataFile = () => path.join(dataDir(), 'dane.json');
 
 // Odczyt: główny plik, a gdyby był uszkodzony (np. przerwa w zasilaniu) – poprzednia wersja, potem najnowsza kopia dzienna.
@@ -166,6 +187,39 @@ ipcMain.handle('manual:open', () => {
     const f = cands.find(x => { try { return fs.existsSync(x); } catch (e) { return false; } });
     return f ? shell.openPath(f) : 'manual not found';
   } catch (e) { return String(e.message || e); }
+});
+ipcMain.handle('profiles:list', () => { const o = loadProfiles(); return { active: o.active, list: o.list.map(p => ({ id: p.id, name: p.name, dir: profDir(p.id) })) }; });
+ipcMain.handle('profiles:create', (_e, name, seed) => {
+  try {
+    const o = loadProfiles(); const nm = String(name == null ? '' : name).trim().slice(0, 60);
+    if (!nm) return { ok: false, error: 'name' };
+    if (o.list.some(p => p.name.trim().toLowerCase() === nm.toLowerCase())) return { ok: false, error: 'exists' };
+    const id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    fs.mkdirSync(profDir(id), { recursive: true });
+    if (seed && typeof seed === 'object' && !Array.isArray(seed)) fs.writeFileSync(path.join(profDir(id), 'dane.json'), JSON.stringify(Object.assign({ app: 'jdg-kalkulator', version: 2 }, seed), null, 1), 'utf8');
+    o.list.push({ id, name: nm }); saveProfiles();
+    return { ok: true, id };
+  } catch (e) { return { ok: false, error: String(e.message || e) }; }
+});
+ipcMain.handle('profiles:switch', (_e, id) => {
+  try { const o = loadProfiles(); if (!o.list.some(p => p.id === id)) return { ok: false, error: 'unknown' }; o.active = id; saveProfiles(); return { ok: true }; }
+  catch (e) { return { ok: false, error: String(e.message || e) }; }
+});
+ipcMain.handle('profiles:rename', (_e, id, name) => {
+  try {
+    const o = loadProfiles(), p = o.list.find(x => x.id === id), nm = String(name == null ? '' : name).trim().slice(0, 60);
+    if (!p) return { ok: false, error: 'unknown' }; if (!nm) return { ok: false, error: 'name' };
+    if (o.list.some(x => x.id !== id && x.name.trim().toLowerCase() === nm.toLowerCase())) return { ok: false, error: 'exists' };
+    p.name = nm; saveProfiles(); return { ok: true };
+  } catch (e) { return { ok: false, error: String(e.message || e) }; }
+});
+// „Usunięcie” profilu tylko wyrejestrowuje go z listy; pliki zostają na dysku (nic nie jest kasowane)
+ipcMain.handle('profiles:remove', (_e, id) => {
+  try {
+    const o = loadProfiles();
+    if (id === 'default' || id === o.active || !o.list.some(p => p.id === id)) return { ok: false, error: 'not-allowed' };
+    const dir = profDir(id); o.list = o.list.filter(p => p.id !== id); saveProfiles(); return { ok: true, dir };
+  } catch (e) { return { ok: false, error: String(e.message || e) }; }
 });
 ipcMain.handle('store:open', () => {
   try { fs.mkdirSync(dataDir(), { recursive: true }); return shell.openPath(dataDir()); } catch (e) { return String(e.message || e); }
