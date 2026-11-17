@@ -23,8 +23,9 @@ button.sec.warn{color:var(--bad);border-color:var(--bad)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .row select{width:auto}
 .chk{display:flex;gap:8px;align-items:center;margin-top:20px}.chk input{width:auto}
-.drop{border:2px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--mut)}
-.drop.over{border-color:var(--acc);background:rgba(31,94,255,.06)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:18px;min-height:130px;display:flex;flex-direction:column;justify-content:center;text-align:center;color:var(--mut)}
+.drop.over{border-color:var(--acc);border-style:solid;background:rgba(31,94,255,.14)}
+#docs.dragging .drop{border-color:var(--acc)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:4px;border-bottom:1px solid var(--line);text-align:left}
 td input,td select{padding:4px 6px}
@@ -412,7 +413,7 @@ lManual:'Ręczna podstawa (opcjonalnie, 0 = wylicz automatycznie)',
 malyNote:'Podstawa = 50% średniomiesięcznego dochodu, w granicach 1 441,80 – 5 652 PLN. Limit: przychód ≤ 120 000 PLN w roku poprzednim (przekroczenie w bieżącym roku wpływa dopiero na rok następny). Ulga trwa max 36 miesięcy w 60-miesięcznym okresie.',
 secYtd:'Narastająco od początku roku (do końca poprzedniego miesiąca)', lYtdRev:'Przychód YTD', lYtdCost:'Koszty YTD', lYtdTax:'Zapłacony podatek dochodowy YTD', lYtdZus:'Zapłacone składki społeczne ZUS YTD', lYtdHealth:'Zapłacona składka zdrowotna YTD',
 paramsHint:'Parametry roczne (podstawy ZUS, składka minimalna, limity) zmienisz w ⚙ Ustawieniach.',
-sec2:'2. Faktury i koszty (PDF)', dropInc:'Faktury sprzedaży (przychód)', dropExp:'Faktury kosztowe (wydatki)', dropHint:'Przeciągnij pliki PDF, zdjęcia, XML z KSeF, plik ZIP lub folder', zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', nameFromRegister:'Nazwa i adres sprzedawcy uzupełnione z rejestru (wg NIP) – sprawdź.', nameFromMemory:'Nazwa i adres uzupełnione z wcześniejszych dokumentów (wg NIP).', srcMemory:'Twoje wcześniejsze dokumenty', needNumber:'Wpisz numer paragonu (W + 6 cyfr, widoczny na paragonie) – nie udało się go pewnie odczytać.', typeToInc:'To faktura SPRZEDAŻY (Twój NIP jest u sprzedawcy) – przeniesiono do przychodów.', typeToExp:'To dokument KOSZTOWY (Twój NIP jest u nabywcy lub sprzedawcą jest ktoś inny) – przeniesiono do kosztów.', pickFiles:'Wybierz pliki', pickFolder:'Wybierz folder',
+sec2:'2. Faktury i koszty (PDF)', dropInc:'Faktury sprzedaży (przychód)', dropExp:'Faktury kosztowe (wydatki)', dropAny:"Pliki upuszczone poza ramkami zostały potraktowane jako faktury kosztowe. Faktury sprzedaży program sam przenosi do przychodów na podstawie Twojego NIP.", dropHint:'Przeciągnij pliki PDF, zdjęcia, XML z KSeF, plik ZIP lub folder', zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', nameFromRegister:'Nazwa i adres sprzedawcy uzupełnione z rejestru (wg NIP) – sprawdź.', nameFromMemory:'Nazwa i adres uzupełnione z wcześniejszych dokumentów (wg NIP).', srcMemory:'Twoje wcześniejsze dokumenty', needNumber:'Wpisz numer paragonu (W + 6 cyfr, widoczny na paragonie) – nie udało się go pewnie odczytać.', typeToInc:'To faktura SPRZEDAŻY (Twój NIP jest u sprzedawcy) – przeniesiono do przychodów.', typeToExp:'To dokument KOSZTOWY (Twój NIP jest u nabywcy lub sprzedawcą jest ktoś inny) – przeniesiono do kosztów.', pickFiles:'Wybierz pliki', pickFolder:'Wybierz folder',
 thType:'Typ', thDate:'Data', thParty:'Kontrahent', thNo:'Numer', thNet:'Netto', thVat:'VAT', thGross:'Brutto', thFile:'Plik',
 addInc:'+ Przychód', addExp:'+ Koszt', calc:'Oblicz miesiąc',
 verifyNote:'Wartości z PDF to tylko podpowiedź – sprawdź każdy wiersz. Wiersze z datą spoza wybranego miesiąca są oznaczone i pomijane w obliczeniach.',
@@ -480,7 +481,7 @@ lManual:'Manual base (optional, 0 = calculate automatically)',
 malyNote:'Base = 50% of average monthly income, between PLN 1,441.80 and 5,652. Limit: revenue ≤ PLN 120,000 in the previous year (exceeding it this year only affects next year). Relief lasts at most 36 months in each 60-month period.',
 secYtd:'Year to date (up to the end of the previous month)', lYtdRev:'YTD revenue', lYtdCost:'YTD costs', lYtdTax:'YTD income tax paid', lYtdZus:'YTD social (ZUS) contributions paid', lYtdHealth:'YTD health contribution paid',
 paramsHint:'Yearly parameters (ZUS bases, minimum contribution, limits) can be changed in ⚙ Settings.',
-sec2:'2. Invoices and expenses (PDF)', dropInc:'Sales invoices (income)', dropExp:'Cost invoices (expenses)', dropHint:'Drag PDF files, photos, KSeF XML files, a ZIP file or a folder here', zipBad:'Could not open the ZIP archive: {0}', nameFromRegister:'Seller name and address filled in from the register (by NIP) – please check.', nameFromMemory:'Name and address filled in from earlier documents (by NIP).', srcMemory:'Your earlier documents', needNumber:'Type the receipt number (W + 6 digits, printed on the receipt) – it could not be read reliably.', typeToInc:'This is a SALES invoice (your NIP is the seller) – moved to income.', typeToExp:'This is a COST document (your NIP is the buyer, or someone else is the seller) – moved to costs.', pickFiles:'Choose files', pickFolder:'Choose folder',
+sec2:'2. Invoices and expenses (PDF)', dropInc:'Sales invoices (income)', dropExp:'Cost invoices (expenses)', dropAny:"Files dropped outside the boxes were treated as cost invoices. The program moves sales invoices to income by your NIP.", dropHint:'Drag PDF files, photos, KSeF XML files, a ZIP file or a folder here', zipBad:'Could not open the ZIP archive: {0}', nameFromRegister:'Seller name and address filled in from the register (by NIP) – please check.', nameFromMemory:'Name and address filled in from earlier documents (by NIP).', srcMemory:'Your earlier documents', needNumber:'Type the receipt number (W + 6 digits, printed on the receipt) – it could not be read reliably.', typeToInc:'This is a SALES invoice (your NIP is the seller) – moved to income.', typeToExp:'This is a COST document (your NIP is the buyer, or someone else is the seller) – moved to costs.', pickFiles:'Choose files', pickFolder:'Choose folder',
 thType:'Type', thDate:'Date', thParty:'Counterparty', thNo:'Number', thNet:'Net', thVat:'VAT', thGross:'Gross', thFile:'File',
 addInc:'+ Income', addExp:'+ Expense', calc:'Calculate month',
 verifyNote:'Values read from PDFs are only suggestions – check every row. Rows dated outside the selected month are flagged and excluded from the calculation.',
@@ -785,6 +786,7 @@ paramsHint:"Річні параметри (бази ZUS, мінімальний 
 sec2:"2. Рахунки та витрати (PDF)",
 dropInc:"Рахунки продажу (дохід)",
 dropExp:"Рахунки витрат",
+dropAny:"Файли, скинуті поза рамками, оброблено як рахунки витрат. Рахунки продажу програма сама переносить до доходів за вашим NIP.",
 dropHint:"Перетягніть сюди файли PDF, фото, файли KSeF XML, файл ZIP або папку",
 zipBad:"Не вдалося відкрити архів ZIP: {0}",
 nameFromRegister:"Назву та адресу продавця заповнено з реєстру (за NIP) – перевірте.",
@@ -1213,6 +1215,7 @@ paramsHint:"Die Jahresparameter (ZUS-Bemessungsgrundlagen, Mindestbeitrag, Grenz
 sec2:"2. Rechnungen und Ausgaben (PDF)",
 dropInc:"Verkaufsrechnungen (Einnahmen)",
 dropExp:"Kostenrechnungen (Ausgaben)",
+dropAny:"Außerhalb der Rahmen abgelegte Dateien wurden als Kostenrechnungen behandelt. Verkaufsrechnungen verschiebt das Programm anhand Ihrer NIP zu den Einnahmen.",
 dropHint:"PDF-Dateien, Fotos, KSeF-XML-Dateien, eine ZIP-Datei oder einen Ordner hierher ziehen",
 zipBad:"ZIP-Archiv konnte nicht geöffnet werden: {0}",
 nameFromRegister:"Name und Adresse des Verkäufers aus dem Register (per NIP) eingetragen – bitte prüfen.",
@@ -1641,6 +1644,7 @@ paramsHint:"Roční parametry (základy ZUS, minimální pojistné, limity) lze 
 sec2:"2. Faktury a výdaje (PDF)",
 dropInc:"Prodejní faktury (příjmy)",
 dropExp:"Nákladové faktury (výdaje)",
+dropAny:"Soubory pustěné mimo rámečky byly zpracovány jako nákladové faktury. Prodejní faktury program podle vašeho NIP přesune do příjmů.",
 dropHint:"Přetáhněte sem soubory PDF, fotografie, soubory KSeF XML, soubor ZIP nebo složku",
 zipBad:"Archiv ZIP se nepodařilo otevřít: {0}",
 nameFromRegister:"Název a adresa prodávajícího doplněny z rejstříku (podle NIP) – zkontrolujte.",
@@ -2069,6 +2073,7 @@ paramsHint:"Los parámetros anuales (bases de ZUS, cotización mínima, límites
 sec2:"2. Facturas y gastos (PDF)",
 dropInc:"Facturas de venta (ingresos)",
 dropExp:"Facturas de gastos",
+dropAny:"Los archivos soltados fuera de los recuadros se trataron como facturas de gastos. El programa mueve las facturas de venta a ingresos según su NIP.",
 dropHint:"Arrastre aquí archivos PDF, fotos, archivos KSeF XML, un archivo ZIP o una carpeta",
 zipBad:"No se pudo abrir el archivo ZIP: {0}",
 nameFromRegister:"Nombre y dirección del vendedor rellenados desde el registro (por NIP): compruébelos.",
@@ -2680,7 +2685,7 @@ async function filesFromDrop(dt){
     else if(en.isDirectory){ const rd=en.createReader(); for(;;){ const batch=await readDir(rd); if(!batch.length) break; for(const c of batch) await walkE(c); } }
   };
   for(const en of entries) await walkE(en);
-  return out;
+  return out.length?out:[...dt.files];
 }
 async function handleFiles(files,type){
   const badZips=[];
@@ -2712,6 +2717,15 @@ function wire(zone,fileIn,dirIn,type){
   $(zone).addEventListener('drop',async e=>{ const dropped=await filesFromDrop(e.dataTransfer); handleFiles(dropped,type); });
 }
 wire('dropInc','fInc','dInc','inc'); wire('dropExp','fExp','dExp','exp');
+// plik upuszczony gdziekolwiek poza ramkami: nie wolno otwierać go w oknie programu; traktujemy jak fakturę kosztową (sprzedaż program sam przenosi wg NIP)
+['dragenter','dragover'].forEach(ev=>window.addEventListener(ev,e=>{ e.preventDefault(); $('docs').classList.add('dragging'); }));
+['dragleave','drop'].forEach(ev=>window.addEventListener(ev,e=>{ if(ev==='drop'||!e.relatedTarget) $('docs').classList.remove('dragging'); }));
+window.addEventListener('drop',e=>{
+  e.preventDefault();
+  if(e.target&&e.target.closest&&e.target.closest('.drop')) return;
+  if(!e.dataTransfer||![...(e.dataTransfer.types||[])].includes('Files')) return;
+  filesFromDrop(e.dataTransfer).then(f=>{ if(!f.length) return; return handleFiles(f,'exp').then(()=>{ $('status').innerHTML+=' <span class="note">'+esc(t('dropAny'))+'</span>'; }); });
+});
 document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>$(b.dataset.pick==='inc'?'fInc':'fExp').click());
 document.querySelectorAll('[data-pickdir]').forEach(b=>b.onclick=()=>$(b.dataset.pickdir==='inc'?'dInc':'dExp').click());
 function rememberNip(r){ const n=String(r.nip||'').replace(/\D/g,''); if(nipOk(n)&&r.party&&!nipDir[n]) nipDir[n]={name:r.party,addr:r.addr||'',regon:''}; }
