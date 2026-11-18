@@ -111,6 +111,16 @@ td.n input{text-align:right}
         <option value="m" data-i="vatMonthly"></option>
         <option value="q" data-i="vatQuarterly"></option>
       </select></div>
+    <div style="grid-column:1/-1"><h3 data-i="vtLabel" style="margin:10px 0 2px"></h3><p class="note" data-i="vtHint"></p></div>
+    <div><label data-i="lDefVatT"></label>
+      <select id="defVatT"><option value="" data-i="vtAuto"></option><option value="dom" data-i="vtDom"></option><option value="ex43" data-i="vtEx43"></option><option value="eub2b" data-i="vtEuB2B"></option><option value="neub2b" data-i="vtNeuB2B"></option><option value="eub2c" data-i="vtEuB2C"></option><option value="neub2c" data-i="vtNeuB2C"></option></select></div>
+    <div><label data-i="lYtdLimit"></label><input id="ytdLimit" type="number" step="0.01" placeholder="—"></div>
+    <div><label data-i="lPrevLimit"></label><input id="prevLimit" type="number" step="0.01" placeholder="—"></div>
+    <div><label data-i="lYtdAllow"></label><input id="ytdAllow" type="number" step="0.01" placeholder="—"></div>
+    <div><label data-i="lPrevAllow"></label><input id="prevAllow" type="number" step="0.01" placeholder="—"></div>
+    <div><label data-i="lPropT"></label><input id="propT" type="number" step="0.01" placeholder="—"></div>
+    <div><label data-i="lPropE"></label><input id="propE" type="number" step="0.01" placeholder="—"></div>
+    <div><label data-i="lPropEst"></label><input id="propEst" type="number" step="1" min="0" max="100" placeholder="—"></div>
     <div><label data-i="lZus"></label>
       <select id="zus">
         <option value="ulga" data-i="zusUlga"></option>
@@ -392,7 +402,7 @@ function compute(p, m){
 const I18N = {
 pl:{
 subtitle:'— kalkulator miesięczny',
-addPastBtn:'+ Dodaj miesiąc z liczb', pmTitle:'Dodaj miesiąc z samych kwot', pmHint:'Dla miesięcy, dla których nie masz faktur w programie: wpisz tylko kwoty. Jeśli dane narastające (Ustawienia lub sekcja „Narastająco”) wpisałeś już ręcznie, nie dodawaj tych samych miesięcy drugi raz – kwoty zliczyłyby się podwójnie.', pmYear:'Rok', pmMonth:'Miesiąc', pmRev:'Przychód', pmCost:'Koszty', pmSoc:'Składki społeczne (ZUS)', pmHealth:'Składka zdrowotna', pmTax:'Zaliczka na podatek zapłacona', pmDate:'Data zapłaty', pmSave:'Zapisz miesiąc', pmCancel:'Anuluj', pmBad:'Podaj prawidłowy rok i miesiąc.', pmAuto:'Wpisany z samych kwot', lg_addPast:'Dodano miesiąc z samych kwot: {0} (przychód {1}, koszty {2})', annTitle:'Rozliczenie roczne: PIT i składka zdrowotna', annNote:'Zestawienie orientacyjne z zamkniętych miesięcy w Historii. To nie jest zeznanie podatkowe: nie uwzględnia innych dochodów, ulg ani odliczeń (np. na dzieci). Sprawdź z księgową przed złożeniem PIT i rozliczenia składki zdrowotnej.', annYear:'Rok', annForm:'Forma opodatkowania w tym roku', annMonths:'Miesiące ubezpieczenia zdrowotnego w roku (12 = cały rok)', annJan:'Składka zdrowotna należna za styczeń następnego roku (jeśli nie ma jej w Historii)', annCalc:'Przelicz', annCsv:'Eksport CSV', annNoData:'Brak zamkniętych miesięcy tego roku w Historii.', annPitTitle:'Zaliczki i podatek za rok {0}', annRev:'Przychód', annCost:'Koszty', annIncome:'Dochód (przychód − koszty)', annSoc:'Składki społeczne zapłacone (odliczenie)', annHealthDedLin:'Składka zdrowotna odliczona (limit {0})', annHealthDedRyc:'50% składki zdrowotnej (odliczenie od przychodu)', annBase:'Podstawa opodatkowania', annTax:'Podatek za rok (stawka {0})', annAdv:'Zaliczki zapłacone w ciągu roku', annPay:'Do dopłaty', annRefund:'Nadpłata (do zwrotu)', annMonthsIn:'Miesiące w Historii: {0} z 12', annMissing:'brakuje: {0}', annHsTitle:'Roczne rozliczenie składki zdrowotnej (rok {0})', annHsIncome:'Dochód roczny (rok kalendarzowy, po odjęciu składek społecznych)', annHsRycRev:'Przychód roczny po odjęciu składek społecznych (decyduje o przedziale)', annHsMin:'Podstawa minimalna ({0} mies. × {1})', annHsBase:'Podstawa roczna', annHsBand:'Przedział: miesięczna podstawa {0}', annHsAnnual:'Składka roczna', annHsDue:'Składki należne za okres rozliczeniowy ({0})', annHsShort:'Niedopłata – do zapłaty razem ze składką za kwiecień {0}, do 20 maja {0} (termin potwierdź w ZUS)', annHsOver:'Nadpłata – wniosek o zwrot (RZS-R) w terminie wskazanym przez ZUS, ok. 1 czerwca {0}', annHsEven:'Brak różnicy.', annHsPeriodSL:'luty {0} – styczeń {1}', annHsPeriodR:'styczeń – grudzień {0}', annHsJanMissing:'W Historii brakuje stycznia {0} – wpisz jego należną składkę w polu powyżej.', annHsNote:'Porównanie dotyczy składek NALEŻNYCH z miesięcznych deklaracji, nie faktycznie zapłaconych (zaległości i raty nie zmieniają rozliczenia rocznego).', annHsRycNote:'Ryczałt: przedział wg przychodu pomniejszonego o składki społeczne (art. 81 ust. 2g) – do potwierdzenia z księgową.', profLabel:'Firma:', profMain:'Profil główny', profNew:'+ Nowa firma', profRename:'Zmień nazwę', profRemove:'Usuń z listy', profNewTitle:'Nowa firma (nowy profil)', profNewHint:'Nowy profil ma puste dane firmy, własną historię, własne ustawienia i własne kopie zapasowe, całkowicie oddzielone od pozostałych firm. Język i klucz do wyszukiwania firm zostaną skopiowane.', profRenameTitle:'Zmień nazwę profilu', profRenameHint:'Nazwa służy tylko do rozpoznania profilu na liście (np. nazwa klienta).', profNameLbl:'Nazwa profilu (np. nazwa firmy klienta)', profOk:'OK', profCancel:'Anuluj', profExists:'Profil o takiej nazwie już istnieje.', profNameEmpty:'Wpisz nazwę profilu.', profErr:'Nie udało się: {0}', profRemoveQ:'Usunąć profil „{0}” z listy? Pliki NIE zostaną skasowane – zostaną w folderze: {1}', profRemoveDefault:'Profilu głównego nie można usunąć z listy.', lg_profile:'Profil: {0} ({1})', vat113:'Zwolniony – art. 113 (zwolnienie podmiotowe, do limitu obrotu)', lVatPeriod:'Okres rozliczenia VAT (dla czynnych podatników)', vatMonthly:'Miesięcznie', vatQuarterly:'Kwartalnie (mały podatnik)', pVatLimit:'Limit zwolnienia z VAT art. 113 (PLN)', thVatPct:'VAT odl. %', vatPctTip:'Jaka część VAT naliczonego z tego dokumentu podlega odliczeniu (100 = całość; np. 50 przy samochodzie osobowym). Nieodliczony VAT zwiększa koszt.', wVat113:'Sprzedaż narastająca ({0}) zbliża się do limitu zwolnienia z VAT ({1}).', wVat113x:'Przekroczono limit zwolnienia z VAT ({0}) – zwolnienie przestaje obowiązywać; sprawdź z księgową.', pmOutVat:'VAT należny (opcjonalnie)', pmInVat:'VAT naliczony odliczony (opcjonalnie)', annVatTitle:'VAT za rok {0}', annVatM:'Miesiąc', annVatQ:'Kwartał', annVatTotal:'Razem', annVatNote:'Orientacyjnie, z miesięcy zamkniętych w Historii: VAT należny minus VAT naliczony odliczony, z przeniesieniem nadwyżki na kolejny okres. Termin deklaracji i wpłaty: zwykle do 25. dnia po okresie rozliczeniowym – sprawdź z księgową.', kcTitle:'Zanim zaczniesz', kcManualText:'Prosimy najpierw przeczytać instrukcję – to kilka minut i oszczędza kłopotów przy pierwszym miesiącu.', kcManualBtn:'Otwórz instrukcję', kcKeyTitle:'Klucz do automatycznego wyszukiwania firm (nieobowiązkowy)', kcKeyText:'Dzięki kluczowi program sam uzupełni nazwę i adres także firm zwolnionych z VAT, wystarczy NIP. Klucz jest bezpłatny i należy do Ciebie: zdobywasz go na stronie CEIDG (lub w GUS). Jak to zrobić krok po kroku – w instrukcji. Bez klucza program działa normalnie, a dane takiej firmy możesz wpisać ręcznie.', kcLinkCeidg:'Strona klucza CEIDG', kcLinkGus:'Strona klucza GUS', kcKeyLabel:'Wklej tutaj klucz CEIDG', kcStoreNote:'Klucz zapisuje się tylko w Twoich danych programu (folder Dokumenty\\Accountancy Helper). Nie wysyłaj go innym osobom.', kcSave:'Zapisz klucz', kcSkip:'Pomiń na razie', kcEmpty:'Wklej najpierw klucz albo wybierz „Pomiń na razie”.', setGus:'Wyszukiwanie firm po NIP (rejestry)', gusNote:'Wykaz podatników VAT zna tylko firmy płacące VAT. Aby program znajdował także firmy zwolnione z VAT: (1) CEIDG – rejestr jednoosobowych działalności: zarejestruj się na dane.biznes.gov.pl (potrzebne konto na biznes.gov.pl, logowanie Profilem Zaufanym); klucz API przyjdzie mailem – wpisz go jako token CEIDG. (2) GUS (REGON), także dla spółek: klucz użytkownika bezpłatnie na wniosek, api.stat.gov.pl/Home/RegonApi. Wystarczy jedno z nich. Wysyłany jest tylko numer NIP.', lCeidgToken:'Token CEIDG (klucz API) – opcjonalnie', lGusKey:'Klucz API GUS (REGON) – opcjonalnie', lookupOkGus:'Pobrano z rejestru: {0}. Sprawdź dane.', lookupNeedKey:'Aby szukać także w rejestrach CEIDG / GUS, wpisz token lub klucz w Ustawieniach.', lookupConfirm:'Znaleziono w rejestrze:\n\nNazwa: {0}\nREGON: {1}\nAdres: {2}\nPKD: {4}\nŹródło: {3}\n\nRejestr pokazuje dane oficjalnie zarejestrowane i mogą się różnić od aktualnych. Wstawić nazwę i REGON (adres i PKD tylko jeśli pola są puste)?', lookupDeclined:'Nic nie zmieniono.', setLog:'Dziennik działań', logNote:'Zapis tego, co robiono w programie (wczytane pliki, zmiany wartości, obliczenia, zamknięte miesiące, eksporty) z datą i godziną. Pomaga sprawdzić, czy czegoś nie pominięto. Zapisywany jest tylko na tym komputerze, obok danych.', openLogBtn:'Otwórz dziennik', logTitle:'Dziennik działań', logDay:'Dzień:', logAllBtn:'Pokaż wszystko', logSaveBtn:'Zapisz jako plik tekstowy', logEmpty:'Brak wpisów.', logSession:'Sesja od {0}', lg_sStart:'Uruchomiono program', lg_sEnd:'Zamknięto program', lg_file:'Wczytano plik {0}: {1}, odczyt {2}, kwota {3} zł{4}', lg_moved:' – przeniesiono do właściwej grupy wg NIP', lg_fileFail:'Nie udało się odczytać pliku {0}', lg_zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', lg_addRow:'Dodano ręcznie wiersz: {0}', lg_delRow:'Usunięto wiersz „{0}”', lg_edit:'Wiersz „{0}”: zmieniono {1} z „{2}” na „{3}”', lg_calc:'Obliczono miesiąc {0}: przychód {1} zł, koszty {2} zł, ZUS społeczne {3} zł, zdrowotna {4} zł, podatek do zapłaty {5} zł', lg_close:'Zamknięto miesiąc {0}: przychód {1} zł, koszty {2} zł, dokumentów {3}', lg_undo:'Cofnięto zamknięcie miesiąca {0}', lg_histEdit:'Historia {0}: zmieniono {1} na „{2}”', lg_kpir:'Wyeksportowano księgę KPIR za rok {0} (miesięcy: {1}, dokumentów: {2})', lg_csv:'Wyeksportowano CSV za {0}', lg_csvYear:'Wyeksportowano CSV za rok {0}', lg_print:'Drukowanie / zapis PDF zestawienia: {0}', lg_backupSave:'Zapisano kopię zapasową (JSON)', lg_backupLoad:'Wczytano kopię zapasową', lg_setting:'Ustawienie „{0}” zmieniono na „{1}”', lg_rules:'Zastosowano zasady roczne, wersja {0}', lg_nip:'Wyszukiwanie NIP {0}: {1}', lg_nipNone:'nie znaleziono w rejestrze', lg_nipErr:'błąd wyszukiwania', lg_reset:'Usunięto wszystkie dane', fromInvoiceBtn:'Uzupełnij z mojej faktury', ceidgSiteBtn:'Sprawdź w CEIDG (strona internetowa)', ceidgSiteNote:'Otwiera oficjalną stronę CEIDG w przeglądarce: wpisz tam NIP i przepisz dane firmy. Automatyczne pobieranie z CEIDG będzie możliwe po otrzymaniu klucza.', fromInvConfirm:'Znaleziono na fakturze (dane sprzedawcy):\n\nNazwa: {0}\nNIP: {1}\nAdres: {2}\n\nWstawić te dane jako dane firmy?', fromInvOk:'Wstawiono dane z faktury: {0}.', fromInvNone:'Nie znaleziono danych sprzedawcy w tym pliku. Wybierz fakturę sprzedaży wystawioną przez Twoją firmę (PDF z tekstem lub XML z KSeF).', lAddress:'Adres firmy', lActivity:'Rodzaj działalności (PKD i opis)', lDefInc:'Domyślny opis przychodu (do księgi), np. Nauka jęz. angielskiego', lDefExp:'Domyślny opis kosztu (do księgi) – opcjonalnie', thNip:'NIP kontrahenta', thDesc:'Opis zdarzenia', thAddr:'Adres kontrahenta', typeOth:'Pozostały przychód', kpirBtn:'Księga KPIR (Excel)', kpirNone:'Brak pozycji do księgi – dodaj faktury i kliknij „Oblicz miesiąc” albo zamknij miesiąc.',
+addPastBtn:'+ Dodaj miesiąc z liczb', pmTitle:'Dodaj miesiąc z samych kwot', pmHint:'Dla miesięcy, dla których nie masz faktur w programie: wpisz tylko kwoty. Jeśli dane narastające (Ustawienia lub sekcja „Narastająco”) wpisałeś już ręcznie, nie dodawaj tych samych miesięcy drugi raz – kwoty zliczyłyby się podwójnie.', pmYear:'Rok', pmMonth:'Miesiąc', pmRev:'Przychód', pmCost:'Koszty', pmSoc:'Składki społeczne (ZUS)', pmHealth:'Składka zdrowotna', pmTax:'Zaliczka na podatek zapłacona', pmDate:'Data zapłaty', pmSave:'Zapisz miesiąc', pmCancel:'Anuluj', pmBad:'Podaj prawidłowy rok i miesiąc.', pmAuto:'Wpisany z samych kwot', lg_addPast:'Dodano miesiąc z samych kwot: {0} (przychód {1}, koszty {2})', annTitle:'Rozliczenie roczne: PIT i składka zdrowotna', annNote:'Zestawienie orientacyjne z zamkniętych miesięcy w Historii. To nie jest zeznanie podatkowe: nie uwzględnia innych dochodów, ulg ani odliczeń (np. na dzieci). Sprawdź z księgową przed złożeniem PIT i rozliczenia składki zdrowotnej.', annYear:'Rok', annForm:'Forma opodatkowania w tym roku', annMonths:'Miesiące ubezpieczenia zdrowotnego w roku (12 = cały rok)', annJan:'Składka zdrowotna należna za styczeń następnego roku (jeśli nie ma jej w Historii)', annCalc:'Przelicz', annCsv:'Eksport CSV', annNoData:'Brak zamkniętych miesięcy tego roku w Historii.', annPitTitle:'Zaliczki i podatek za rok {0}', annRev:'Przychód', annCost:'Koszty', annIncome:'Dochód (przychód − koszty)', annSoc:'Składki społeczne zapłacone (odliczenie)', annHealthDedLin:'Składka zdrowotna odliczona (limit {0})', annHealthDedRyc:'50% składki zdrowotnej (odliczenie od przychodu)', annBase:'Podstawa opodatkowania', annTax:'Podatek za rok (stawka {0})', annAdv:'Zaliczki zapłacone w ciągu roku', annPay:'Do dopłaty', annRefund:'Nadpłata (do zwrotu)', annMonthsIn:'Miesiące w Historii: {0} z 12', annMissing:'brakuje: {0}', annHsTitle:'Roczne rozliczenie składki zdrowotnej (rok {0})', annHsIncome:'Dochód roczny (rok kalendarzowy, po odjęciu składek społecznych)', annHsRycRev:'Przychód roczny po odjęciu składek społecznych (decyduje o przedziale)', annHsMin:'Podstawa minimalna ({0} mies. × {1})', annHsBase:'Podstawa roczna', annHsBand:'Przedział: miesięczna podstawa {0}', annHsAnnual:'Składka roczna', annHsDue:'Składki należne za okres rozliczeniowy ({0})', annHsShort:'Niedopłata – do zapłaty razem ze składką za kwiecień {0}, do 20 maja {0} (termin potwierdź w ZUS)', annHsOver:'Nadpłata – wniosek o zwrot (RZS-R) w terminie wskazanym przez ZUS, ok. 1 czerwca {0}', annHsEven:'Brak różnicy.', annHsPeriodSL:'luty {0} – styczeń {1}', annHsPeriodR:'styczeń – grudzień {0}', annHsJanMissing:'W Historii brakuje stycznia {0} – wpisz jego należną składkę w polu powyżej.', annHsNote:'Porównanie dotyczy składek NALEŻNYCH z miesięcznych deklaracji, nie faktycznie zapłaconych (zaległości i raty nie zmieniają rozliczenia rocznego).', annHsRycNote:'Ryczałt: przedział wg przychodu pomniejszonego o składki społeczne (art. 81 ust. 2g) – do potwierdzenia z księgową.', profLabel:'Firma:', profMain:'Profil główny', profNew:'+ Nowa firma', profRename:'Zmień nazwę', profRemove:'Usuń z listy', profNewTitle:'Nowa firma (nowy profil)', profNewHint:'Nowy profil ma puste dane firmy, własną historię, własne ustawienia i własne kopie zapasowe, całkowicie oddzielone od pozostałych firm. Język i klucz do wyszukiwania firm zostaną skopiowane.', profRenameTitle:'Zmień nazwę profilu', profRenameHint:'Nazwa służy tylko do rozpoznania profilu na liście (np. nazwa klienta).', profNameLbl:'Nazwa profilu (np. nazwa firmy klienta)', profOk:'OK', profCancel:'Anuluj', profExists:'Profil o takiej nazwie już istnieje.', profNameEmpty:'Wpisz nazwę profilu.', profErr:'Nie udało się: {0}', profRemoveQ:'Usunąć profil „{0}” z listy? Pliki NIE zostaną skasowane – zostaną w folderze: {1}', profRemoveDefault:'Profilu głównego nie można usunąć z listy.', lg_profile:'Profil: {0} ({1})', vat113:'Zwolniony – art. 113 (zwolnienie podmiotowe, do limitu obrotu)', lVatPeriod:'Okres rozliczenia VAT (dla czynnych podatników)', vatMonthly:'Miesięcznie', vatQuarterly:'Kwartalnie (mały podatnik)', pVatLimit:'Limit zwolnienia z VAT art. 113 (PLN)', thVatPct:'VAT odl. %', vatPctTip:'Jaka część VAT naliczonego z tego dokumentu podlega odliczeniu (100 = całość; np. 50 przy samochodzie osobowym). Nieodliczony VAT zwiększa koszt.', wVat113:'Sprzedaż narastająca ({0}) zbliża się do limitu zwolnienia z VAT ({1}).', wVat113x:'Przekroczono limit zwolnienia z VAT ({0}) – zwolnienie przestaje obowiązywać; sprawdź z księgową.', pmOutVat:'VAT należny (opcjonalnie)', pmInVat:'VAT naliczony odliczony (opcjonalnie)', annVatTitle:'VAT za rok {0}', annVatM:'Miesiąc', annVatQ:'Kwartał', annVatTotal:'Razem', annVatNote:'Orientacyjnie, z miesięcy zamkniętych w Historii: VAT należny minus VAT naliczony odliczony, z przeniesieniem nadwyżki na kolejny okres. Termin deklaracji i wpłaty: zwykle do 25. dnia po okresie rozliczeniowym – sprawdź z księgową.', kcTitle:'Zanim zaczniesz', kcManualText:'Prosimy najpierw przeczytać instrukcję – to kilka minut i oszczędza kłopotów przy pierwszym miesiącu.', kcManualBtn:'Otwórz instrukcję', kcKeyTitle:'Osobisty klucz CEIDG (nieobowiązkowy)', kcKeyText:'Program ma już wbudowany ogólny klucz do rejestru GUS, więc nazwę i adres firmy zwolnionej z VAT znajdzie po samym NIP. Własny klucz CEIDG jest dodatkowy i nieobowiązkowy: daje pełniejsze dane (np. PKD). Jest bezpłatny i należy do Ciebie – zdobywasz go na stronie CEIDG. Jak to zrobić, krok po kroku – w instrukcji. Bez niego program działa normalnie.', kcLinkCeidg:'Strona klucza CEIDG', kcLinkGus:'Strona klucza GUS', kcKeyLabel:'Wklej tutaj klucz CEIDG', kcStoreNote:'Klucz zapisuje się tylko w Twoich danych programu (folder Dokumenty\\Accountancy Helper). Nie wysyłaj go innym osobom.', kcSave:'Zapisz klucz', kcSkip:'Pomiń na razie', kcEmpty:'Wklej najpierw klucz albo wybierz „Pomiń na razie”.', setGus:'Wyszukiwanie firm po NIP (rejestry)', gusNote:'Wykaz podatników VAT zna tylko firmy płacące VAT. Aby program znajdował także firmy zwolnione z VAT: (1) CEIDG – rejestr jednoosobowych działalności: zarejestruj się na dane.biznes.gov.pl (potrzebne konto na biznes.gov.pl, logowanie Profilem Zaufanym); klucz API przyjdzie mailem – wpisz go jako token CEIDG. (2) GUS (REGON), także dla spółek: klucz użytkownika bezpłatnie na wniosek, api.stat.gov.pl/Home/RegonApi. Wystarczy jedno z nich. Wysyłany jest tylko numer NIP.', lCeidgToken:'Token CEIDG (klucz API) – opcjonalnie', lGusKey:'Klucz API GUS (REGON) – opcjonalnie', lookupOkGus:'Pobrano z rejestru: {0}. Sprawdź dane.', lookupNeedKey:'Aby szukać także w rejestrach CEIDG / GUS, wpisz token lub klucz w Ustawieniach.', lookupConfirm:'Znaleziono w rejestrze:\n\nNazwa: {0}\nREGON: {1}\nAdres: {2}\nPKD: {4}\nŹródło: {3}\n\nRejestr pokazuje dane oficjalnie zarejestrowane i mogą się różnić od aktualnych. Wstawić nazwę i REGON (adres i PKD tylko jeśli pola są puste)?', lookupDeclined:'Nic nie zmieniono.', setLog:'Dziennik działań', logNote:'Zapis tego, co robiono w programie (wczytane pliki, zmiany wartości, obliczenia, zamknięte miesiące, eksporty) z datą i godziną. Pomaga sprawdzić, czy czegoś nie pominięto. Zapisywany jest tylko na tym komputerze, obok danych.', openLogBtn:'Otwórz dziennik', logTitle:'Dziennik działań', logDay:'Dzień:', logAllBtn:'Pokaż wszystko', logSaveBtn:'Zapisz jako plik tekstowy', logEmpty:'Brak wpisów.', logSession:'Sesja od {0}', lg_sStart:'Uruchomiono program', lg_sEnd:'Zamknięto program', lg_file:'Wczytano plik {0}: {1}, odczyt {2}, kwota {3} zł{4}', lg_moved:' – przeniesiono do właściwej grupy wg NIP', lg_fileFail:'Nie udało się odczytać pliku {0}', lg_zipBad:'Nie udało się otworzyć archiwum ZIP: {0}', lg_addRow:'Dodano ręcznie wiersz: {0}', lg_delRow:'Usunięto wiersz „{0}”', lg_edit:'Wiersz „{0}”: zmieniono {1} z „{2}” na „{3}”', lg_calc:'Obliczono miesiąc {0}: przychód {1} zł, koszty {2} zł, ZUS społeczne {3} zł, zdrowotna {4} zł, podatek do zapłaty {5} zł', lg_close:'Zamknięto miesiąc {0}: przychód {1} zł, koszty {2} zł, dokumentów {3}', lg_undo:'Cofnięto zamknięcie miesiąca {0}', lg_histEdit:'Historia {0}: zmieniono {1} na „{2}”', lg_kpir:'Wyeksportowano księgę KPIR za rok {0} (miesięcy: {1}, dokumentów: {2})', lg_csv:'Wyeksportowano CSV za {0}', lg_csvYear:'Wyeksportowano CSV za rok {0}', lg_print:'Drukowanie / zapis PDF zestawienia: {0}', lg_backupSave:'Zapisano kopię zapasową (JSON)', lg_backupLoad:'Wczytano kopię zapasową', lg_setting:'Ustawienie „{0}” zmieniono na „{1}”', lg_rules:'Zastosowano zasady roczne, wersja {0}', lg_nip:'Wyszukiwanie NIP {0}: {1}', lg_nipNone:'nie znaleziono w rejestrze', lg_nipErr:'błąd wyszukiwania', lg_reset:'Usunięto wszystkie dane', fromInvoiceBtn:'Uzupełnij z mojej faktury', ceidgSiteBtn:'Sprawdź w CEIDG (strona internetowa)', ceidgSiteNote:'Otwiera oficjalną stronę CEIDG w przeglądarce: wpisz tam NIP i przepisz dane firmy. Automatyczne pobieranie z CEIDG będzie możliwe po otrzymaniu klucza.', fromInvConfirm:'Znaleziono na fakturze (dane sprzedawcy):\n\nNazwa: {0}\nNIP: {1}\nAdres: {2}\n\nWstawić te dane jako dane firmy?', fromInvOk:'Wstawiono dane z faktury: {0}.', fromInvNone:'Nie znaleziono danych sprzedawcy w tym pliku. Wybierz fakturę sprzedaży wystawioną przez Twoją firmę (PDF z tekstem lub XML z KSeF).', lAddress:'Adres firmy', lActivity:'Rodzaj działalności (PKD i opis)', lDefInc:'Domyślny opis przychodu (do księgi), np. Nauka jęz. angielskiego', lDefExp:'Domyślny opis kosztu (do księgi) – opcjonalnie', thNip:'NIP kontrahenta', thDesc:'Opis zdarzenia', thAddr:'Adres kontrahenta', typeOth:'Pozostały przychód', kpirBtn:'Księga KPIR (Excel)', kpirNone:'Brak pozycji do księgi – dodaj faktury i kliknij „Oblicz miesiąc” albo zamknij miesiąc.',
 zusEmeryt:'Emeryt / inny system (składki społeczne wpisane ręcznie)', lManualSoc:'Składki społeczne miesięcznie (PLN) – wpisz 0, jeśli ich nie ma',
 emerytNote:'Brak obowiązkowych składek społecznych z działalności; składka zdrowotna nadal jest liczona. Zweryfikuj swoją sytuację w ZUS / u księgowej.',
 lPrevDays:'Liczba dni działalności w poprzednim roku (365 = cały rok)', malyDaysWarn:'Działalność trwała krócej niż 60 dni w poprzednim roku – warunek Mały ZUS Plus może nie być spełniony.',
@@ -456,11 +466,68 @@ tr5t:'Sprawdź i popraw', tr5x:'Wszystkie odczytane pozycje możesz poprawić. M
 tr6t:'Oblicz miesiąc', tr6x:'Po sprawdzeniu tabeli kliknij ten przycisk. Pojawi się zestawienie z ZUS, składką zdrowotną i podatkiem do zapłaty.',
 tr7t:'Drukuj, eksportuj, zamknij', tr7x:'Pod zestawieniem znajdziesz przyciski: drukowania / zapisu do PDF, eksportu CSV oraz „Zamknij miesiąc”, który zapisuje wynik w historii i przenosi go do danych narastających.',
 tr8t:'Historia i kopia zapasowa', tr8x:'Tu widać zamknięte miesiące (można je cofnąć) oraz zapisać kopię danych do pliku. Dane i tak zapisują się automatycznie.',
-tr9t:'Ustawienia', tr9x:'W ustawieniach zmienisz język i parametry roczne, usuniesz dane oraz uruchomisz ten samouczek ponownie.'
+tr9t:'Ustawienia', tr9x:'W ustawieniach zmienisz język i parametry roczne, usuniesz dane oraz uruchomisz ten samouczek ponownie.',
+vtLabel:"VAT: działalność mieszana (zwolniona + opodatkowana)",
+vtHint:"Jeśli oprócz zwolnionego nauczania (art. 43) sprzedajesz też coś opodatkowanego (np. oprogramowanie), oznacz w tabeli rodzaj każdej sprzedaży i sposób wykorzystania kosztów. Program śledzi limit zwolnienia z art. 113 (240 000 zł), limit usług elektronicznych dla konsumentów z UE, proporcję VAT naliczonego (art. 90) i listę VAT-UE. Wyniki są orientacyjne.",
+lDefVatT:"Domyślny rodzaj sprzedaży (VAT)",
+vtAuto:"automatycznie",
+vtDom:"Sprzedaż w kraju (opodatkowana; przy art. 113 zwolniona)",
+vtEx43:"Zwolniona – art. 43 (np. nauczanie)",
+vtEuB2B:"Usługa dla firmy z UE (poza Polską)",
+vtNeuB2B:"Usługa dla firmy spoza UE (poza Polską)",
+vtEuB2C:"Usługa elektroniczna dla konsumenta z UE",
+vtNeuB2C:"Usługa dla konsumenta spoza UE (poza Polską)",
+lYtdLimit:"Sprzedaż wliczana do limitu zwolnienia (art. 113) od początku roku, bez bieżącego miesiąca",
+lPrevLimit:"Sprzedaż wliczana do limitu w poprzednim roku",
+lYtdAllow:"Usługi elektroniczne dla konsumentów z UE od początku roku (limit 42 000 zł), bez bieżącego miesiąca",
+lPrevAllow:"To samo w poprzednim roku",
+lPropT:"Obrót opodatkowany w poprzednim roku, netto (do proporcji z art. 90)",
+lPropE:"Obrót zwolniony w poprzednim roku, netto (np. nauczanie)",
+lPropEst:"Proporcja szacunkowa, % (gdy obrót opodatkowany w poprzednim roku był poniżej 30 000 zł lub go nie było)",
+useCustom:"% ręcznie",
+useTax:"Tylko sprzedaż opodatkowana (100%)",
+useEx:"Tylko sprzedaż zwolniona, np. nauczanie (0%)",
+useMix:"Wspólny (według proporcji)",
+useTip:"Do czego służy ten koszt: do sprzedaży opodatkowanej (odliczasz cały VAT), do zwolnionej (nie odliczasz) albo do obu (odliczasz według proporcji z art. 90).",
+vtSalesTitle:"Sprzedaż według rodzaju VAT",
+vtNotePre:"Adnotacja na fakturze: ",
+limTitle:"Limit zwolnienia z VAT (art. 113)",
+limBefore:"Wliczana sprzedaż od początku roku, przed tym miesiącem",
+limMonth:"Wliczana sprzedaż w tym miesiącu",
+limTotal:"Razem w roku (limit {0})",
+limRoom:"Pozostało do limitu",
+wLim70:"Wliczana sprzedaż ({0}) przekroczyła 70% limitu zwolnienia z VAT ({1}) – zaplanuj rejestrację VAT.",
+wReg113:"Zarejestruj się jako czynny podatnik VAT PRZED sprzedażą, która przekroczy limit (art. 96 ust. 5 pkt 2) – zwolnienie traci moc od tej czynności.",
+wLimPrev:"Sprzedaż wliczana w poprzednim roku ({0}) przekroczyła limit ({1}) – zwolnienie z art. 113 w tym roku nie przysługuje.",
+wFirstSale:"Masz sprzedaż inną niż zwolnione nauczanie, a status firmy to „tylko art. 43”. Zmień status (art. 113 albo czynny VAT) i sprawdź zgłoszenie VAT-R przed pierwszą taką sprzedażą (art. 96 ust. 5 pkt 1; brzmienie niejednoznaczne – potwierdź).",
+wEuB2B:"Usługi dla firm z UE: przed pierwszą taką usługą potrzebna jest rejestracja VAT-UE, a informację podsumowującą VAT-UE składa się do 25. dnia następnego miesiąca.",
+wAllow:"Usługi elektroniczne dla konsumentów z UE: {0} z limitu {1} (ok. 10 000 euro). Po przekroczeniu obowiązuje VAT kraju konsumenta (zwykle przez OSS).",
+wAllowX:"Przekroczono limit {1} usług elektronicznych dla konsumentów z UE ({0}) – od tej usługi obowiązuje VAT kraju konsumenta; rozważ procedurę OSS.",
+wAdv:"W opisie sprzedaży jest słowo typu „doradztwo / konsulting / audyt”. Usługi doradcze wyłączają zwolnienie z art. 113 (art. 113 ust. 13 pkt 2 lit. b) – opisuj to, co faktycznie sprzedajesz.",
+euTitle:"Informacja podsumowująca VAT-UE (firmy z UE)",
+euNote:"Do 25. dnia następnego miesiąca. W kolumnie NIP wpisz numer VAT UE kontrahenta z kodem kraju.",
+propTitle:"Proporcja VAT naliczonego (art. 90)",
+propUsed:"Proporcja stosowana do kosztów wspólnych: {0}%",
+propNoData:"Brak obrotu z poprzedniego roku – koszty wspólne nie są odliczane. Wpisz proporcję szacunkową w ustawieniach (art. 90 ust. 8; zawiadom urząd skarbowy do 25. dnia następnego miesiąca).",
+propShared:"VAT naliczony z kosztów wspólnych: {0}, odliczony: {1}",
+annLimTitle:"Limit zwolnienia z VAT, rok {0}",
+annLimRow:"Sprzedaż wliczana w roku {0} (limit {1})",
+annPropTitle:"Proporcja VAT i korekta roczna (art. 90–91), rok {0}",
+annPropActual:"Proporcja rzeczywista za rok (zaokrąglona w górę)",
+annPropApplied:"Proporcja zastosowana w ciągu roku",
+annPropDiff:"Różnica (punkty procentowe)",
+annPropShared:"VAT naliczony z kosztów wspólnych w roku",
+annPropCorrUp:"Korekta zwiększająca odliczenie: {0} (w pierwszej deklaracji następnego roku; przychód w PIT – art. 14 ust. 2 pkt 7f)",
+annPropCorrDown:"Korekta zmniejszająca odliczenie: {0} (koszt w PIT – art. 23 ust. 1 pkt 43 lit. c)",
+annPropNone:"Korekta niepotrzebna (różnica nie przekracza 2 punktów procentowych – art. 91 ust. 1a).",
+annPropNext:"Proporcja na następny rok: {0}% – wpisz obroty w ustawieniach.",
+annPropNote:"Orientacyjnie. Środki trwałe i wartości niematerialne powyżej 15 000 zł są korygowane przez 5 lat (art. 91 ust. 2) – tego program nie liczy.",
+lgUse:"Wykorzystanie kosztu",
+lgVatT:"Rodzaj sprzedaży (VAT)"
 },
 en:{
 subtitle:'— monthly calculator',
-addPastBtn:'+ Add a month from figures', pmTitle:'Add a month from figures only', pmHint:'For months you have no invoices for in the program: type the amounts only. If you already typed the year-to-date totals by hand (Settings or the “Year to date” section), do not add the same months again – the amounts would be counted twice.', pmYear:'Year', pmMonth:'Month', pmRev:'Revenue', pmCost:'Costs', pmSoc:'Social contributions (ZUS)', pmHealth:'Health contribution', pmTax:'Tax advance paid', pmDate:'Date paid', pmSave:'Save month', pmCancel:'Cancel', pmBad:'Enter a valid year and month.', pmAuto:'Entered from figures only', lg_addPast:'Month added from figures only: {0} (revenue {1}, costs {2})', annTitle:'Yearly figures: PIT and health contribution', annNote:'An indicative summary from the closed months in History. It is not a tax return: it does not include other income, reliefs or deductions (for example for children). Check with your accountant before filing the PIT and the health-contribution settlement.', annYear:'Year', annForm:'Tax form this year', annMonths:'Months of health insurance in the year (12 = whole year)', annJan:'Health contribution due for January of the next year (if it is not in History)', annCalc:'Recalculate', annCsv:'Export CSV', annNoData:'There are no closed months for this year in History.', annPitTitle:'Advances and tax for {0}', annRev:'Revenue', annCost:'Costs', annIncome:'Income (revenue − costs)', annSoc:'Social contributions paid (deduction)', annHealthDedLin:'Health contribution deducted (limit {0})', annHealthDedRyc:'50% of the health contribution (deducted from revenue)', annBase:'Tax base', annTax:'Tax for the year (rate {0})', annAdv:'Advances paid during the year', annPay:'To pay', annRefund:'Overpayment (refund)', annMonthsIn:'Months in History: {0} of 12', annMissing:'missing: {0}', annHsTitle:'Annual health-contribution settlement (year {0})', annHsIncome:'Annual income (calendar year, after social contributions)', annHsRycRev:'Annual revenue after social contributions (decides the band)', annHsMin:'Minimum base ({0} months × {1})', annHsBase:'Annual base', annHsBand:'Band: monthly base {0}', annHsAnnual:'Annual contribution', annHsDue:'Contributions due for the settlement period ({0})', annHsShort:'Shortfall – to be paid with the April {0} contribution, by 20 May {0} (confirm the date with ZUS)', annHsOver:'Overpayment – refund request (RZS-R) by the date ZUS gives, around 1 June {0}', annHsEven:'No difference.', annHsPeriodSL:'February {0} – January {1}', annHsPeriodR:'January – December {0}', annHsJanMissing:'January {0} is missing from History – enter its due contribution in the box above.', annHsNote:'The comparison uses contributions DUE from the monthly declarations, not those actually paid (arrears and instalments do not change the annual settlement).', annHsRycNote:'Ryczałt: band by revenue less social contributions (art. 81 ust. 2g) – to be confirmed with your accountant.', profLabel:'Company:', profMain:'Main profile', profNew:'+ New company', profRename:'Rename', profRemove:'Remove from list', profNewTitle:'New company (new profile)', profNewHint:'A new profile has empty company details, its own history, its own settings and its own backups, completely separate from the other companies. The language and the company-lookup key are copied.', profRenameTitle:'Rename profile', profRenameHint:'The name is only used to recognise the profile in the list (for example the client name).', profNameLbl:'Profile name (for example the client company name)', profOk:'OK', profCancel:'Cancel', profExists:'A profile with that name already exists.', profNameEmpty:'Enter a profile name.', profErr:'Failed: {0}', profRemoveQ:'Remove the profile “{0}” from the list? The files are NOT deleted – they stay in the folder: {1}', profRemoveDefault:'The main profile cannot be removed from the list.', lg_profile:'Profile: {0} ({1})', vat113:'VAT-exempt – Art. 113 (small-business exemption, up to the turnover limit)', lVatPeriod:'VAT settlement period (for VAT-registered)', vatMonthly:'Monthly', vatQuarterly:'Quarterly (small taxpayer)', pVatLimit:'VAT exemption limit, art. 113 (PLN)', thVatPct:'VAT ded. %', vatPctTip:'What share of the input VAT on this document may be deducted (100 = all; for example 50 for a passenger car). The VAT that is not deducted increases the cost.', wVat113:'Sales so far ({0}) are approaching the VAT exemption limit ({1}).', wVat113x:'The VAT exemption limit ({0}) has been exceeded – the exemption stops; check with your accountant.', pmOutVat:'Output VAT (optional)', pmInVat:'Input VAT deducted (optional)', annVatTitle:'VAT for {0}', annVatM:'Month', annVatQ:'Quarter', annVatTotal:'Total', annVatNote:'Indicative, from the months closed in History: output VAT minus deducted input VAT, with any excess carried to the next period. Return and payment are usually due by the 25th after the settlement period – check with your accountant.', kcTitle:'Before you start', kcManualText:'Please read the manual first. It takes a few minutes and saves trouble in the first month.', kcManualBtn:'Open the manual', kcKeyTitle:'Key for automatic company lookup (optional)', kcKeyText:'With a key the software fills in the name and address of VAT-exempt businesses too, from just the NIP. The key is free and belongs to you: you get it on the CEIDG website (or from GUS). The manual explains how, step by step. Without a key the software works normally, and you can type such a business in by hand.', kcLinkCeidg:'CEIDG key page', kcLinkGus:'GUS key page', kcKeyLabel:'Paste your CEIDG key here', kcStoreNote:'The key is saved only in your own program data (Documents\\Accountancy Helper folder). Do not send it to other people.', kcSave:'Save key', kcSkip:'Skip for now', kcEmpty:'Paste a key first, or choose Skip for now.', setGus:'Company lookup by NIP (registers)', gusNote:'The VAT register only knows VAT-paying businesses. To also find VAT-exempt businesses: (1) CEIDG, the sole-proprietor register: register at dane.biznes.gov.pl (needs a biznes.gov.pl account, sign-in with a Trusted Profile); the API key arrives by email - enter it as the CEIDG token. (2) GUS (REGON), also covers companies: a user key is issued free on request, api.stat.gov.pl/Home/RegonApi. One of them is enough. Only the NIP number is sent.', lCeidgToken:'CEIDG token (API key) - optional', lGusKey:'GUS (REGON) API key - optional', lookupOkGus:'Fetched from the register: {0}. Please check the details.', lookupNeedKey:'To also search the CEIDG / GUS registers, enter a token or key in Settings.', lookupConfirm:'Found in the register:\n\nName: {0}\nREGON: {1}\nAddress: {2}\nPKD: {4}\nSource: {3}\n\nThe register shows the officially registered details, which can differ from your current ones. Insert the name and REGON (the address and PKD only if those fields are empty)?', lookupDeclined:'Nothing was changed.', setLog:'Activity log', logNote:'A record of what was done in the program (files loaded, value changes, calculations, closed months, exports) with date and time. It helps to check that nothing was missed. It is stored only on this computer, next to the data.', openLogBtn:'Open the log', logTitle:'Activity log', logDay:'Day:', logAllBtn:'Show all', logSaveBtn:'Save as a text file', logEmpty:'No entries.', logSession:'Session from {0}', lg_sStart:'Program started', lg_sEnd:'Program closed', lg_file:'Loaded file {0}: {1}, read as {2}, amount {3} PLN{4}', lg_moved:' – moved to the right group by NIP', lg_fileFail:'Could not read file {0}', lg_zipBad:'Could not open the ZIP archive: {0}', lg_addRow:'Row added by hand: {0}', lg_delRow:'Row deleted: {0}', lg_edit:'Row {0}: {1} changed from {2} to {3}', lg_calc:'Calculated month {0}: revenue {1} PLN, costs {2} PLN, social ZUS {3} PLN, health {4} PLN, tax payable {5} PLN', lg_close:'Closed month {0}: revenue {1} PLN, costs {2} PLN, documents {3}', lg_undo:'Undid the closing of month {0}', lg_histEdit:'History {0}: {1} changed to {2}', lg_kpir:'Exported the KPIR ledger for {0} (months: {1}, documents: {2})', lg_csv:'Exported CSV for {0}', lg_csvYear:'Exported CSV for the year {0}', lg_print:'Printed / saved the summary as PDF: {0}', lg_backupSave:'Saved a backup (JSON)', lg_backupLoad:'Loaded a backup', lg_setting:'Setting {0} changed to {1}', lg_rules:'Applied yearly rules, version {0}', lg_nip:'NIP lookup {0}: {1}', lg_nipNone:'not found in the register', lg_nipErr:'lookup error', lg_reset:'All data deleted', fromInvoiceBtn:'Fill in from my invoice', ceidgSiteBtn:'Check on the CEIDG website', ceidgSiteNote:'Opens the official CEIDG page in your browser: type the NIP there and copy the company details. Automatic lookup from CEIDG will be possible once the key arrives.', fromInvConfirm:'Found on the invoice (seller details):\n\nName: {0}\nNIP: {1}\nAddress: {2}\n\nInsert these as the company details?', fromInvOk:'Inserted the details from the invoice: {0}.', fromInvNone:'No seller details found in this file. Choose a sales invoice issued by your company (a PDF with text, or a KSeF XML).', lAddress:'Company address', lActivity:'Type of activity (PKD and description)', lDefInc:'Default description for income (ledger), e.g. English lessons', lDefExp:'Default description for costs (ledger) – optional', thNip:'Counterparty NIP', thDesc:'Description of event', thAddr:'Counterparty address', typeOth:'Other income', kpirBtn:'KPIR ledger (Excel)', kpirNone:'No entries for the ledger yet – add invoices and click “Calculate month”, or close a month.',
+addPastBtn:'+ Add a month from figures', pmTitle:'Add a month from figures only', pmHint:'For months you have no invoices for in the program: type the amounts only. If you already typed the year-to-date totals by hand (Settings or the “Year to date” section), do not add the same months again – the amounts would be counted twice.', pmYear:'Year', pmMonth:'Month', pmRev:'Revenue', pmCost:'Costs', pmSoc:'Social contributions (ZUS)', pmHealth:'Health contribution', pmTax:'Tax advance paid', pmDate:'Date paid', pmSave:'Save month', pmCancel:'Cancel', pmBad:'Enter a valid year and month.', pmAuto:'Entered from figures only', lg_addPast:'Month added from figures only: {0} (revenue {1}, costs {2})', annTitle:'Yearly figures: PIT and health contribution', annNote:'An indicative summary from the closed months in History. It is not a tax return: it does not include other income, reliefs or deductions (for example for children). Check with your accountant before filing the PIT and the health-contribution settlement.', annYear:'Year', annForm:'Tax form this year', annMonths:'Months of health insurance in the year (12 = whole year)', annJan:'Health contribution due for January of the next year (if it is not in History)', annCalc:'Recalculate', annCsv:'Export CSV', annNoData:'There are no closed months for this year in History.', annPitTitle:'Advances and tax for {0}', annRev:'Revenue', annCost:'Costs', annIncome:'Income (revenue − costs)', annSoc:'Social contributions paid (deduction)', annHealthDedLin:'Health contribution deducted (limit {0})', annHealthDedRyc:'50% of the health contribution (deducted from revenue)', annBase:'Tax base', annTax:'Tax for the year (rate {0})', annAdv:'Advances paid during the year', annPay:'To pay', annRefund:'Overpayment (refund)', annMonthsIn:'Months in History: {0} of 12', annMissing:'missing: {0}', annHsTitle:'Annual health-contribution settlement (year {0})', annHsIncome:'Annual income (calendar year, after social contributions)', annHsRycRev:'Annual revenue after social contributions (decides the band)', annHsMin:'Minimum base ({0} months × {1})', annHsBase:'Annual base', annHsBand:'Band: monthly base {0}', annHsAnnual:'Annual contribution', annHsDue:'Contributions due for the settlement period ({0})', annHsShort:'Shortfall – to be paid with the April {0} contribution, by 20 May {0} (confirm the date with ZUS)', annHsOver:'Overpayment – refund request (RZS-R) by the date ZUS gives, around 1 June {0}', annHsEven:'No difference.', annHsPeriodSL:'February {0} – January {1}', annHsPeriodR:'January – December {0}', annHsJanMissing:'January {0} is missing from History – enter its due contribution in the box above.', annHsNote:'The comparison uses contributions DUE from the monthly declarations, not those actually paid (arrears and instalments do not change the annual settlement).', annHsRycNote:'Ryczałt: band by revenue less social contributions (art. 81 ust. 2g) – to be confirmed with your accountant.', profLabel:'Company:', profMain:'Main profile', profNew:'+ New company', profRename:'Rename', profRemove:'Remove from list', profNewTitle:'New company (new profile)', profNewHint:'A new profile has empty company details, its own history, its own settings and its own backups, completely separate from the other companies. The language and the company-lookup key are copied.', profRenameTitle:'Rename profile', profRenameHint:'The name is only used to recognise the profile in the list (for example the client name).', profNameLbl:'Profile name (for example the client company name)', profOk:'OK', profCancel:'Cancel', profExists:'A profile with that name already exists.', profNameEmpty:'Enter a profile name.', profErr:'Failed: {0}', profRemoveQ:'Remove the profile “{0}” from the list? The files are NOT deleted – they stay in the folder: {1}', profRemoveDefault:'The main profile cannot be removed from the list.', lg_profile:'Profile: {0} ({1})', vat113:'VAT-exempt – Art. 113 (small-business exemption, up to the turnover limit)', lVatPeriod:'VAT settlement period (for VAT-registered)', vatMonthly:'Monthly', vatQuarterly:'Quarterly (small taxpayer)', pVatLimit:'VAT exemption limit, art. 113 (PLN)', thVatPct:'VAT ded. %', vatPctTip:'What share of the input VAT on this document may be deducted (100 = all; for example 50 for a passenger car). The VAT that is not deducted increases the cost.', wVat113:'Sales so far ({0}) are approaching the VAT exemption limit ({1}).', wVat113x:'The VAT exemption limit ({0}) has been exceeded – the exemption stops; check with your accountant.', pmOutVat:'Output VAT (optional)', pmInVat:'Input VAT deducted (optional)', annVatTitle:'VAT for {0}', annVatM:'Month', annVatQ:'Quarter', annVatTotal:'Total', annVatNote:'Indicative, from the months closed in History: output VAT minus deducted input VAT, with any excess carried to the next period. Return and payment are usually due by the 25th after the settlement period – check with your accountant.', kcTitle:'Before you start', kcManualText:'Please read the manual first. It takes a few minutes and saves trouble in the first month.', kcManualBtn:'Open the manual', kcKeyTitle:'Personal CEIDG key (optional)', kcKeyText:'The software already includes a general key for the GUS register, so it can find the name and address of VAT-exempt businesses from just the NIP. A personal CEIDG key is an optional extra that gives more complete details (for example the PKD code). It is free and belongs to you: you get it on the CEIDG website. The manual explains how, step by step. Without it the software works normally.', kcLinkCeidg:'CEIDG key page', kcLinkGus:'GUS key page', kcKeyLabel:'Paste your CEIDG key here', kcStoreNote:'The key is saved only in your own program data (Documents\\Accountancy Helper folder). Do not send it to other people.', kcSave:'Save key', kcSkip:'Skip for now', kcEmpty:'Paste a key first, or choose Skip for now.', setGus:'Company lookup by NIP (registers)', gusNote:'The VAT register only knows VAT-paying businesses. To also find VAT-exempt businesses: (1) CEIDG, the sole-proprietor register: register at dane.biznes.gov.pl (needs a biznes.gov.pl account, sign-in with a Trusted Profile); the API key arrives by email - enter it as the CEIDG token. (2) GUS (REGON), also covers companies: a user key is issued free on request, api.stat.gov.pl/Home/RegonApi. One of them is enough. Only the NIP number is sent.', lCeidgToken:'CEIDG token (API key) - optional', lGusKey:'GUS (REGON) API key - optional', lookupOkGus:'Fetched from the register: {0}. Please check the details.', lookupNeedKey:'To also search the CEIDG / GUS registers, enter a token or key in Settings.', lookupConfirm:'Found in the register:\n\nName: {0}\nREGON: {1}\nAddress: {2}\nPKD: {4}\nSource: {3}\n\nThe register shows the officially registered details, which can differ from your current ones. Insert the name and REGON (the address and PKD only if those fields are empty)?', lookupDeclined:'Nothing was changed.', setLog:'Activity log', logNote:'A record of what was done in the program (files loaded, value changes, calculations, closed months, exports) with date and time. It helps to check that nothing was missed. It is stored only on this computer, next to the data.', openLogBtn:'Open the log', logTitle:'Activity log', logDay:'Day:', logAllBtn:'Show all', logSaveBtn:'Save as a text file', logEmpty:'No entries.', logSession:'Session from {0}', lg_sStart:'Program started', lg_sEnd:'Program closed', lg_file:'Loaded file {0}: {1}, read as {2}, amount {3} PLN{4}', lg_moved:' – moved to the right group by NIP', lg_fileFail:'Could not read file {0}', lg_zipBad:'Could not open the ZIP archive: {0}', lg_addRow:'Row added by hand: {0}', lg_delRow:'Row deleted: {0}', lg_edit:'Row {0}: {1} changed from {2} to {3}', lg_calc:'Calculated month {0}: revenue {1} PLN, costs {2} PLN, social ZUS {3} PLN, health {4} PLN, tax payable {5} PLN', lg_close:'Closed month {0}: revenue {1} PLN, costs {2} PLN, documents {3}', lg_undo:'Undid the closing of month {0}', lg_histEdit:'History {0}: {1} changed to {2}', lg_kpir:'Exported the KPIR ledger for {0} (months: {1}, documents: {2})', lg_csv:'Exported CSV for {0}', lg_csvYear:'Exported CSV for the year {0}', lg_print:'Printed / saved the summary as PDF: {0}', lg_backupSave:'Saved a backup (JSON)', lg_backupLoad:'Loaded a backup', lg_setting:'Setting {0} changed to {1}', lg_rules:'Applied yearly rules, version {0}', lg_nip:'NIP lookup {0}: {1}', lg_nipNone:'not found in the register', lg_nipErr:'lookup error', lg_reset:'All data deleted', fromInvoiceBtn:'Fill in from my invoice', ceidgSiteBtn:'Check on the CEIDG website', ceidgSiteNote:'Opens the official CEIDG page in your browser: type the NIP there and copy the company details. Automatic lookup from CEIDG will be possible once the key arrives.', fromInvConfirm:'Found on the invoice (seller details):\n\nName: {0}\nNIP: {1}\nAddress: {2}\n\nInsert these as the company details?', fromInvOk:'Inserted the details from the invoice: {0}.', fromInvNone:'No seller details found in this file. Choose a sales invoice issued by your company (a PDF with text, or a KSeF XML).', lAddress:'Company address', lActivity:'Type of activity (PKD and description)', lDefInc:'Default description for income (ledger), e.g. English lessons', lDefExp:'Default description for costs (ledger) – optional', thNip:'Counterparty NIP', thDesc:'Description of event', thAddr:'Counterparty address', typeOth:'Other income', kpirBtn:'KPIR ledger (Excel)', kpirNone:'No entries for the ledger yet – add invoices and click “Calculate month”, or close a month.',
 zusEmeryt:'Pensioner / other system (social contributions entered manually)', lManualSoc:'Social contributions per month (PLN) – enter 0 if none',
 emerytNote:'No compulsory social contributions from the business; the health contribution is still calculated. Check your situation with ZUS / your accountant.',
 lPrevDays:'Days of activity in the previous year (365 = full year)', malyDaysWarn:'The business operated for under 60 days last year – the Small ZUS Plus condition may not be met.',
@@ -524,7 +591,64 @@ tr5t:'Check and correct', tr5x:'You can correct every extracted item. You can al
 tr6t:'Calculate month', tr6x:'After checking the table, click this button. A summary appears with ZUS, health contribution and tax due.',
 tr7t:'Print, export, close', tr7x:'Below the summary you will find buttons to print / save as PDF, export CSV, and “Close month”, which saves the result to history and adds it to the year-to-date totals.',
 tr8t:'History and backup', tr8x:'Closed months are listed here (and can be undone), and you can save a backup of your data to a file. Data is also saved automatically.',
-tr9t:'Settings', tr9x:'In Settings you can change the language and yearly parameters, delete data, and run this tutorial again.'
+tr9t:'Settings', tr9x:'In Settings you can change the language and yearly parameters, delete data, and run this tutorial again.',
+vtLabel:"VAT: mixed activity (exempt + taxable)",
+vtHint:"If, besides exempt teaching (art. 43), you also sell something taxable (for example software), mark the type of each sale and how each cost is used. The program tracks the art. 113 exemption limit (PLN 240,000), the limit for electronic services to EU consumers, the input-VAT proportion (art. 90) and the VAT-UE list. Results are indicative.",
+lDefVatT:"Default type of sale (VAT)",
+vtAuto:"automatic",
+vtDom:"Domestic sale (taxable; exempt under art. 113)",
+vtEx43:"Exempt – art. 43 (e.g. teaching)",
+vtEuB2B:"Service to an EU business (outside Poland)",
+vtNeuB2B:"Service to a non-EU business (outside Poland)",
+vtEuB2C:"Electronic service to an EU consumer",
+vtNeuB2C:"Service to a non-EU consumer (outside Poland)",
+lYtdLimit:"Sales counting toward the exemption limit (art. 113) year to date, before this month",
+lPrevLimit:"Sales counting toward the limit in the previous year",
+lYtdAllow:"Electronic services to EU consumers year to date (limit PLN 42,000), before this month",
+lPrevAllow:"The same in the previous year",
+lPropT:"Taxable turnover in the previous year, net (for the art. 90 proportion)",
+lPropE:"Exempt turnover in the previous year, net (e.g. teaching)",
+lPropEst:"Estimated proportion, % (when taxable turnover last year was under PLN 30,000 or there was none)",
+useCustom:"% by hand",
+useTax:"Taxable sales only (100%)",
+useEx:"Exempt sales only, e.g. teaching (0%)",
+useMix:"Shared (by proportion)",
+useTip:"What this cost is used for: taxable sales (deduct all the VAT), exempt sales (deduct none) or both (deduct by the art. 90 proportion).",
+vtSalesTitle:"Sales by VAT type",
+vtNotePre:"Invoice wording: ",
+limTitle:"VAT exemption limit (art. 113)",
+limBefore:"Counted sales year to date, before this month",
+limMonth:"Counted sales this month",
+limTotal:"Total this year (limit {0})",
+limRoom:"Room left under the limit",
+wLim70:"Counted sales ({0}) have passed 70% of the VAT exemption limit ({1}) – plan your VAT registration.",
+wReg113:"Register as an active VAT payer BEFORE the sale that crosses the limit (art. 96 ust. 5 pkt 2) – the exemption ends from that very transaction.",
+wLimPrev:"Counted sales in the previous year ({0}) exceeded the limit ({1}) – the art. 113 exemption is not available this year.",
+wFirstSale:"You have sales other than exempt teaching, while the company status is “art. 43 only”. Change the status (art. 113 or VAT-registered) and check the VAT-R registration before the first such sale (art. 96 ust. 5 pkt 1; the wording is unclear – confirm).",
+wEuB2B:"Services to EU businesses: VAT-UE registration is needed before the first such service, and the VAT-UE summary is filed by the 25th of the following month.",
+wAllow:"Electronic services to EU consumers: {0} of the {1} limit (about EUR 10,000). Above it the consumer's country VAT applies (usually through OSS).",
+wAllowX:"The {1} limit for electronic services to EU consumers has been exceeded ({0}) – from that service the consumer's country VAT applies; consider the OSS procedure.",
+wAdv:"A sales description contains a word like “advisory / consulting / audit”. Advisory services exclude the art. 113 exemption (art. 113 ust. 13 pkt 2 lit. b) – describe what you actually sell.",
+euTitle:"VAT-UE summary (EU businesses)",
+euNote:"Due by the 25th of the following month. Enter the customer's EU VAT number with the country code in the NIP column.",
+propTitle:"Input-VAT proportion (art. 90)",
+propUsed:"Proportion used for shared costs: {0}%",
+propNoData:"No turnover from the previous year – shared costs are not deducted. Enter an estimated proportion in the setup (art. 90 ust. 8; notify the tax office by the 25th of the following month).",
+propShared:"Input VAT on shared costs: {0}, deducted: {1}",
+annLimTitle:"VAT exemption limit, year {0}",
+annLimRow:"Counted sales in {0} (limit {1})",
+annPropTitle:"VAT proportion and annual correction (art. 90–91), year {0}",
+annPropActual:"Actual proportion for the year (rounded up)",
+annPropApplied:"Proportion applied during the year",
+annPropDiff:"Difference (percentage points)",
+annPropShared:"Input VAT on shared costs in the year",
+annPropCorrUp:"Correction increasing the deduction: {0} (in the first return of next year; PIT revenue – art. 14 ust. 2 pkt 7f)",
+annPropCorrDown:"Correction reducing the deduction: {0} (a PIT cost – art. 23 ust. 1 pkt 43 lit. c)",
+annPropNone:"No correction needed (the difference does not exceed 2 percentage points – art. 91 ust. 1a).",
+annPropNext:"Proportion for next year: {0}% – enter the turnovers in the setup.",
+annPropNote:"Indicative. Fixed assets and intangibles above PLN 15,000 are corrected over 5 years (art. 91 ust. 2) – the program does not calculate that.",
+lgUse:"Cost use",
+lgVatT:"Type of sale (VAT)"
 },
 uk:{
 subtitle:"— щомісячний калькулятор",
@@ -620,8 +744,8 @@ annVatNote:"Орієнтовно, за місяцями, закритими в �
 kcTitle:"Перш ніж почати",
 kcManualText:"Будь ласка, спочатку прочитайте інструкцію. Це кілька хвилин, і це заощадить клопоту в перший місяць.",
 kcManualBtn:"Відкрити інструкцію",
-kcKeyTitle:"Ключ для автоматичного пошуку фірм (необов'язково)",
-kcKeyText:"З ключем програма сама заповнить назву й адресу також фірм, звільнених від ПДВ, лише за NIP. Ключ безкоштовний і належить вам: ви отримуєте його на сайті CEIDG (або в GUS). Як це зробити, крок за кроком, описано в інструкції. Без ключа програма працює нормально, а дані такої фірми можна ввести вручну.",
+kcKeyTitle:"Особистий ключ CEIDG (необов'язково)",
+kcKeyText:"У програму вже вбудовано загальний ключ до реєстру GUS, тому назву й адресу фірм, звільнених від ПДВ, вона знаходить лише за NIP. Власний ключ CEIDG – необов'язкове доповнення, що дає повніші дані (наприклад, код PKD). Він безкоштовний і належить вам: його можна отримати на сайті CEIDG. Як це зробити, крок за кроком, описано в інструкції. Без нього програма працює нормально.",
 kcLinkCeidg:"Сторінка ключа CEIDG",
 kcLinkGus:"Сторінка ключа GUS",
 kcKeyLabel:"Вставте сюди свій ключ CEIDG",
@@ -953,7 +1077,64 @@ tr7x:"Під зведенням є кнопки друку / збереженн�
 tr8t:"Історія та резервна копія",
 tr8x:"Тут перелічено закриті місяці (їх можна скасувати), а також можна зберегти резервну копію даних у файл. Дані також зберігаються автоматично.",
 tr9t:"Налаштування",
-tr9x:"У Налаштуваннях можна змінити мову та річні параметри, видалити дані й запустити цей посібник знову."
+tr9x:"У Налаштуваннях можна змінити мову та річні параметри, видалити дані й запустити цей посібник знову.",
+vtLabel:"ПДВ: змішана діяльність (звільнена + оподатковувана)",
+vtHint:"Якщо, окрім звільненого викладання (ст. 43), ви продаєте ще щось оподатковуване (наприклад, програмне забезпечення), позначте в таблиці вид кожного продажу та спосіб використання витрат. Програма відстежує ліміт звільнення зі ст. 113 (240 000 PLN), ліміт електронних послуг для споживачів з ЄС, пропорцію вхідного ПДВ (ст. 90) і список VAT-UE. Результати орієнтовні.",
+lDefVatT:"Типовий вид продажу (ПДВ)",
+vtAuto:"автоматично",
+vtDom:"Продаж у Польщі (оподатковуваний; за ст. 113 звільнений)",
+vtEx43:"Звільнений – ст. 43 (напр. викладання)",
+vtEuB2B:"Послуга для фірми з ЄС (поза Польщею)",
+vtNeuB2B:"Послуга для фірми не з ЄС (поза Польщею)",
+vtEuB2C:"Електронна послуга для споживача з ЄС",
+vtNeuB2C:"Послуга для споживача не з ЄС (поза Польщею)",
+lYtdLimit:"Продаж, що враховується в ліміті звільнення (ст. 113) з початку року, без поточного місяця",
+lPrevLimit:"Продаж, що враховувався в ліміті минулого року",
+lYtdAllow:"Електронні послуги для споживачів з ЄС з початку року (ліміт 42 000 PLN), без поточного місяця",
+lPrevAllow:"Те саме за минулий рік",
+lPropT:"Оподатковуваний оборот за минулий рік, нетто (для пропорції зі ст. 90)",
+lPropE:"Звільнений оборот за минулий рік, нетто (напр. викладання)",
+lPropEst:"Орієнтовна пропорція, % (якщо оподатковуваний оборот минулого року був менше 30 000 PLN або його не було)",
+useCustom:"% вручну",
+useTax:"Лише оподатковуваний продаж (100%)",
+useEx:"Лише звільнений продаж, напр. викладання (0%)",
+useMix:"Спільні (за пропорцією)",
+useTip:"Для чого ці витрати: для оподатковуваного продажу (відраховуєте весь ПДВ), для звільненого (не відраховуєте) чи для обох (відраховуєте за пропорцією зі ст. 90).",
+vtSalesTitle:"Продаж за видами ПДВ",
+vtNotePre:"Запис у рахунку-фактурі: ",
+limTitle:"Ліміт звільнення від ПДВ (ст. 113)",
+limBefore:"Продаж, що враховується, з початку року, до цього місяця",
+limMonth:"Продаж, що враховується, цього місяця",
+limTotal:"Разом за рік (ліміт {0})",
+limRoom:"Залишилось до ліміту",
+wLim70:"Продаж, що враховується ({0}), перевищив 70% ліміту звільнення від ПДВ ({1}) – сплануйте реєстрацію платником ПДВ.",
+wReg113:"Зареєструйтеся платником ПДВ ДО продажу, який перевищить ліміт (ст. 96 ust. 5 pkt 2) – звільнення втрачає чинність саме від цієї операції.",
+wLimPrev:"Продаж, що враховувався минулого року ({0}), перевищив ліміт ({1}) – звільнення зі ст. 113 цього року не діє.",
+wFirstSale:"У вас є продаж, окрім звільненого викладання, а статус фірми – «лише ст. 43». Змініть статус (ст. 113 або платник ПДВ) і перевірте подання VAT-R до першого такого продажу (ст. 96 ust. 5 pkt 1; формулювання неоднозначне – уточніть).",
+wEuB2B:"Послуги для фірм з ЄС: до першої такої послуги потрібна реєстрація VAT-UE, а підсумкова інформація VAT-UE подається до 25 числа наступного місяця.",
+wAllow:"Електронні послуги для споживачів з ЄС: {0} з ліміту {1} (близько 10 000 євро). Після перевищення діє ПДВ країни споживача (зазвичай через OSS).",
+wAllowX:"Перевищено ліміт {1} електронних послуг для споживачів з ЄС ({0}) – від цієї послуги діє ПДВ країни споживача; розгляньте процедуру OSS.",
+wAdv:"В описі продажу є слово на кшталт «консультація / консалтинг / аудит». Консультаційні послуги виключають звільнення зі ст. 113 (ст. 113 ust. 13 pkt 2 lit. b) – описуйте те, що справді продаєте.",
+euTitle:"Підсумкова інформація VAT-UE (фірми з ЄС)",
+euNote:"До 25 числа наступного місяця. У колонці NIP вкажіть номер ПДВ ЄС контрагента з кодом країни.",
+propTitle:"Пропорція вхідного ПДВ (ст. 90)",
+propUsed:"Пропорція для спільних витрат: {0}%",
+propNoData:"Немає обороту за минулий рік – спільні витрати не відраховуються. Вкажіть орієнтовну пропорцію в налаштуваннях (ст. 90 ust. 8; повідомте податкову до 25 числа наступного місяця).",
+propShared:"Вхідний ПДВ зі спільних витрат: {0}, відраховано: {1}",
+annLimTitle:"Ліміт звільнення від ПДВ, рік {0}",
+annLimRow:"Продаж, що враховується, за {0} рік (ліміт {1})",
+annPropTitle:"Пропорція ПДВ і річне коригування (ст. 90–91), рік {0}",
+annPropActual:"Фактична пропорція за рік (округлена вгору)",
+annPropApplied:"Пропорція, застосована протягом року",
+annPropDiff:"Різниця (відсоткові пункти)",
+annPropShared:"Вхідний ПДВ зі спільних витрат за рік",
+annPropCorrUp:"Коригування, що збільшує відрахування: {0} (у першій декларації наступного року; дохід у PIT – ст. 14 ust. 2 pkt 7f)",
+annPropCorrDown:"Коригування, що зменшує відрахування: {0} (витрати в PIT – ст. 23 ust. 1 pkt 43 lit. c)",
+annPropNone:"Коригування не потрібне (різниця не перевищує 2 відсоткових пунктів – ст. 91 ust. 1a).",
+annPropNext:"Пропорція на наступний рік: {0}% – введіть обороти в налаштуваннях.",
+annPropNote:"Орієнтовно. Основні засоби та нематеріальні активи понад 15 000 PLN коригуються протягом 5 років (ст. 91 ust. 2) – програма цього не розраховує.",
+lgUse:"Використання витрат",
+lgVatT:"Вид продажу (ПДВ)"
 },
 de:{
 subtitle:"— Monatsrechner",
@@ -1049,8 +1230,8 @@ annVatNote:"Näherungswerte aus den im Verlauf abgeschlossenen Monaten: Umsatzst
 kcTitle:"Bevor Sie beginnen",
 kcManualText:"Bitte lesen Sie zuerst die Anleitung. Das dauert ein paar Minuten und erspart Ärger im ersten Monat.",
 kcManualBtn:"Anleitung öffnen",
-kcKeyTitle:"Schlüssel für die automatische Firmensuche (optional)",
-kcKeyText:"Mit einem Schlüssel trägt die Software Name und Adresse auch von USt-befreiten Unternehmen allein anhand der NIP ein. Der Schlüssel ist kostenlos und gehört Ihnen: Sie erhalten ihn auf der CEIDG-Website (oder bei GUS). Die Anleitung erklärt Schritt für Schritt, wie. Ohne Schlüssel funktioniert die Software normal, und solche Firmen können Sie von Hand eintragen.",
+kcKeyTitle:"Persönlicher CEIDG-Schlüssel (optional)",
+kcKeyText:"Die Software enthält bereits einen allgemeinen Schlüssel für das GUS-Register und findet daher Name und Adresse USt-befreiter Unternehmen allein anhand der NIP. Ein persönlicher CEIDG-Schlüssel ist ein optionales Extra mit vollständigeren Angaben (z. B. dem PKD-Code). Er ist kostenlos und gehört Ihnen: Sie erhalten ihn auf der CEIDG-Website. Die Anleitung erklärt Schritt für Schritt, wie. Ohne ihn funktioniert die Software normal.",
 kcLinkCeidg:"CEIDG-Schlüsselseite",
 kcLinkGus:"GUS-Schlüsselseite",
 kcKeyLabel:"Fügen Sie hier Ihren CEIDG-Schlüssel ein",
@@ -1382,7 +1563,64 @@ tr7x:"Unter der Übersicht finden Sie Schaltflächen zum Drucken / Speichern als
 tr8t:"Verlauf und Sicherung",
 tr8x:"Hier sind die abgeschlossenen Monate aufgelistet (sie lassen sich rückgängig machen), und Sie können eine Sicherung Ihrer Daten in einer Datei speichern. Die Daten werden außerdem automatisch gespeichert.",
 tr9t:"Einstellungen",
-tr9x:"In den Einstellungen können Sie Sprache und Jahresparameter ändern, Daten löschen und diese Einführung erneut starten."
+tr9x:"In den Einstellungen können Sie Sprache und Jahresparameter ändern, Daten löschen und diese Einführung erneut starten.",
+vtLabel:"USt: gemischte Tätigkeit (befreit + steuerpflichtig)",
+vtHint:"Wenn Sie neben dem befreiten Unterricht (Art. 43) auch etwas Steuerpflichtiges verkaufen (z. B. Software), kennzeichnen Sie in der Tabelle die Art jedes Verkaufs und die Verwendung der Kosten. Das Programm verfolgt die Befreiungsgrenze nach Art. 113 (240.000 PLN), die Grenze für elektronische Leistungen an EU-Verbraucher, den Vorsteuerschlüssel (Art. 90) und die VAT-UE-Liste. Die Ergebnisse sind Näherungswerte.",
+lDefVatT:"Standardart des Verkaufs (USt)",
+vtAuto:"automatisch",
+vtDom:"Inlandsverkauf (steuerpflichtig; bei Art. 113 befreit)",
+vtEx43:"Befreit – Art. 43 (z. B. Unterricht)",
+vtEuB2B:"Leistung an ein EU-Unternehmen (außerhalb Polens)",
+vtNeuB2B:"Leistung an ein Nicht-EU-Unternehmen (außerhalb Polens)",
+vtEuB2C:"Elektronische Leistung an einen EU-Verbraucher",
+vtNeuB2C:"Leistung an einen Nicht-EU-Verbraucher (außerhalb Polens)",
+lYtdLimit:"Auf die Befreiungsgrenze (Art. 113) angerechneter Verkauf seit Jahresbeginn, ohne diesen Monat",
+lPrevLimit:"Im Vorjahr auf die Grenze angerechneter Verkauf",
+lYtdAllow:"Elektronische Leistungen an EU-Verbraucher seit Jahresbeginn (Grenze 42.000 PLN), ohne diesen Monat",
+lPrevAllow:"Dasselbe im Vorjahr",
+lPropT:"Steuerpflichtiger Umsatz im Vorjahr, netto (für den Schlüssel nach Art. 90)",
+lPropE:"Befreiter Umsatz im Vorjahr, netto (z. B. Unterricht)",
+lPropEst:"Geschätzter Schlüssel, % (wenn der steuerpflichtige Umsatz im Vorjahr unter 30.000 PLN lag oder fehlte)",
+useCustom:"% von Hand",
+useTax:"Nur steuerpflichtiger Verkauf (100 %)",
+useEx:"Nur befreiter Verkauf, z. B. Unterricht (0 %)",
+useMix:"Gemeinsam (nach Schlüssel)",
+useTip:"Wofür diese Kosten verwendet werden: für steuerpflichtigen Verkauf (die ganze Vorsteuer abziehen), für befreiten Verkauf (nichts abziehen) oder für beides (Abzug nach dem Schlüssel gemäß Art. 90).",
+vtSalesTitle:"Verkäufe nach USt-Art",
+vtNotePre:"Vermerk auf der Rechnung: ",
+limTitle:"USt-Befreiungsgrenze (Art. 113)",
+limBefore:"Angerechneter Verkauf seit Jahresbeginn, vor diesem Monat",
+limMonth:"Angerechneter Verkauf in diesem Monat",
+limTotal:"Summe im Jahr (Grenze {0})",
+limRoom:"Noch Spielraum bis zur Grenze",
+wLim70:"Der angerechnete Verkauf ({0}) hat 70 % der USt-Befreiungsgrenze ({1}) überschritten – planen Sie die USt-Registrierung.",
+wReg113:"Registrieren Sie sich als USt-pflichtig VOR dem Verkauf, der die Grenze überschreitet (Art. 96 ust. 5 pkt 2) – die Befreiung endet mit genau diesem Umsatz.",
+wLimPrev:"Der im Vorjahr angerechnete Verkauf ({0}) hat die Grenze ({1}) überschritten – die Befreiung nach Art. 113 gilt in diesem Jahr nicht.",
+wFirstSale:"Sie haben andere Verkäufe als befreiten Unterricht, der Firmenstatus ist aber „nur Art. 43“. Ändern Sie den Status (Art. 113 oder USt-pflichtig) und prüfen Sie die Anmeldung VAT-R vor dem ersten solchen Verkauf (Art. 96 ust. 5 pkt 1; Wortlaut unklar – bitte bestätigen).",
+wEuB2B:"Leistungen an EU-Unternehmen: Vor der ersten solchen Leistung ist die VAT-UE-Registrierung nötig; die VAT-UE-Zusammenfassende Meldung ist bis zum 25. des Folgemonats einzureichen.",
+wAllow:"Elektronische Leistungen an EU-Verbraucher: {0} von der Grenze {1} (etwa 10.000 Euro). Darüber gilt die USt des Verbraucherlandes (meist über OSS).",
+wAllowX:"Die Grenze {1} für elektronische Leistungen an EU-Verbraucher wurde überschritten ({0}) – ab dieser Leistung gilt die USt des Verbraucherlandes; prüfen Sie das OSS-Verfahren.",
+wAdv:"Eine Verkaufsbeschreibung enthält ein Wort wie „Beratung / Consulting / Audit“. Beratungsleistungen schließen die Befreiung nach Art. 113 aus (Art. 113 ust. 13 pkt 2 lit. b) – beschreiben Sie, was Sie tatsächlich verkaufen.",
+euTitle:"VAT-UE-Zusammenfassende Meldung (EU-Unternehmen)",
+euNote:"Fällig bis zum 25. des Folgemonats. Tragen Sie in der Spalte NIP die EU-USt-Nummer des Kunden mit Ländercode ein.",
+propTitle:"Vorsteuerschlüssel (Art. 90)",
+propUsed:"Für gemeinsame Kosten verwendeter Schlüssel: {0} %",
+propNoData:"Kein Umsatz aus dem Vorjahr – gemeinsame Kosten werden nicht abgezogen. Tragen Sie in den Einstellungen einen geschätzten Schlüssel ein (Art. 90 ust. 8; Finanzamt bis zum 25. des Folgemonats informieren).",
+propShared:"Vorsteuer aus gemeinsamen Kosten: {0}, abgezogen: {1}",
+annLimTitle:"USt-Befreiungsgrenze, Jahr {0}",
+annLimRow:"Angerechneter Verkauf im Jahr {0} (Grenze {1})",
+annPropTitle:"USt-Schlüssel und Jahreskorrektur (Art. 90–91), Jahr {0}",
+annPropActual:"Tatsächlicher Schlüssel für das Jahr (aufgerundet)",
+annPropApplied:"Im Jahr angewandter Schlüssel",
+annPropDiff:"Differenz (Prozentpunkte)",
+annPropShared:"Vorsteuer aus gemeinsamen Kosten im Jahr",
+annPropCorrUp:"Korrektur, die den Abzug erhöht: {0} (in der ersten Erklärung des Folgejahres; Einnahme bei der PIT – Art. 14 ust. 2 pkt 7f)",
+annPropCorrDown:"Korrektur, die den Abzug mindert: {0} (Kosten bei der PIT – Art. 23 ust. 1 pkt 43 lit. c)",
+annPropNone:"Keine Korrektur nötig (die Differenz überschreitet 2 Prozentpunkte nicht – Art. 91 ust. 1a).",
+annPropNext:"Schlüssel für das nächste Jahr: {0} % – Umsätze in den Einstellungen eintragen.",
+annPropNote:"Näherungswerte. Anlagegüter und immaterielle Werte über 15.000 PLN werden über 5 Jahre berichtigt (Art. 91 ust. 2) – das berechnet das Programm nicht.",
+lgUse:"Kostenverwendung",
+lgVatT:"Art des Verkaufs (USt)"
 },
 cs:{
 subtitle:"— měsíční kalkulačka",
@@ -1478,8 +1716,8 @@ annVatNote:"Orientačně, z měsíců uzavřených v Historii: DPH na výstupu m
 kcTitle:"Než začnete",
 kcManualText:"Přečtěte si nejprve prosím návod. Zabere to pár minut a ušetří potíže v prvním měsíci.",
 kcManualBtn:"Otevřít návod",
-kcKeyTitle:"Klíč pro automatické vyhledávání firem (volitelný)",
-kcKeyText:"S klíčem program sám doplní název a adresu i firem osvobozených od DPH, stačí jen NIP. Klíč je zdarma a patří vám: získáte ho na webu CEIDG (nebo u GUS). Jak na to, krok za krokem, vysvětluje návod. Bez klíče program funguje normálně a údaje takové firmy lze zadat ručně.",
+kcKeyTitle:"Osobní klíč CEIDG (volitelný)",
+kcKeyText:"Program již obsahuje obecný klíč k rejstříku GUS, takže název a adresu firem osvobozených od DPH najde jen podle NIP. Osobní klíč CEIDG je volitelný doplněk, který dává úplnější údaje (například kód PKD). Je zdarma a patří vám: získáte ho na webu CEIDG. Jak na to, krok za krokem, vysvětluje návod. Bez něj program funguje normálně.",
 kcLinkCeidg:"Stránka klíče CEIDG",
 kcLinkGus:"Stránka klíče GUS",
 kcKeyLabel:"Vložte sem svůj klíč CEIDG",
@@ -1811,7 +2049,64 @@ tr7x:"Pod přehledem najdete tlačítka pro tisk / uložení jako PDF, export CS
 tr8t:"Historie a záloha",
 tr8x:"Zde jsou uvedeny uzavřené měsíce (lze je zrušit) a můžete uložit zálohu svých dat do souboru. Data se také ukládají automaticky.",
 tr9t:"Nastavení",
-tr9x:"V Nastavení můžete změnit jazyk a roční parametry, smazat data a znovu spustit tohoto průvodce."
+tr9x:"V Nastavení můžete změnit jazyk a roční parametry, smazat data a znovu spustit tohoto průvodce.",
+vtLabel:"DPH: smíšená činnost (osvobozená + zdanitelná)",
+vtHint:"Pokud kromě osvobozené výuky (čl. 43) prodáváte i něco zdanitelného (například software), označte v tabulce druh každého prodeje a způsob použití nákladů. Program sleduje limit osvobození podle čl. 113 (240 000 PLN), limit elektronických služeb pro spotřebitele z EU, poměr odpočtu DPH na vstupu (čl. 90) a seznam VAT-UE. Výsledky jsou orientační.",
+lDefVatT:"Výchozí druh prodeje (DPH)",
+vtAuto:"automaticky",
+vtDom:"Prodej v Polsku (zdanitelný; podle čl. 113 osvobozený)",
+vtEx43:"Osvobozeno – čl. 43 (např. výuka)",
+vtEuB2B:"Služba pro firmu z EU (mimo Polsko)",
+vtNeuB2B:"Služba pro firmu mimo EU (mimo Polsko)",
+vtEuB2C:"Elektronická služba pro spotřebitele z EU",
+vtNeuB2C:"Služba pro spotřebitele mimo EU (mimo Polsko)",
+lYtdLimit:"Prodej započítávaný do limitu osvobození (čl. 113) od začátku roku, bez tohoto měsíce",
+lPrevLimit:"Prodej započítaný do limitu v minulém roce",
+lYtdAllow:"Elektronické služby pro spotřebitele z EU od začátku roku (limit 42 000 PLN), bez tohoto měsíce",
+lPrevAllow:"Totéž v minulém roce",
+lPropT:"Zdanitelný obrat v minulém roce, bez DPH (pro poměr podle čl. 90)",
+lPropE:"Osvobozený obrat v minulém roce, bez DPH (např. výuka)",
+lPropEst:"Odhadovaný poměr, % (pokud byl zdanitelný obrat v minulém roce pod 30 000 PLN nebo žádný)",
+useCustom:"% ručně",
+useTax:"Pouze zdanitelný prodej (100 %)",
+useEx:"Pouze osvobozený prodej, např. výuka (0 %)",
+useMix:"Společné (podle poměru)",
+useTip:"K čemu tento náklad slouží: ke zdanitelnému prodeji (odpočtete celou DPH), k osvobozenému (neodpočtete nic) nebo k obojímu (odpočet podle poměru z čl. 90).",
+vtSalesTitle:"Prodej podle druhu DPH",
+vtNotePre:"Poznámka na faktuře: ",
+limTitle:"Limit osvobození od DPH (čl. 113)",
+limBefore:"Započítaný prodej od začátku roku, před tímto měsícem",
+limMonth:"Započítaný prodej v tomto měsíci",
+limTotal:"Celkem za rok (limit {0})",
+limRoom:"Zbývá do limitu",
+wLim70:"Započítaný prodej ({0}) překročil 70 % limitu osvobození od DPH ({1}) – naplánujte registraci k DPH.",
+wReg113:"Zaregistrujte se jako plátce DPH PŘED prodejem, který limit překročí (čl. 96 ust. 5 pkt 2) – osvobození zaniká právě touto operací.",
+wLimPrev:"Prodej započítaný v minulém roce ({0}) překročil limit ({1}) – osvobození podle čl. 113 se letos neuplatní.",
+wFirstSale:"Máte prodej jiný než osvobozená výuka, ale stav firmy je „pouze čl. 43“. Změňte stav (čl. 113 nebo plátce DPH) a ověřte přihlášku VAT-R před prvním takovým prodejem (čl. 96 ust. 5 pkt 1; znění je nejasné – potvrďte).",
+wEuB2B:"Služby pro firmy z EU: před první takovou službou je nutná registrace VAT-UE a souhrnné hlášení VAT-UE se podává do 25. dne následujícího měsíce.",
+wAllow:"Elektronické služby pro spotřebitele z EU: {0} z limitu {1} (asi 10 000 eur). Po překročení platí DPH země spotřebitele (obvykle přes OSS).",
+wAllowX:"Limit {1} pro elektronické služby spotřebitelům z EU byl překročen ({0}) – od této služby platí DPH země spotřebitele; zvažte režim OSS.",
+wAdv:"Popis prodeje obsahuje slovo jako „poradenství / konzultace / audit“. Poradenské služby vylučují osvobození podle čl. 113 (čl. 113 ust. 13 pkt 2 lit. b) – popisujte, co skutečně prodáváte.",
+euTitle:"Souhrnné hlášení VAT-UE (firmy z EU)",
+euNote:"Do 25. dne následujícího měsíce. Do sloupce NIP zadejte DIČ zákazníka v EU s kódem země.",
+propTitle:"Poměr odpočtu DPH na vstupu (čl. 90)",
+propUsed:"Poměr použitý u společných nákladů: {0} %",
+propNoData:"Chybí obrat z minulého roku – společné náklady se neodpočítávají. Zadejte v nastavení odhadovaný poměr (čl. 90 ust. 8; oznamte finančnímu úřadu do 25. dne následujícího měsíce).",
+propShared:"DPH na vstupu ze společných nákladů: {0}, odečteno: {1}",
+annLimTitle:"Limit osvobození od DPH, rok {0}",
+annLimRow:"Započítaný prodej v roce {0} (limit {1})",
+annPropTitle:"Poměr DPH a roční oprava (čl. 90–91), rok {0}",
+annPropActual:"Skutečný poměr za rok (zaokrouhlený nahoru)",
+annPropApplied:"Poměr použitý během roku",
+annPropDiff:"Rozdíl (procentní body)",
+annPropShared:"DPH na vstupu ze společných nákladů za rok",
+annPropCorrUp:"Oprava zvyšující odpočet: {0} (v prvním přiznání příštího roku; příjem v PIT – čl. 14 ust. 2 pkt 7f)",
+annPropCorrDown:"Oprava snižující odpočet: {0} (náklad v PIT – čl. 23 ust. 1 pkt 43 lit. c)",
+annPropNone:"Oprava není nutná (rozdíl nepřekračuje 2 procentní body – čl. 91 ust. 1a).",
+annPropNext:"Poměr na příští rok: {0} % – zadejte obraty v nastavení.",
+annPropNote:"Orientačně. Dlouhodobý majetek a nehmotná aktiva nad 15 000 PLN se opravují po dobu 5 let (čl. 91 ust. 2) – to program nepočítá.",
+lgUse:"Použití nákladu",
+lgVatT:"Druh prodeje (DPH)"
 },
 es:{
 subtitle:"— calculadora mensual",
@@ -1907,8 +2202,8 @@ annVatNote:"Orientativo, a partir de los meses cerrados en el Historial: IVA rep
 kcTitle:"Antes de empezar",
 kcManualText:"Lea primero el manual, por favor. Son unos minutos y evita problemas el primer mes.",
 kcManualBtn:"Abrir el manual",
-kcKeyTitle:"Clave para la búsqueda automática de empresas (opcional)",
-kcKeyText:"Con una clave, el programa rellena el nombre y la dirección también de empresas exentas de IVA, solo con el NIP. La clave es gratuita y es suya: se obtiene en la web de CEIDG (o en GUS). El manual explica cómo, paso a paso. Sin clave el programa funciona con normalidad y puede escribir los datos de esa empresa a mano.",
+kcKeyTitle:"Clave personal de CEIDG (opcional)",
+kcKeyText:"El programa ya incluye una clave general del registro GUS, por lo que encuentra el nombre y la dirección de empresas exentas de IVA solo con el NIP. Una clave personal de CEIDG es un extra opcional que da datos más completos (por ejemplo, el código PKD). Es gratuita y es suya: se obtiene en la web de CEIDG. El manual explica cómo, paso a paso. Sin ella el programa funciona con normalidad.",
 kcLinkCeidg:"Página de la clave CEIDG",
 kcLinkGus:"Página de la clave GUS",
 kcKeyLabel:"Pegue aquí su clave CEIDG",
@@ -2240,7 +2535,64 @@ tr7x:"Debajo del resumen hay botones para imprimir / guardar como PDF, exportar 
 tr8t:"Historial y copia de seguridad",
 tr8x:"Aquí se listan los meses cerrados (se pueden deshacer) y puede guardar una copia de seguridad de sus datos en un archivo. Los datos también se guardan automáticamente.",
 tr9t:"Ajustes",
-tr9x:"En Ajustes puede cambiar el idioma y los parámetros anuales, borrar datos y volver a ejecutar este tutorial."
+tr9x:"En Ajustes puede cambiar el idioma y los parámetros anuales, borrar datos y volver a ejecutar este tutorial.",
+vtLabel:"IVA: actividad mixta (exenta + sujeta)",
+vtHint:"Si, además de la enseñanza exenta (art. 43), vende algo sujeto a IVA (por ejemplo software), marque en la tabla el tipo de cada venta y el uso de cada gasto. El programa controla el límite de exención del art. 113 (240.000 PLN), el límite de servicios electrónicos a consumidores de la UE, la proporción del IVA soportado (art. 90) y la lista VAT-UE. Los resultados son orientativos.",
+lDefVatT:"Tipo de venta predeterminado (IVA)",
+vtAuto:"automático",
+vtDom:"Venta nacional (sujeta; exenta si art. 113)",
+vtEx43:"Exenta – art. 43 (p. ej. enseñanza)",
+vtEuB2B:"Servicio a una empresa de la UE (fuera de Polonia)",
+vtNeuB2B:"Servicio a una empresa de fuera de la UE (fuera de Polonia)",
+vtEuB2C:"Servicio electrónico a un consumidor de la UE",
+vtNeuB2C:"Servicio a un consumidor de fuera de la UE (fuera de Polonia)",
+lYtdLimit:"Ventas que cuentan para el límite de exención (art. 113) en lo que va de año, sin este mes",
+lPrevLimit:"Ventas que contaron para el límite el año anterior",
+lYtdAllow:"Servicios electrónicos a consumidores de la UE en lo que va de año (límite 42.000 PLN), sin este mes",
+lPrevAllow:"Lo mismo el año anterior",
+lPropT:"Volumen sujeto a IVA del año anterior, neto (para la proporción del art. 90)",
+lPropE:"Volumen exento del año anterior, neto (p. ej. enseñanza)",
+lPropEst:"Proporción estimada, % (si el volumen sujeto del año anterior fue inferior a 30.000 PLN o no hubo)",
+useCustom:"% a mano",
+useTax:"Solo ventas sujetas (100 %)",
+useEx:"Solo ventas exentas, p. ej. enseñanza (0 %)",
+useMix:"Común (según proporción)",
+useTip:"Para qué se usa este gasto: ventas sujetas (se deduce todo el IVA), ventas exentas (no se deduce nada) o ambas (se deduce según la proporción del art. 90).",
+vtSalesTitle:"Ventas por tipo de IVA",
+vtNotePre:"Texto en la factura: ",
+limTitle:"Límite de exención del IVA (art. 113)",
+limBefore:"Ventas computadas en lo que va de año, antes de este mes",
+limMonth:"Ventas computadas este mes",
+limTotal:"Total del año (límite {0})",
+limRoom:"Margen restante hasta el límite",
+wLim70:"Las ventas computadas ({0}) superan el 70 % del límite de exención del IVA ({1}) – planifique el alta en el IVA.",
+wReg113:"Dese de alta como sujeto pasivo del IVA ANTES de la venta que supere el límite (art. 96 ust. 5 pkt 2): la exención termina con esa misma operación.",
+wLimPrev:"Las ventas computadas el año anterior ({0}) superaron el límite ({1}) – la exención del art. 113 no se aplica este año.",
+wFirstSale:"Tiene ventas distintas de la enseñanza exenta, pero el estado de la empresa es «solo art. 43». Cambie el estado (art. 113 o sujeto pasivo del IVA) y compruebe el alta VAT-R antes de la primera venta de ese tipo (art. 96 ust. 5 pkt 1; la redacción no es clara – confírmelo).",
+wEuB2B:"Servicios a empresas de la UE: antes del primer servicio hace falta el registro VAT-UE, y el resumen VAT-UE se presenta antes del día 25 del mes siguiente.",
+wAllow:"Servicios electrónicos a consumidores de la UE: {0} del límite de {1} (unos 10.000 euros). Por encima se aplica el IVA del país del consumidor (normalmente mediante OSS).",
+wAllowX:"Se ha superado el límite de {1} de servicios electrónicos a consumidores de la UE ({0}): desde ese servicio se aplica el IVA del país del consumidor; considere el régimen OSS.",
+wAdv:"Una descripción de venta contiene una palabra como «asesoría / consultoría / auditoría». Los servicios de asesoría excluyen la exención del art. 113 (art. 113 ust. 13 pkt 2 lit. b): describa lo que realmente vende.",
+euTitle:"Resumen VAT-UE (empresas de la UE)",
+euNote:"Antes del día 25 del mes siguiente. Escriba en la columna NIP el número de IVA UE del cliente con el código del país.",
+propTitle:"Proporción del IVA soportado (art. 90)",
+propUsed:"Proporción aplicada a los gastos comunes: {0} %",
+propNoData:"No hay volumen del año anterior: los gastos comunes no se deducen. Introduzca una proporción estimada en los ajustes (art. 90 ust. 8; avise a Hacienda antes del día 25 del mes siguiente).",
+propShared:"IVA soportado de gastos comunes: {0}, deducido: {1}",
+annLimTitle:"Límite de exención del IVA, año {0}",
+annLimRow:"Ventas computadas en {0} (límite {1})",
+annPropTitle:"Proporción del IVA y regularización anual (art. 90–91), año {0}",
+annPropActual:"Proporción real del año (redondeada al alza)",
+annPropApplied:"Proporción aplicada durante el año",
+annPropDiff:"Diferencia (puntos porcentuales)",
+annPropShared:"IVA soportado de gastos comunes en el año",
+annPropCorrUp:"Regularización que aumenta la deducción: {0} (en la primera declaración del año siguiente; ingreso en el PIT – art. 14 ust. 2 pkt 7f)",
+annPropCorrDown:"Regularización que reduce la deducción: {0} (gasto en el PIT – art. 23 ust. 1 pkt 43 lit. c)",
+annPropNone:"No hace falta regularizar (la diferencia no supera 2 puntos porcentuales – art. 91 ust. 1a).",
+annPropNext:"Proporción para el año siguiente: {0} % – introduzca los volúmenes en los ajustes.",
+annPropNote:"Orientativo. Los activos fijos e intangibles de más de 15.000 PLN se regularizan durante 5 años (art. 91 ust. 2); el programa no lo calcula.",
+lgUse:"Uso del gasto",
+lgVatT:"Tipo de venta (IVA)"
 }
 };
 let LANG='pl';
@@ -2251,7 +2603,39 @@ const num=id=>parseFloat($(id).value)||0;
 // zwolnienie z VAT (art. 43 – przedmiotowe, art. 113 – podmiotowe): kwoty brutto, VAT nie jest rozliczany
 const isExempt=()=>['art43','art113'].includes($('vat').value);
 // udział odliczanego VAT naliczonego w dokumencie kosztowym (domyślnie 100%; np. 50% przy samochodach osobowych); nieodliczony VAT zwiększa koszt
-const vatShare=r=>{ const v=r.vatPct==null||r.vatPct===''?100:parseFloat(r.vatPct); return isNaN(v)?100:Math.min(100,Math.max(0,v)); };
+const vatShare=r=>{
+  if(r.type==='exp'){ if(r.use==='tax') return 100; if(r.use==='ex') return 0; if(r.use==='mix'){ const p=propPct(); return p==null?0:p; } }
+  const v=r.vatPct==null||r.vatPct===''?100:parseFloat(r.vatPct); return isNaN(v)?100:Math.min(100,Math.max(0,v));
+};
+// rodzaje sprzedaży (VAT) przy działalności mieszanej: zwolnione nauczanie (art. 43) + sprzedaż opodatkowana (np. oprogramowanie) + usługi za granicę
+const VT_CODES=['dom','ex43','eub2b','neub2b','eub2c','neub2c'];
+const VT_KEY={dom:'vtDom',ex43:'vtEx43',eub2b:'vtEuB2B',neub2b:'vtNeuB2B',eub2c:'vtEuB2C',neub2c:'vtNeuB2C'};
+const VT_FOREIGN=['eub2b','neub2b','neub2c'];   // miejsce świadczenia poza Polską: to nie jest „sprzedaż” w rozumieniu art. 2 pkt 22 (nie liczy się do limitu z art. 113)
+const B2C_LIMIT=42000, VAT_LIMIT_DEF=240000;     // 10 000 euro = 42 000 zł dla usługodawcy z siedzibą tylko w Polsce (art. 28k ust. 2 pkt 3)
+function vtNote(c){
+  const st=$('vat').value;
+  if(c==='ex43') return 'zwolnione od podatku – art. 43 ust. 1 pkt 28 ustawy o VAT';
+  if(c==='dom') return (st==='art113'||st==='art43')?'zwolnienie podmiotowe – art. 113 ust. 1 ustawy o VAT':'';
+  if(c==='eub2b') return 'odwrotne obciążenie (usługa poza terytorium kraju – art. 28b ustawy o VAT)';
+  if(c==='neub2b') return 'NP – usługa poza terytorium kraju (art. 28b ustawy o VAT)';
+  if(c==='neub2c') return 'NP – usługa poza terytorium kraju (art. 28k, 28l ustawy o VAT)';
+  if(c==='eub2c') return 'VAT w Polsce do limitu 42 000 zł, potem VAT kraju konsumenta (art. 28k ustawy o VAT)';
+  return '';
+}
+function saleCode(r){
+  if(r.type!=='inc') return null;
+  if(r.vatT&&VT_CODES.includes(r.vatT)) return r.vatT;
+  const p=partyInfo[(r.party||'').toLowerCase()]; if(p&&VT_CODES.includes(p.vatT)) return p.vatT;
+  const d=$('defVatT').value; if(VT_CODES.includes(d)) return d;
+  return $('vat').value==='art43'?'ex43':'dom';
+}
+// proporcja z art. 90 ust. 3–4 (obrót opodatkowany / całkowity z poprzedniego roku, zaokrąglona w górę); ≤ 2% = 0% (ust. 10 pkt 2); null = brak danych
+function propPct(){
+  const est=$('propEst').value;
+  if(est!==''&&!isNaN(parseFloat(est))) return Math.min(100,Math.max(0,Math.ceil(parseFloat(est)-1e-9)));
+  const T=num('propT'), E=num('propE'); if(T+E<=0) return null;
+  let p=Math.ceil(100*T/(T+E)-1e-9); if(p<=2) p=0; return Math.min(100,p);
+}
 const rowBooks=(r,exempt)=>exempt?(r.gross||r.net):(r.type==='exp'?r2(r.net+r.vat*(1-vatShare(r)/100)):r.net);
 const LOCALES={pl:'pl-PL',en:'en-GB',uk:'uk-UA',de:'de-DE',cs:'cs-CZ',es:'es-ES'};
 const fmt=x=>(x||0).toLocaleString(LOCALES[LANG]||'en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+t('currency');
@@ -2274,7 +2658,7 @@ function applyLang(){
 
 // ---------- state ----------
 let nipDir={}, partyInfo={}, rulesState=null, lastRulesCheck='', myLinks=[], rows=[], history=[], corr={}, lastResult=null, tourDone=false, keyCardDone=false, tourOpen=false, tourI=0;
-const FIELDS=['vatPeriod','pVatLimit','hbIncome','name','nip','regon','address','activity','defInc','defExp','gusKey','ceidgToken','year','month','taxForm','rate','vat','zus','prevIncome','prevDays','prevRevenue','manualBase','manualSocial','ytdRev','ytdCost','ytdTax','ytdZus','ytdHealth','pBaseFull','pBasePref','pMinWage','pMinHealth','pAvgWage','pLinLimit','rulesUrl'];
+const FIELDS=['defVatT','ytdLimit','prevLimit','ytdAllow','prevAllow','propT','propE','propEst','vatPeriod','pVatLimit','hbIncome','name','nip','regon','address','activity','defInc','defExp','gusKey','ceidgToken','year','month','taxForm','rate','vat','zus','prevIncome','prevDays','prevRevenue','manualBase','manualSocial','ytdRev','ytdCost','ytdTax','ytdZus','ytdHealth','pBaseFull','pBasePref','pMinWage','pMinHealth','pAvgWage','pLinLimit','rulesUrl'];
 const ytdMap={rev:'ytdRev',cost:'ytdCost',tax:'ytdTax',soc:'ytdZus',health:'ytdHealth'};
 function stateObj(){
   const o={app:'jdg-kalkulator',version:2,saved:new Date().toISOString(),chorobowe:$('chorobowe').checked,lang:LANG,tourDone,keyCardDone,corr,partyInfo,nipDir,history,myLinks,rulesApplied:rulesState,lastRulesCheck};
@@ -2750,18 +3134,27 @@ function dupCount(r){
   history.forEach(h=>(h.rows||[]).forEach(x=>{ if(key(x)===k) c++; }));
   return c;
 }
+function vtSelectHtml(r){
+  const cur=r.vatT&&VT_CODES.includes(r.vatT)?r.vatT:'', auto=saleCode(Object.assign({},r,{vatT:''}));
+  return '<select data-k="vatT" title="'+esc(t('lgVatT'))+'" style="margin-top:4px;max-width:230px"><option value=""'+(cur===''?' selected':'')+'>('+esc(t('vtAuto'))+': '+esc(t(VT_KEY[auto]))+')</option>'
+    +VT_CODES.map(c=>'<option value="'+c+'"'+(cur===c?' selected':'')+'>'+esc(t(VT_KEY[c]))+'</option>').join('')+'</select>';
+}
+function useSelectHtml(r){
+  const u=r.use||'';
+  return '<select data-k="use" title="'+esc(t('useTip'))+'" style="max-width:190px;margin-bottom:3px">'+[['','useCustom'],['tax','useTax'],['ex','useEx'],['mix','useMix']].map(([v,k])=>'<option value="'+v+'"'+(u===v?' selected':'')+'>'+esc(t(k))+'</option>').join('')+'</select>';
+}
 function render(){
   const tb=$('tbl').querySelector('tbody'); tb.innerHTML='';
   $('descList').innerHTML=[...new Set(Object.values(partyInfo).map(p=>p.desc).filter(Boolean))].map(d=>`<option value="${esc(d)}">`).join('');
   rows.forEach((r,i)=>{
     const tr=document.createElement('tr'), out=!inMonth(r), dup=dupCount(r)>0;
-    tr.innerHTML=`<td><select data-k="type"><option value="inc">${t('typeInc')}</option><option value="oth">${t('typeOth')}</option><option value="exp">${t('typeExp')}</option></select></td>
+    tr.innerHTML=`<td><select data-k="type"><option value="inc">${t('typeInc')}</option><option value="oth">${t('typeOth')}</option><option value="exp">${t('typeExp')}</option></select>${r.type==='inc'?vtSelectHtml(r):''}</td>
       <td><input type="date" data-k="date" value="${esc(r.date)}">${out?'<div class="warn note">'+t('outOfMonth')+'</div>':''}</td>
       <td><input data-k="party" value="${esc(r.party)}"></td>
       <td><input data-k="number" value="${esc(r.number)}">${dup?'<div class="warn note">'+t('dupWarn')+'</div>':''}</td>
       <td class="n"><input type="number" step="0.01" data-k="net" value="${r.net}"></td>
       <td class="n"><input type="number" step="0.01" data-k="vat" value="${r.vat}"></td>
-      <td class="n"><input type="number" step="1" min="0" max="100" data-k="vatPct" value="${r.vatPct==null?100:r.vatPct}" ${(r.type==='exp'&&$('vat').value==='reg')?'':'disabled'} title="${esc(t('vatPctTip'))}" style="min-width:60px"></td>
+      <td class="n">${(r.type==='exp'&&$('vat').value==='reg')?useSelectHtml(r):''}<input type="number" step="1" min="0" max="100" data-k="vatPct" value="${(r.type==='exp'&&r.use)?vatShare(r):(r.vatPct==null?100:r.vatPct)}" ${(r.type==='exp'&&$('vat').value==='reg'&&!r.use)?'':'disabled'} title="${esc(t('vatPctTip'))}" style="min-width:60px"></td>
       <td class="n"><input type="number" step="0.01" data-k="gross" value="${r.gross}">${r.estimated?'<div class="warn note">'+t('estimated')+'</div>':''}</td>
       <td><input data-k="nip" value="${esc(r.nip||'')}" style="min-width:100px"></td>
       <td><input data-k="desc" list="descList" value="${esc(r.desc||'')}" style="min-width:160px"></td>
@@ -2776,8 +3169,8 @@ function render(){
       if(k==='party'&&r.rawParty&&r.party!==r.rawParty){ corr[r.rawParty.toLowerCase()]=r.party; persistAll(); }
       if(k==='party') fillInfo(r);
       if(k==='nip') fillRowFromNip(r);
-      if(['nip','desc','addr'].includes(k)&&r.party){ const pk=r.party.toLowerCase(); partyInfo[pk]=Object.assign(partyInfo[pk]||{},{[k]:r[k]}); persistAll(); }
-      if(['date','type','net','vat','gross','number','party','desc','vatPct'].includes(k)) render();
+      if(['nip','desc','addr','vatT'].includes(k)&&r.party){ const pk=r.party.toLowerCase(); partyInfo[pk]=Object.assign(partyInfo[pk]||{},{[k]:r[k]}); persistAll(); }
+      if(['date','type','net','vat','gross','number','party','desc','vatPct','vatT','use'].includes(k)) render();
     });
     tr.querySelector('[data-del]').onclick=()=>{ logAct('delRow',[r.number||r.party||r.file]); rows.splice(i,1); render(); };
     tb.appendChild(tr);
@@ -2787,13 +3180,40 @@ function render(){
 // ---------- summary ----------
 function monthTotals(){
   const exempt=isExempt();
-  const x={rev:0,cost:0,outVat:0,inVat:0,nInc:0,nExp:0,skipped:0};
+  const x={rev:0,cost:0,outVat:0,inVat:0,nInc:0,nExp:0,skipped:0,lim:0,b2c:0,numer:0,denomEx:0,sharedVat:0,sharedDed:0,bt:{},eu:{},adv:false,nonEx:false,euB2B:false,mixN:0};
   rows.forEach(r=>{
     if(!inMonth(r)){ x.skipped++; return; }
-    if(r.type!=='exp'){ x.nInc++; x.rev+=rowBooks(r,exempt); x.outVat+=exempt?0:r.vat; }
-    else { x.nExp++; x.cost+=rowBooks(r,exempt); x.inVat+=exempt?0:r2(r.vat*vatShare(r)/100); }
+    if(r.type!=='exp'){
+      x.nInc++; x.rev+=rowBooks(r,exempt);
+      const c=r.type==='inc'?saleCode(r):null, net=r.net||r.gross||0;
+      x.outVat+=(exempt||(c&&c!=='dom'))?0:r.vat;
+      if(c){
+        const bb=x.bt[c]||(x.bt[c]={n:0,net:0}); bb.n++; bb.net=r2(bb.net+net);
+        if(c==='dom') x.lim+=net;
+        if(c==='eub2c') x.b2c+=net;
+        if(c==='ex43') x.denomEx+=net; else x.numer+=net;
+        if(c==='eub2b'){ x.euB2B=true; const k=r.nip||r.party||'?'; const e=x.eu[k]||(x.eu[k]={party:r.party||'',nip:r.nip||'',net:0}); e.net=r2(e.net+net); }
+        if(c==='dom'||c==='eub2c') x.nonEx=true;
+        if(/doradz|konsult|consult|advis|audyt|audit|beratung|poraden|asesor/i.test(r.desc||'')) x.adv=true;
+      }
+    } else {
+      x.nExp++; x.cost+=rowBooks(r,exempt); const sh=vatShare(r); x.inVat+=exempt?0:r2(r.vat*sh/100);
+      if(!exempt&&r.use==='mix'){ x.mixN++; x.sharedVat+=r.vat; x.sharedDed+=r2(r.vat*sh/100); }
+    }
   });
-  x.rev=r2(x.rev); x.cost=r2(x.cost); return x;
+  ['rev','cost','lim','b2c','numer','denomEx','sharedVat','sharedDed'].forEach(k=>x[k]=r2(x[k]));
+  return x;
+}
+// limit zwolnienia podmiotowego (art. 113): do limitu wlicza się sprzedaż w kraju; nie wlicza się nauczania zwolnionego z art. 43 ani usług świadczonych poza Polską
+function limitState(tt){
+  const lim=num('pVatLimit')||VAT_LIMIT_DEF;
+  const legacy=$('ytdLimit').value===''&&$('defVatT').value===''&&!rows.some(r=>r.vatT);   // starsze dane: cała sprzedaż liczy się do limitu
+  const histSum=r2(history.filter(h=>h.year===num('year')&&h.limSales!=null).reduce((a,h)=>a+h.limSales,0));
+  const before=legacy?num('ytdRev'):($('ytdLimit').value!==''?num('ytdLimit'):histSum);
+  const prevAllowOver=num('prevAllow')>B2C_LIMIT, allowBefore=num('ytdAllow');
+  const b2cIn=prevAllowOver?0:Math.max(0,Math.min(tt.b2c,B2C_LIMIT-allowBefore));
+  const month=legacy?tt.rev:r2(tt.lim+b2cIn), total=r2(before+month), prev=num('prevLimit');
+  return {lim,before,month,total,pct:lim?Math.round(total/lim*100):0,room:r2(lim-total),prev,prevOver:prev>lim,legacy,allowBefore,allowTotal:r2(allowBefore+tt.b2c),b2cIn};
 }
 const typeLabel=r=>r.type==='inc'?t('typeInc'):r.type==='oth'?t('typeOth'):t('typeExp');
 const kv=(a,b,cls='')=>`<div class="kv ${cls}"><span>${a}</span><span>${b}</span></div>`;
@@ -2804,7 +3224,28 @@ function showSheet(){
   const vatBal=r2(tt.outVat-tt.inVat);
   const warns=[];
   if(!rulesFor(y)) warns.push(t('wNoRules',y));
-  if($('vat').value==='art113'){ const lim=num('pVatLimit'), cum=res.cumRev; if(lim>0){ if(cum>lim) warns.push(t('wVat113x',fmt(lim))); else if(cum>=lim*0.9) warns.push(t('wVat113',fmt(cum),fmt(lim))); } }
+  let extra='';
+  const stt=$('vat').value, ls=stt!=='reg'?limitState(tt):null;
+  if(stt==='art113'&&ls){
+    if(ls.prevOver) warns.push(t('wLimPrev',fmt(ls.prev),fmt(ls.lim)));
+    if(ls.total>ls.lim){ warns.push(t('wVat113x',fmt(ls.lim))); warns.push(t('wReg113')); }
+    else if(ls.total>=ls.lim*0.9){ warns.push(t('wVat113',fmt(ls.total),fmt(ls.lim))); warns.push(t('wReg113')); }
+    else if(ls.total>=ls.lim*0.7) warns.push(t('wLim70',fmt(ls.total),fmt(ls.lim)));
+    extra+=`<div class="card"><h2>${t('limTitle')}</h2>${kv(t('limBefore'),fmt(ls.before))}${kv(t('limMonth'),fmt(ls.month))}${kv(t('limTotal',fmt(ls.lim)),fmt(ls.total)+' ('+ls.pct+'%)','t')}${kv(t('limRoom'),fmt(Math.max(0,ls.room)))}</div>`;
+  }
+  if(stt==='art43'&&tt.nonEx) warns.push(t('wFirstSale'));
+  if(tt.euB2B) warns.push(t('wEuB2B'));
+  if(tt.b2c>0||num('ytdAllow')>0){ const tot=r2(num('ytdAllow')+tt.b2c); if(tot>B2C_LIMIT) warns.push(t('wAllowX',fmt(tot),fmt(B2C_LIMIT))); else if(tot>=B2C_LIMIT*0.7) warns.push(t('wAllow',fmt(tot),fmt(B2C_LIMIT))); }
+  if(tt.adv&&stt==='art113') warns.push(t('wAdv'));
+  const codes=Object.keys(tt.bt);
+  if(codes.length&&(codes.length>1||codes[0]!=='dom'||stt==='art113')) extra+=`<div class="card"><h2>${t('vtSalesTitle')}</h2>`+codes.map(c=>kv(esc(t(VT_KEY[c]))+' ('+tt.bt[c].n+')',fmt(tt.bt[c].net))+(vtNote(c)?`<div class="note">${esc(t('vtNotePre'))}${esc(vtNote(c))}</div>`:'')).join('')+'</div>';
+  const euK=Object.keys(tt.eu);
+  if(euK.length) extra+=`<div class="card"><h2>${t('euTitle')}</h2>`+euK.map(k=>kv(esc(tt.eu[k].party+(tt.eu[k].nip?' · '+tt.eu[k].nip:'')),fmt(tt.eu[k].net))).join('')+`<div class="note">${t('euNote')}</div></div>`;
+  if(stt==='reg'&&(tt.denomEx>0||tt.mixN>0||propPct()!=null)){
+    const pp=propPct();
+    if(tt.mixN>0&&pp==null) warns.push(t('propNoData'));
+    extra+=`<div class="card"><h2>${t('propTitle')}</h2>${pp==null?`<div class="note">${t('propNoData')}</div>`:kv(t('propUsed',pp),'')}${tt.mixN>0?kv(t('propShared',fmt(tt.sharedVat),fmt(tt.sharedDed)),''):''}</div>`;
+  }
   if(p.taxForm==='skala'){ if(res.taxBase>120000) warns.push(t('wScale32')); else if(res.taxBase>=108000) warns.push(t('wScale')); }
   if(p.taxForm==='ryczalt'){
     const a=p.ytdRev, b=res.cumRev;
@@ -2843,6 +3284,7 @@ function showSheet(){
     ${kv(res.taxDue>=0?t('tDue'):t('tOver'),fmt(Math.abs(res.taxDue)),'t')}
     <div class="big" style="margin-top:12px">${t('grand',fmt(r2(res.taxPayable+res.totalZus+(exempt?0:Math.max(0,vatBal)))))}</div>
     <div class="note">${exempt?'':t('incVat',fmt(Math.max(0,vatBal)))}${t('disclaimer')}</div></div>
+  ${extra}
   ${warns.length?`<div class="card"><h2>⚠ ${t('wTitle')}</h2>${warns.map(w=>`<div class="warn">• ${esc(w)}</div>`).join('')}</div>`:''}
   <div class="card"><h2>${t('chkTitle')}</h2>
     ${kv(t('chk1'),fmt(r2(p.ytdRev+tt.rev)))}${kv(t('chk2'),fmt(r2(tt.rev-tt.cost-S.total-res.health)))}
@@ -2905,8 +3347,8 @@ $('fInvFill').onchange=e=>{ const f=e.target.files[0]; e.target.value=''; if(f) 
 // ---------- Dziennik działań ----------
 function logAct(k,a){ try{ if(window.jdgStore&&window.jdgStore.log) window.jdgStore.log(k,(a||[]).map(x=>typeof x==='number'?x:String(x==null?'':x).slice(0,200))); }catch(e){} }
 const LOG_SECRET=['gusKey','ceidgToken'];
-const LOG_FIELD={vatPeriod:'lVatPeriod',pVatLimit:'pVatLimit',name:'lName',nip:'lNip',regon:'lRegon',address:'lAddress',activity:'lActivity',year:'lYear',month:'lMonth',taxForm:'lTax',rate:'lRate',vat:'lVat',zus:'lZus',chorobowe:'lChor',prevIncome:'lPrevInc',prevDays:'lPrevDays',prevRevenue:'lPrevRev',manualBase:'lManual',manualSocial:'lManualSoc',ytdRev:'lYtdRev',ytdCost:'lYtdCost',ytdTax:'lYtdTax',ytdZus:'lYtdZus',ytdHealth:'lYtdHealth',hbIncome:'lHbIncome',defInc:'lDefInc',defExp:'lDefExp',pBaseFull:'pBaseFull',pBasePref:'pBasePref',pMinWage:'pMinWage',pMinHealth:'pMinHealth',pAvgWage:'pAvgWage',pLinLimit:'pLinLimit',rulesUrl:'rulesUrlLbl',gusKey:'lGusKey',ceidgToken:'lCeidgToken',monthNote:'noteLbl'};
-const LOG_ROWFIELD={type:'thType',date:'thDate',party:'thParty',number:'thNo',net:'thNet',vat:'thVat',gross:'thGross',nip:'thNip',desc:'thDesc',addr:'thAddr'};
+const LOG_FIELD={defVatT:'lDefVatT',ytdLimit:'lYtdLimit',prevLimit:'lPrevLimit',ytdAllow:'lYtdAllow',prevAllow:'lPrevAllow',propT:'lPropT',propE:'lPropE',propEst:'lPropEst',vatPeriod:'lVatPeriod',pVatLimit:'pVatLimit',name:'lName',nip:'lNip',regon:'lRegon',address:'lAddress',activity:'lActivity',year:'lYear',month:'lMonth',taxForm:'lTax',rate:'lRate',vat:'lVat',zus:'lZus',chorobowe:'lChor',prevIncome:'lPrevInc',prevDays:'lPrevDays',prevRevenue:'lPrevRev',manualBase:'lManual',manualSocial:'lManualSoc',ytdRev:'lYtdRev',ytdCost:'lYtdCost',ytdTax:'lYtdTax',ytdZus:'lYtdZus',ytdHealth:'lYtdHealth',hbIncome:'lHbIncome',defInc:'lDefInc',defExp:'lDefExp',pBaseFull:'pBaseFull',pBasePref:'pBasePref',pMinWage:'pMinWage',pMinHealth:'pMinHealth',pAvgWage:'pAvgWage',pLinLimit:'pLinLimit',rulesUrl:'rulesUrlLbl',gusKey:'lGusKey',ceidgToken:'lCeidgToken',monthNote:'noteLbl'};
+const LOG_ROWFIELD={type:'thType',date:'thDate',party:'thParty',number:'thNo',net:'thNet',vat:'thVat',gross:'thGross',nip:'thNip',desc:'thDesc',addr:'thAddr',vatT:'lgVatT',use:'lgUse'};
 const LOG_HISTFIELD={paidSoc:'hSoc',paidHealth:'hHealth',paidTax:'hTax',paidDate:'hDate',note:'hNote'};
 const logTypeName=v=>v==='inc'?t('typeInc'):v==='oth'?t('typeOth'):v==='exp'?t('typeExp'):v;
 function logSettingChange(e){
@@ -2996,6 +3438,7 @@ function renderHistory(){
     if(i<0||!confirm(t('undoQ',b.dataset.undo))) return;
     const h=history[i];
     if(ytdApplies(h)) Object.entries(ytdMap).forEach(([k,id])=>$(id).value=r2(Math.max(0,num(id)-paidOf(h,k))));
+    if(ytdApplies(h)&&h.limSales!=null){ if($('ytdLimit').value!=='') $('ytdLimit').value=r2(Math.max(0,num('ytdLimit')-h.limSales)); if($('ytdAllow').value!=='') $('ytdAllow').value=r2(Math.max(0,num('ytdAllow')-(h.b2c||0))); }
     logAct('undo',[b.dataset.undo]);
     history.splice(i,1); persistAll(); renderHistory(); render();
   });
@@ -3006,14 +3449,17 @@ $('closeMonth').onclick=()=>{
   if(history.some(h=>h.year===y&&h.month===m)){ alert(t('alreadyClosed')); return; }
   if(!confirm(t('closeQ',t('months')[m-1],y))) return;
   const {t:tt,res}=lastResult;
-  const h={year:y,month:m,rev:tt.rev,cost:tt.cost,soc:res.soc.total,health:res.health,tax:res.taxPayable,
+  const ls0=limitState(tt), pp0=propPct();
+  const h={year:y,month:m,limSales:ls0.month,b2c:tt.b2c,numer:tt.numer,denomEx:tt.denomEx,sharedVat:tt.sharedVat,sharedDed:tt.sharedDed,appliedProp:pp0,rev:tt.rev,cost:tt.cost,soc:res.soc.total,health:res.health,tax:res.taxPayable,
     paidSoc:res.soc.total,paidHealth:res.health,paidTax:res.taxPayable,paidDate:'',note:$('monthNote').value,outVat:tt.outVat,inVat:tt.inVat,vatStatus:$('vat').value,
     rows:rows.filter(inMonth).map(x=>({...x}))};
   history.push(h);
   logAct('close',[y+'-'+String(m).padStart(2,'0'),tt.rev.toFixed(2),tt.cost.toFixed(2),h.rows.length]);
   Object.entries(ytdMap).forEach(([k,id])=>$(id).value=r2(num(id)+paidOf(h,k)));
+  if(!ls0.legacy) $('ytdLimit').value=ls0.total;   // starsze dane (bez oznaczeń): licznik pozostaje pusty, limit liczy się z „Przychód YTD” jak dawniej
+  $('ytdAllow').value=r2(num('ytdAllow')+tt.b2c);
   rows=rows.filter(x=>!inMonth(x)); $('monthNote').value=''; lastResult=null; $('sheet').style.display='none'; $('outBtns').hidden=true;
-  if(m<12) $('month').value=m+1; else { $('year').value=y+1; $('month').value=1; Object.values(ytdMap).forEach(id=>$(id).value=0); applyRulesForYear(y+1); updateRulesStatus(); }
+  if(m<12) $('month').value=m+1; else { $('year').value=y+1; $('month').value=1; Object.values(ytdMap).forEach(id=>$(id).value=0); { const am0=annMix(y); $('prevLimit').value=ls0.total; $('prevAllow').value=$('ytdAllow').value; $('ytdLimit').value=ls0.legacy?'':0; $('ytdAllow').value=0; if(am0.T+am0.E>0){ $('propT').value=am0.T; $('propE').value=am0.E; $('propEst').value=''; } } applyRulesForYear(y+1); updateRulesStatus(); }
   persistAll(); renderHistory(); render(); window.scrollTo({top:0,behavior:'smooth'});
 };
 
@@ -3062,6 +3508,15 @@ function annVat(y){
   Object.values(per).sort((a,b)=>a.k-b.k).forEach(p=>{ const bal=r2(p.out-p.inn-carry); out.push({k:p.k,out:r2(p.out),inn:r2(p.inn),carryIn:r2(carry),pay:bal>0?bal:0,carryOut:bal<0?r2(-bal):0}); carry=bal<0?-bal:0; });
   return {q,list:out,totalOut:r2(out.reduce((a,x)=>a+x.out,0)),totalIn:r2(out.reduce((a,x)=>a+x.inn,0)),totalPay:r2(out.reduce((a,x)=>a+x.pay,0))};
 }
+function annMix(y){
+  const hy=history.filter(h=>h.year===y), sm=f=>r2(hy.reduce((a,h)=>a+(f(h)||0),0));
+  const T=sm(h=>h.numer), E=sm(h=>h.denomEx), sh=sm(h=>h.sharedVat), shd=sm(h=>h.sharedDed);
+  const lim=sm(h=>h.limSales), hasLim=hy.some(h=>h.limSales!=null), ap=hy.map(h=>h.appliedProp).filter(v=>v!=null);
+  let actual=null; if(T+E>0){ actual=Math.ceil(100*T/(T+E)-1e-9); if(actual<=2) actual=0; if(actual>100) actual=100; }
+  const applied=ap.length?ap[0]:null; let corr=null;
+  if(actual!=null&&applied!=null&&sh>0){ const d=actual-applied; corr=Math.abs(d)<=2?{none:true,d}:{d,amount:r2(d/100*sh)}; }
+  return {y,hasLim,lim,T,E,actual,applied,sh,shd,corr};
+}
 function annData(){
   const y=parseInt($('annYear').value)||num('year'), form=$('annFormSel').value, p=params();
   const hy=history.filter(h=>h.year===y);
@@ -3090,6 +3545,13 @@ function annRender(){
     h+=`<h3 style="margin-top:14px">${esc(t('annVatTitle',d.y))}</h3><table><tr style="font-weight:700"><td>${esc(t(av.q?'annVatQ':'annVatM'))}</td><td style="text-align:right">${esc(t('vatOut'))}</td><td style="text-align:right">${esc(t('vatIn'))}</td><td style="text-align:right">${esc(t('vatPay'))}</td><td style="text-align:right">${esc(t('vatCarry'))}</td></tr>`
       +av.list.map(x=>`<tr><td>${esc(lab(x.k))}</td><td style="text-align:right">${fmt(x.out)}</td><td style="text-align:right">${fmt(x.inn)}</td><td style="text-align:right">${fmt(x.pay)}</td><td style="text-align:right">${fmt(x.carryOut)}</td></tr>`).join('')
       +`<tr style="font-weight:700"><td>${esc(t('annVatTotal'))}</td><td style="text-align:right">${fmt(av.totalOut)}</td><td style="text-align:right">${fmt(av.totalIn)}</td><td style="text-align:right">${fmt(av.totalPay)}</td><td></td></tr></table><p class="note">${esc(t('annVatNote'))}</p>`;
+  }
+  const am=annMix(d.y);
+  if(am.hasLim&&$('vat').value!=='reg') h+=`<h3 style="margin-top:14px">${esc(t('annLimTitle',d.y))}</h3><table>${kv(t('annLimRow',d.y,fmt(num('pVatLimit')||VAT_LIMIT_DEF)),fmt(am.lim))}</table>`;
+  if(am.actual!=null){
+    h+=`<h3 style="margin-top:14px">${esc(t('annPropTitle',d.y))}</h3><table>${kv(t('annPropActual'),am.actual+'%',true)}${kv(t('annPropApplied'),am.applied==null?'—':am.applied+'%')}${am.corr?kv(t('annPropDiff'),(am.corr.d>0?'+':'')+am.corr.d):''}${kv(t('annPropShared'),fmt(am.sh))}</table>`;
+    if(am.corr) h+=`<p class="note">${esc(am.corr.none?t('annPropNone'):(am.corr.amount>0?t('annPropCorrUp',fmt(am.corr.amount)):t('annPropCorrDown',fmt(-am.corr.amount))))}</p>`;
+    h+=`<p class="note">${esc(t('annPropNext',am.actual))} ${esc(t('annPropNote'))}</p>`;
   }
   const o=d.hs; h+=`<h3 style="margin-top:14px">${esc(t('annHsTitle',o.y))}</h3><table>`;
   if(o.form==='ryczalt') h+=kv(t('annHsRycRev'),fmt(o.revAfter))+kv(t('annHsBand',fmt(o.monthBase)),'')+kv(t('annHsMin',o.months,fmt(o.monthBase)),fmt(r2(o.months*o.monthBase)));

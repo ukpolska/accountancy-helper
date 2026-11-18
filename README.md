@@ -38,6 +38,7 @@
 - Faktury: PDF, zdjęcia i skany (OCR), KSeF XML, ZIP, foldery; rozpoznanie faktur sprzedaży i kosztowych po NIP / invoices from PDF, photos and scans (OCR), KSeF XML, ZIP, folders; sales and cost invoices recognised by NIP
 - Księga KPIR (Excel), historia miesięcy, kopie zapasowe, dziennik działań / KPIR ledger (Excel), month history, backups, activity log
 - Interfejs w językach: polski, angielski, ukraiński, niemiecki, czeski, hiszpański (tłumaczenia nowych języków czekają na sprawdzenie przez native speakerów), samouczek / Interface in Polish, English, Ukrainian, German, Czech and Spanish (the new translations are awaiting review by native speakers), guided tour
+- Działalność mieszana (zwolnione nauczanie + sprzedaż opodatkowana): rodzaj VAT każdej sprzedaży, limit z art. 113, lista VAT-UE, proporcja VAT naliczonego i korekta roczna (orientacyjnie) / Mixed activity (exempt teaching + taxable sales): VAT type per sale, the art. 113 limit, the VAT-UE list, the input-VAT proportion and annual correction (indicative)
 - Wiele firm w jednym programie (osobne profile z oddzielnymi danymi) / Several companies in one program (separate profiles with separate data)
 - VAT: czynny podatnik (netto, udział odliczanego VAT, rozliczenie miesięczne lub kwartalne), zwolnienie z art. 43 i art. 113 (z ostrzeżeniem o limicie) / VAT: registered (net, deductible share, monthly or quarterly), exemption under art. 43 and art. 113 (with a limit warning)
 - Rozliczenie roczne: PIT, VAT i roczne rozliczenie składki zdrowotnej (orientacyjnie) / Yearly figures: PIT, VAT and the annual health-contribution settlement (indicative)
@@ -47,7 +48,7 @@ Instrukcja / Manual: [`Instrukcja-Manual.pdf`](Instrukcja-Manual.pdf)
 ## Plany / Roadmap
 
 - Rozliczenie roczne (PIT za rok i roczne rozliczenie składki zdrowotnej) – dodane w wersji 1.1.0 jako zestawienie orientacyjne, do sprawdzenia z księgową; samo zeznanie (PIT-36 / PIT-36L / PIT-28) i wysyłka do urzędu nie są w programie / Yearly figures (PIT for the year and the annual health-contribution settlement) – added in 1.1.0 as an indicative summary, to be checked with an accountant; the PIT return form itself and e-filing are not in the program
-- Deklaracje i pliki VAT (JPK_V7), VAT-UE i szczególne przypadki VAT (odwrotne obciążenie, samochody 75%/20%) / VAT returns and files (JPK_V7), EU VAT and special VAT cases (reverse charge, the 75%/20% car rules)
+- Deklaracje i pliki VAT (JPK_V7), składanie VAT-R / VAT-UE, procedura OSS i szczególne przypadki VAT (odwrotne obciążenie, samochody 75%/20%) / VAT returns and files (JPK_V7), filing VAT-R / VAT-UE, the OSS procedure and special VAT cases (reverse charge, the 75%/20% car rules)
 - Instrukcja (PDF) w ukraińskim, niemieckim, czeskim i hiszpańskim / The manual (PDF) in Ukrainian, German, Czech and Spanish
 - Opcjonalne hasło do programu / An optional program password
 - Aktualizacje zasad rocznych z tego repozytorium (za zgodą użytkownika) / Yearly rule updates from this repository (with the user's approval)
