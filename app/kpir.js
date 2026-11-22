@@ -8,7 +8,8 @@
   const thin = { style: 'thin' };
   const box = { top: thin, left: thin, bottom: thin, right: thin };
 
-  function buildKpir(ExcelJS, d) {
+  // Układ dotychczasowy (do 2025 r., 17 kolumn) – wzór księgowej
+  function buildKpirOld(ExcelJS, d) {
     const wb = new ExcelJS.Workbook();
     wb.calcProperties.fullCalcOnLoad = true;
     let prev = null;
@@ -98,5 +99,102 @@
     });
     return wb.xlsx.writeBuffer();
   }
-  if (typeof module !== 'undefined' && module.exports) module.exports = { buildKpir }; else root.buildKpir = buildKpir;
+  // Wzór od 1.01.2026 r. (rozporządzenie Ministra Finansów i Gospodarki z 6.09.2025, Dz.U. poz. 1299, załącznik): 19 kolumn
+  // 1 Lp. | 2 data | 3 numer KSeF | 4 numer dowodu | 5 identyfikator podatkowy | 6 imię i nazwisko (nazwa) | 7 adres | 8 opis zdarzenia
+  // 9 wartość sprzedanych towarów i usług | 10 pozostałe przychody | 11 razem przychód (9+10)
+  // 12 zakup towarów i materiałów | 13 koszty uboczne zakupu | 14 wynagrodzenia | 15 pozostałe wydatki | 16 razem wydatki (14+15) | 17 wolna | 18 koszty B+R (opis, wartość) | 19 uwagi
+  // Kolumny arkusza: A..Q = 1..17, R i S = kolumna 18 (opis kosztu, wartość), T = 19. Dochód = kolumna 11 − (kolumny 12 + 13 + 16) (objaśnienie 22).
+  const SUM2 = ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+  const WIDTHS2 = { A: 3.6, B: 13.3, C: 22, D: 19, E: 16, F: 24, G: 30, H: 32, I: 14, J: 13, K: 14, L: 14, M: 12, N: 13, O: 13, P: 14, Q: 8, R: 18, S: 11, T: 14 };
+  const COLS2 = 'ABCDEFGHIJKLMNOPQRST'.split('');
+  function buildKpirNew(ExcelJS, d) {
+    const wb = new ExcelJS.Workbook();
+    wb.calcProperties.fullCalcOnLoad = true;
+    let prev = null;
+    d.months.slice().sort((a, b) => a.month - b.month).forEach(mo => {
+      const rows = mo.rows.map((r, i) => ({ r, i })).sort((a, b) => (a.r.date || '').localeCompare(b.r.date || '') || a.i - b.i).map(x => x.r);
+      if (!rows.length) return;
+      const name = `KPIR_${String(mo.month).padStart(2, '0')}.${d.year}`;
+      const ws = wb.addWorksheet(name, { pageSetup: { paperSize: 9, orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, margins: { left: 0.5, right: 0.5, top: 0.75, bottom: 0.75, header: 0.3, footer: 0.3 } } });
+      ws.properties.defaultRowHeight = 12.75;
+      Object.keys(WIDTHS2).forEach(c => ws.getColumn(c).width = WIDTHS2[c]);
+      const font = (o) => Object.assign({ name: 'Times New Roman', size: 10 }, o);
+      const put = (addr, v, o = {}) => { const c = ws.getCell(addr); c.value = v; c.font = font(o.font); if (o.align) c.alignment = o.align; if (o.numFmt) c.numFmt = o.numFmt; return c; };
+
+      put('C1', 'PODATKOWA KSIĘGA PRZYCHODÓW I ROZCHODÓW', { font: { bold: true, size: 18 } });
+      put('C3', d.name || '', { font: { bold: true } });
+      put('C4', '(imię i nazwisko (nazwa firmy))', { font: { size: 8, italic: true } });
+      put('C6', d.address || '');
+      put('C7', '(adres)', { font: { size: 8, italic: true } });
+      put('C9', d.activity || '');
+      put('C10', 'Rodzaj działalności', { font: { size: 8, italic: true } });
+      put('A12', 'Strona 1', { font: { bold: true } });
+      put('C12', 'Miesiąc:', { font: { bold: true } });
+      put('D12', MN[mo.month - 1], { font: { bold: true } });
+      put('E12', 'rok: ' + d.year, { font: { bold: true } });
+      put('P12', 'Strona 1', { font: { bold: true } });
+
+      const head = { A14: 'Lp.', B14: 'Data zdarzenia gospodarczego', C14: 'Oznaczenie dowodu księgowego', E14: 'Kontrahent', H14: 'Opis zdarzenia gospodarczego', I14: 'Przychód',
+        L14: 'Zakup towarów handlowych i materiałów według cen zakupu', M14: 'Koszty uboczne zakupu', N14: 'Wydatki (koszty)', Q14: '', R14: 'Koszty działalności badawczo-rozwojowej, o których mowa w art. 26e ustawy o podatku dochodowym', T14: 'Uwagi',
+        C15: 'numer identyfikujący fakturę wystawioną przy użyciu Krajowego Systemu e-Faktur', D15: 'numer dowodu księgowego', E15: 'identyfikator podatkowy', F15: 'imię i nazwisko (nazwa firmy)', G15: 'adres',
+        I15: 'wartość sprzedanych towarów i usług', J15: 'pozostałe przychody', K15: 'razem przychód (9+10)', N15: 'wynagrodzenia w gotówce i w naturze', O15: 'pozostałe wydatki', P15: 'razem wydatki (14+15)', R15: 'opis kosztu', S15: 'wartość' };
+      ['A14:A15', 'B14:B15', 'C14:D14', 'E14:G14', 'H14:H15', 'I14:K14', 'L14:L15', 'M14:M15', 'N14:P14', 'Q14:Q15', 'R14:S14', 'T14:T15', 'R16:S16'].forEach(m => ws.mergeCells(m));
+      Object.keys(head).forEach(a => put(a, head[a], { font: { bold: true, size: 9 } }));
+      COLS2.forEach(c => { if (c === 'S') return; const n = c === 'T' ? 19 : c === 'R' ? 18 : COLS2.indexOf(c) + 1; put(c + '16', n, { font: { size: 8 } }); });
+      for (let r = 14; r <= 16; r++) COLS2.forEach(c => {
+        const cell = ws.getCell(c + r);
+        cell.border = box;
+        cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      });
+      ws.getRow(1).height = 22.5; ws.getRow(14).height = 25.5; ws.getRow(15).height = 64; ws.getRow(16).height = 15.75;
+
+      const first = 18, last = first + rows.length - 1;
+      const tot = {}; SUM2.forEach(c => tot[c] = 0);
+      rows.forEach((x, i) => {
+        const r = first + i, inc = x.type === 'inc', oth = x.type === 'oth', exp = x.type === 'exp';
+        const amt = r2(x.amount || 0), p = (x.date || '').split('-').map(Number);
+        const D = (a, v, o) => put(a, v, Object.assign({ align: { vertical: 'top', wrapText: true } }, o));
+        D('A' + r, i + 1, { align: { vertical: 'top', horizontal: 'center' } });
+        D('B' + r, p.length === 3 ? new Date(Date.UTC(p[0], p[1] - 1, p[2])) : '', { numFmt: 'dd.mm.yyyy', align: { vertical: 'top', horizontal: 'center' } });
+        D('C' + r, x.ksef || '');
+        D('D' + r, x.number || '');
+        // objaśnienie 5: gdy wpisano identyfikator podatkowy kontrahenta (z kodem kraju), jego imienia i adresu nie wpisuje się
+        if (x.nip) D('E' + r, x.nip); else { D('F' + r, x.party || ''); D('G' + r, x.addr || ''); }
+        D('H' + r, x.desc || '');
+        const money = { numFmt: '#,##0.00', align: { vertical: 'top' } };
+        D('I' + r, inc ? amt : 0, money);
+        D('J' + r, oth ? amt : 0, money);
+        D('K' + r, { formula: `I${r}+J${r}`, result: inc || oth ? amt : 0 }, money);
+        D('L' + r, 0, money); D('M' + r, 0, money); D('N' + r, 0, money);
+        D('O' + r, exp ? amt : 0, money);
+        D('P' + r, { formula: `N${r}+O${r}`, result: exp ? amt : 0 }, money);
+        if (inc) { tot.I += amt; tot.K += amt; } if (oth) { tot.J += amt; tot.K += amt; } if (exp) { tot.O += amt; tot.P += amt; }
+        ws.getRow(r).height = 30;
+      });
+      SUM2.forEach(c => tot[c] = r2(tot[c]));
+      const sr = last + 1, pr = last + 2, mr = last + 3, yr = last + 4;
+      const ytd = {}; SUM2.forEach(c => ytd[c] = r2(tot[c] + (prev ? prev.ytd[c] : 0)));
+      const labels = { [sr]: 'Suma strony', [pr]: 'Razem z poprzedniej strony', [mr]: 'Razem za miesiąc', [yr]: 'Razem od początku roku' };
+      Object.keys(labels).forEach(r => put('H' + r, labels[r], { font: { bold: true }, align: { horizontal: 'right' } }));
+      SUM2.forEach(c => {
+        const money = { numFmt: '#,##0.00', font: { bold: true } };
+        put(c + sr, { formula: `SUM(${c}${first}:${c}${last})`, result: tot[c] }, money);
+        put(c + pr, 0, money);
+        put(c + mr, { formula: `${c}${sr}+${c}${pr}`, result: tot[c] }, money);
+        put(c + yr, prev ? { formula: `${c}${mr}+'${prev.name}'!${c}${prev.yr}`, result: ytd[c] } : { formula: `${c}${mr}`, result: ytd[c] }, money);
+      });
+      for (let r = first; r <= yr; r++) COLS2.forEach(c => { ws.getCell(c + r).border = box; });
+      const dr = yr + 3, inc2 = v => v ? r2(v.K - v.L - v.M - v.P) : 0;
+      [['Dochód – suma strony', sr, tot], ['Dochód – z poprzedniej strony', pr, null], ['Dochód – za miesiąc', mr, tot], ['Dochód – od początku roku', yr, ytd]].forEach(([lab, row, v], i) => {
+        const r = dr + i;
+        put('H' + r, lab, { font: { bold: true }, align: { horizontal: 'right' } });
+        put('I' + r, { formula: `K${row}-L${row}-M${row}-P${row}`, result: inc2(v) }, { numFmt: '#,##0.00', font: { bold: true } });
+      });
+      put('H' + (dr + 5), 'Dochód = kolumna 11 − (kolumny 12 + 13 + 16)', { font: { size: 8, italic: true }, align: { horizontal: 'right' } });
+      prev = { name, yr, ytd };
+    });
+    return wb.xlsx.writeBuffer();
+  }
+  function buildKpir(ExcelJS, d) { return d.layout === 'old' ? buildKpirOld(ExcelJS, d) : buildKpirNew(ExcelJS, d); }
+  if (typeof module !== 'undefined' && module.exports) module.exports = { buildKpir, buildKpirOld, buildKpirNew }; else root.buildKpir = buildKpir;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -24,7 +24,7 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 
 <h2>2. Instalacja</h2>
 <ol>
-<li>Uruchom plik <code>Accountancy Helper Setup 1.3.2.exe</code> i postępuj zgodnie z instrukcjami.</li>
+<li>Uruchom plik <code>Accountancy Helper Setup 1.3.3.exe</code> i postępuj zgodnie z instrukcjami.</li>
 <li>Windows może wyświetlić ostrzeżenie „System Windows ochronił ten komputer”, ponieważ program nie ma płatnego podpisu cyfrowego. Kliknij <b>Więcej informacji</b>, a potem <b>Uruchom mimo to</b>.</li>
 <li>Po instalacji na pulpicie pojawi się skrót. Przy pierwszym uruchomieniu program sam pokaże krótki samouczek.</li>
 </ol>
@@ -50,7 +50,7 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <li>Opcjonalnie wpisz notatkę do miesiąca.</li>
 <li>Kliknij <b>Oblicz miesiąc</b>. Pojawi się zestawienie: przychód i koszty, składki ZUS ze składnikami, składka zdrowotna, podatek narastająco, podatek do zapłaty za miesiąc i ewentualne ostrzeżenia (np. zbliżanie się do progu 120 000 zł).</li>
 <li><b>Drukuj / zapisz PDF</b> lub <b>Eksport CSV</b> – gotowe zestawienie dla dokumentacji.</li>
-<li><b>Księga KPIR (Excel)</b> – plik z podatkową księgą przychodów i rozchodów: jeden plik na rok, każdy miesiąc w osobnej zakładce. W tabeli uzupełnij kolumny „NIP kontrahenta”, „Opis zdarzenia” i „Adres kontrahenta” (program zapamiętuje je dla kontrahenta), a w konfiguracji firmy – adres i rodzaj działalności (PKD i opis). Kwoty są brutto, gdy firma jest zwolniona z VAT. Odsetki i inne pozostałe przychody wybierz jako rodzaj „Pozostały przychód”. W konfiguracji firmy możesz wpisać domyślny opis przychodu (np. „Nauka jęz. angielskiego”).</li>
+<li><b>Księga KPIR (Excel)</b> – plik z podatkową księgą przychodów i rozchodów: jeden plik na rok, każdy miesiąc w osobnej zakładce. Układ księgi: od 2026 r. program stosuje wzór z rozporządzenia obowiązującego od 1.01.2026 (19 kolumn, Dz.U. 2025 poz. 1299): numer dowodu w kolumnie 4, identyfikator podatkowy kontrahenta w kolumnie 5 (gdy jest NIP, nazwy i adresu się nie wpisuje – tak stanowi objaśnienie 5), przychody w kolumnach 9–11, wydatki w kolumnach 15–16, dochód = kolumna 11 − (12 + 13 + 16). Dla lat do 2025 stosowany jest wzór dotychczasowy (17 kolumn). W Ustawieniach można wymusić jeden z wzorów (np. gdy księgowa używa starego arkusza). W tabeli uzupełnij kolumny „NIP kontrahenta”, „Opis zdarzenia” i „Adres kontrahenta” (program zapamiętuje je dla kontrahenta), a w konfiguracji firmy – adres i rodzaj działalności (PKD i opis). Kwoty są brutto, gdy firma jest zwolniona z VAT. Odsetki i inne pozostałe przychody wybierz jako rodzaj „Pozostały przychód”. W konfiguracji firmy możesz wpisać domyślny opis przychodu (np. „Nauka jęz. angielskiego”).</li>
 <li>Gdy wszystko się zgadza, kliknij <b>Zamknij miesiąc</b>. Miesiąc trafia do historii razem z fakturami i notatką, a dane narastające zostają zaktualizowane.</li>
 <li>Po opłaceniu składek i podatku wpisz w <b>Historii</b> faktycznie zapłacone kwoty i datę zapłaty (np. z wyciągu bankowego). Zmiana kwoty automatycznie koryguje dane narastające.</li>
 </ol>
@@ -148,7 +148,7 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 
 <h2>2. Installation</h2>
 <ol>
-<li>Run <code>Accountancy Helper Setup 1.3.2.exe</code> and follow the instructions.</li>
+<li>Run <code>Accountancy Helper Setup 1.3.3.exe</code> and follow the instructions.</li>
 <li>Windows may show “Windows protected your PC”, because the program does not have a paid digital signature. Click <b>More info</b>, then <b>Run anyway</b>.</li>
 <li>A shortcut appears on the desktop. On first launch the program shows a short tutorial by itself.</li>
 </ol>
@@ -174,7 +174,7 @@ code{background:#eef1f6;padding:0 3pt;border-radius:3pt}
 <li>Optionally write a note for the month.</li>
 <li>Click <b>Calculate month</b>. A summary appears: revenue and costs, ZUS contributions with their components, health contribution, cumulative tax, tax due for the month and any warnings (for example approaching the PLN 120,000 threshold).</li>
 <li><b>Print / save as PDF</b> or <b>Export CSV</b> – a ready summary for your records.</li>
-<li><b>KPIR ledger (Excel)</b> – a file with the tax revenue and expense ledger: one file per year, each month on its own tab. Fill in the “Counterparty NIP”, “Description of event” and “Counterparty address” columns in the table (the program remembers them for each counterparty), and the company address and type of activity (PKD and description) in the company setup. Amounts are gross when the business is VAT-exempt. Choose the type “Other income” for interest and other non-sales income. In the company setup you can enter a default description for income (for example “English lessons”).</li>
+<li><b>KPIR ledger (Excel)</b> – a file with the tax revenue and expense ledger: one file per year, each month on its own tab. Layout: from 2026 the program uses the form from the regulation in force from 1 January 2026 (19 columns, Dz.U. 2025 poz. 1299): document number in column 4, the counterparty's tax identifier in column 5 (when a NIP is given, the name and address are not entered – explanatory note 5), revenue in columns 9–11, expenses in columns 15–16, income = column 11 − (12 + 13 + 16). For years up to 2025 the previous form (17 columns) is used. In Settings you can force one of the forms (for example if your accountant uses the old sheet). Fill in the “Counterparty NIP”, “Description of event” and “Counterparty address” columns in the table (the program remembers them for each counterparty), and the company address and type of activity (PKD and description) in the company setup. Amounts are gross when the business is VAT-exempt. Choose the type “Other income” for interest and other non-sales income. In the company setup you can enter a default description for income (for example “English lessons”).</li>
 <li>When everything is correct, click <b>Close month</b>. The month goes into the history together with its invoices and note, and the year-to-date figures are updated.</li>
 <li>After the contributions and tax are paid, enter the amounts actually paid and the payment date in the <b>History</b> (for example from the bank statement). Changing an amount automatically corrects the year-to-date figures.</li>
 </ol>

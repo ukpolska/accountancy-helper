@@ -251,6 +251,7 @@ td.n input{text-align:right}
     <div><label data-i="pAvgWage"></label><input id="pAvgWage" type="number" step="0.01" value="9228.64"></div>
     <div><label data-i="pLinLimit"></label><input id="pLinLimit" type="number" step="0.01" value="14100"></div>
     <div><label data-i="pVatLimit"></label><input id="pVatLimit" type="number" step="0.01" value="240000"></div>
+    <div><label data-i="lKpirLayout"></label><select id="kpirLayout"><option value="auto" data-i="kpirAuto"></option><option value="new" data-i="kpirNew"></option><option value="old" data-i="kpirOld"></option></select></div>
   </div>
   <p class="note" id="rulesStatus"></p>
   <div class="grid"><div><label data-i="rulesUrlLbl"></label><input id="rulesUrl" placeholder="https://…"></div></div>
@@ -523,7 +524,11 @@ annPropNone:"Korekta niepotrzebna (różnica nie przekracza 2 punktów procentow
 annPropNext:"Proporcja na następny rok: {0}% – wpisz obroty w ustawieniach.",
 annPropNote:"Orientacyjnie. Środki trwałe i wartości niematerialne powyżej 15 000 zł są korygowane przez 5 lat (art. 91 ust. 2) – tego program nie liczy.",
 lgUse:"Wykorzystanie kosztu",
-lgVatT:"Rodzaj sprzedaży (VAT)"
+lgVatT:"Rodzaj sprzedaży (VAT)",
+lKpirLayout:"Układ księgi KPIR (Excel)",
+kpirAuto:"Automatycznie (od 2026 r. nowy wzór)",
+kpirNew:"Wzór od 1.01.2026 (19 kolumn)",
+kpirOld:"Wzór dotychczasowy (do 2025 r., 17 kolumn)"
 },
 en:{
 subtitle:'— monthly calculator',
@@ -648,7 +653,11 @@ annPropNone:"No correction needed (the difference does not exceed 2 percentage p
 annPropNext:"Proportion for next year: {0}% – enter the turnovers in the setup.",
 annPropNote:"Indicative. Fixed assets and intangibles above PLN 15,000 are corrected over 5 years (art. 91 ust. 2) – the program does not calculate that.",
 lgUse:"Cost use",
-lgVatT:"Type of sale (VAT)"
+lgVatT:"Type of sale (VAT)",
+lKpirLayout:"KPIR ledger layout (Excel)",
+kpirAuto:"Automatic (new form from 2026)",
+kpirNew:"Form from 1 Jan 2026 (19 columns)",
+kpirOld:"Previous form (until 2025, 17 columns)"
 },
 uk:{
 subtitle:"— щомісячний калькулятор",
@@ -1134,7 +1143,11 @@ annPropNone:"Коригування не потрібне (різниця не �
 annPropNext:"Пропорція на наступний рік: {0}% – введіть обороти в налаштуваннях.",
 annPropNote:"Орієнтовно. Основні засоби та нематеріальні активи понад 15 000 PLN коригуються протягом 5 років (ст. 91 ust. 2) – програма цього не розраховує.",
 lgUse:"Використання витрат",
-lgVatT:"Вид продажу (ПДВ)"
+lgVatT:"Вид продажу (ПДВ)",
+lKpirLayout:"Макет книги KPIR (Excel)",
+kpirAuto:"Автоматично (з 2026 року новий зразок)",
+kpirNew:"Зразок з 01.01.2026 (19 колонок)",
+kpirOld:"Попередній зразок (до 2025 року, 17 колонок)"
 },
 de:{
 subtitle:"— Monatsrechner",
@@ -1620,7 +1633,11 @@ annPropNone:"Keine Korrektur nötig (die Differenz überschreitet 2 Prozentpunkt
 annPropNext:"Schlüssel für das nächste Jahr: {0} % – Umsätze in den Einstellungen eintragen.",
 annPropNote:"Näherungswerte. Anlagegüter und immaterielle Werte über 15.000 PLN werden über 5 Jahre berichtigt (Art. 91 ust. 2) – das berechnet das Programm nicht.",
 lgUse:"Kostenverwendung",
-lgVatT:"Art des Verkaufs (USt)"
+lgVatT:"Art des Verkaufs (USt)",
+lKpirLayout:"Layout des KPIR-Buchs (Excel)",
+kpirAuto:"Automatisch (ab 2026 neues Muster)",
+kpirNew:"Muster ab 1.1.2026 (19 Spalten)",
+kpirOld:"Bisheriges Muster (bis 2025, 17 Spalten)"
 },
 cs:{
 subtitle:"— měsíční kalkulačka",
@@ -2106,7 +2123,11 @@ annPropNone:"Oprava není nutná (rozdíl nepřekračuje 2 procentní body – �
 annPropNext:"Poměr na příští rok: {0} % – zadejte obraty v nastavení.",
 annPropNote:"Orientačně. Dlouhodobý majetek a nehmotná aktiva nad 15 000 PLN se opravují po dobu 5 let (čl. 91 ust. 2) – to program nepočítá.",
 lgUse:"Použití nákladu",
-lgVatT:"Druh prodeje (DPH)"
+lgVatT:"Druh prodeje (DPH)",
+lKpirLayout:"Rozložení knihy KPIR (Excel)",
+kpirAuto:"Automaticky (od roku 2026 nový vzor)",
+kpirNew:"Vzor od 1. 1. 2026 (19 sloupců)",
+kpirOld:"Dosavadní vzor (do roku 2025, 17 sloupců)"
 },
 es:{
 subtitle:"— calculadora mensual",
@@ -2592,7 +2613,11 @@ annPropNone:"No hace falta regularizar (la diferencia no supera 2 puntos porcent
 annPropNext:"Proporción para el año siguiente: {0} % – introduzca los volúmenes en los ajustes.",
 annPropNote:"Orientativo. Los activos fijos e intangibles de más de 15.000 PLN se regularizan durante 5 años (art. 91 ust. 2); el programa no lo calcula.",
 lgUse:"Uso del gasto",
-lgVatT:"Tipo de venta (IVA)"
+lgVatT:"Tipo de venta (IVA)",
+lKpirLayout:"Formato del libro KPIR (Excel)",
+kpirAuto:"Automático (desde 2026 el nuevo modelo)",
+kpirNew:"Modelo desde el 1.1.2026 (19 columnas)",
+kpirOld:"Modelo anterior (hasta 2025, 17 columnas)"
 }
 };
 let LANG='pl';
@@ -2658,7 +2683,7 @@ function applyLang(){
 
 // ---------- state ----------
 let nipDir={}, partyInfo={}, rulesState=null, lastRulesCheck='', myLinks=[], rows=[], history=[], corr={}, lastResult=null, tourDone=false, keyCardDone=false, tourOpen=false, tourI=0;
-const FIELDS=['defVatT','ytdLimit','prevLimit','ytdAllow','prevAllow','propT','propE','propEst','vatPeriod','pVatLimit','hbIncome','name','nip','regon','address','activity','defInc','defExp','gusKey','ceidgToken','year','month','taxForm','rate','vat','zus','prevIncome','prevDays','prevRevenue','manualBase','manualSocial','ytdRev','ytdCost','ytdTax','ytdZus','ytdHealth','pBaseFull','pBasePref','pMinWage','pMinHealth','pAvgWage','pLinLimit','rulesUrl'];
+const FIELDS=['kpirLayout','defVatT','ytdLimit','prevLimit','ytdAllow','prevAllow','propT','propE','propEst','vatPeriod','pVatLimit','hbIncome','name','nip','regon','address','activity','defInc','defExp','gusKey','ceidgToken','year','month','taxForm','rate','vat','zus','prevIncome','prevDays','prevRevenue','manualBase','manualSocial','ytdRev','ytdCost','ytdTax','ytdZus','ytdHealth','pBaseFull','pBasePref','pMinWage','pMinHealth','pAvgWage','pLinLimit','rulesUrl'];
 const ytdMap={rev:'ytdRev',cost:'ytdCost',tax:'ytdTax',soc:'ytdZus',health:'ytdHealth'};
 function stateObj(){
   const o={app:'jdg-kalkulator',version:2,saved:new Date().toISOString(),chorobowe:$('chorobowe').checked,lang:LANG,tourDone,keyCardDone,corr,partyInfo,nipDir,history,myLinks,rulesApplied:rulesState,lastRulesCheck};
@@ -3347,7 +3372,7 @@ $('fInvFill').onchange=e=>{ const f=e.target.files[0]; e.target.value=''; if(f) 
 // ---------- Dziennik działań ----------
 function logAct(k,a){ try{ if(window.jdgStore&&window.jdgStore.log) window.jdgStore.log(k,(a||[]).map(x=>typeof x==='number'?x:String(x==null?'':x).slice(0,200))); }catch(e){} }
 const LOG_SECRET=['gusKey','ceidgToken'];
-const LOG_FIELD={defVatT:'lDefVatT',ytdLimit:'lYtdLimit',prevLimit:'lPrevLimit',ytdAllow:'lYtdAllow',prevAllow:'lPrevAllow',propT:'lPropT',propE:'lPropE',propEst:'lPropEst',vatPeriod:'lVatPeriod',pVatLimit:'pVatLimit',name:'lName',nip:'lNip',regon:'lRegon',address:'lAddress',activity:'lActivity',year:'lYear',month:'lMonth',taxForm:'lTax',rate:'lRate',vat:'lVat',zus:'lZus',chorobowe:'lChor',prevIncome:'lPrevInc',prevDays:'lPrevDays',prevRevenue:'lPrevRev',manualBase:'lManual',manualSocial:'lManualSoc',ytdRev:'lYtdRev',ytdCost:'lYtdCost',ytdTax:'lYtdTax',ytdZus:'lYtdZus',ytdHealth:'lYtdHealth',hbIncome:'lHbIncome',defInc:'lDefInc',defExp:'lDefExp',pBaseFull:'pBaseFull',pBasePref:'pBasePref',pMinWage:'pMinWage',pMinHealth:'pMinHealth',pAvgWage:'pAvgWage',pLinLimit:'pLinLimit',rulesUrl:'rulesUrlLbl',gusKey:'lGusKey',ceidgToken:'lCeidgToken',monthNote:'noteLbl'};
+const LOG_FIELD={kpirLayout:'lKpirLayout',defVatT:'lDefVatT',ytdLimit:'lYtdLimit',prevLimit:'lPrevLimit',ytdAllow:'lYtdAllow',prevAllow:'lPrevAllow',propT:'lPropT',propE:'lPropE',propEst:'lPropEst',vatPeriod:'lVatPeriod',pVatLimit:'pVatLimit',name:'lName',nip:'lNip',regon:'lRegon',address:'lAddress',activity:'lActivity',year:'lYear',month:'lMonth',taxForm:'lTax',rate:'lRate',vat:'lVat',zus:'lZus',chorobowe:'lChor',prevIncome:'lPrevInc',prevDays:'lPrevDays',prevRevenue:'lPrevRev',manualBase:'lManual',manualSocial:'lManualSoc',ytdRev:'lYtdRev',ytdCost:'lYtdCost',ytdTax:'lYtdTax',ytdZus:'lYtdZus',ytdHealth:'lYtdHealth',hbIncome:'lHbIncome',defInc:'lDefInc',defExp:'lDefExp',pBaseFull:'pBaseFull',pBasePref:'pBasePref',pMinWage:'pMinWage',pMinHealth:'pMinHealth',pAvgWage:'pAvgWage',pLinLimit:'pLinLimit',rulesUrl:'rulesUrlLbl',gusKey:'lGusKey',ceidgToken:'lCeidgToken',monthNote:'noteLbl'};
 const LOG_ROWFIELD={type:'thType',date:'thDate',party:'thParty',number:'thNo',net:'thNet',vat:'thVat',gross:'thGross',nip:'thNip',desc:'thDesc',addr:'thAddr',vatT:'lgVatT',use:'lgUse'};
 const LOG_HISTFIELD={paidSoc:'hSoc',paidHealth:'hHealth',paidTax:'hTax',paidDate:'hDate',note:'hNote'};
 const logTypeName=v=>v==='inc'?t('typeInc'):v==='oth'?t('typeOth'):v==='exp'?t('typeExp'):v;
@@ -3388,7 +3413,8 @@ async function exportKpir(){
   const m=num('month'); if(!months[m]){ const cur=rows.filter(inMonth).map(map); if(cur.length) months[m]=cur; }
   const list=Object.keys(months).map(k=>({month:+k,rows:months[k]})).filter(x=>x.rows.length);
   if(!list.length){ alert(t('kpirNone')); return; }
-  const buf=await buildKpir(ExcelJS,{name:$('name').value,address:$('address').value,activity:$('activity').value,year:y,months:list});
+  const sel=$('kpirLayout').value, layout=(sel==='old'||(sel!=='new'&&y<2026))?'old':'new';   // wzór księgi od 1.01.2026 (19 kolumn) albo dotychczasowy (17 kolumn)
+  const buf=await buildKpir(ExcelJS,{name:$('name').value,address:$('address').value,activity:$('activity').value,year:y,months:list,layout});
   logAct('kpir',[y,list.length,list.reduce((n,x)=>n+x.rows.length,0)]);
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
   a.download=`KPIR-${y}.xlsx`; a.click();
